@@ -56,4 +56,32 @@ async function deletePlaylist(id) {
   loadPlaylists();
 }
 
+async function lookup() {
+    const name = document.getElementById("search").value;
+
+    const res = await fetch(
+        "https://itunes.apple.com/search?term=" +
+        encodeURIComponent(name) +
+        "&media=music&limit=10"
+    );
+
+    const data = await res.json();
+
+    let html = "";
+
+    for (let i = 0; i < data.results.length; i++) {
+        const song = data.results[i];
+
+        html += `
+            <li>
+                <strong>${song.trackName}</strong>
+                <p>Artist: ${song.artistName}</p>
+                <p>Album: ${song.collectionName}</p>
+            </li>
+        `;
+    }
+
+    document.getElementById("results").innerHTML = html;
+}
+
 loadPlaylists();
