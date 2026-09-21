@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Edit Playlist</title>
+</head>
+
+<body>
+  <h1>Edit Playlist</h1>
+
+  <input id="name" placeholder="Playlist name" />
+  <br /><br />
+
+  <input id="description" placeholder="Description" />
+  <br /><br />
+
+  <input id="genre" placeholder="Genre" />
+  <br /><br />
+
+  <input id="mood" placeholder="Mood" />
+  <br /><br />
+
+  <button onclick="savePlaylist()">
+    Save Changes
+  </button>
+
+  <a href="index.html">Cancel</a>
+
+  <script>
+    const id = new URLSearchParams(
+      location.search
+    ).get("id");
+
+    async function loadPlaylist() {
+      const res = await fetch("/api/playlists");
+      const playlists = await res.json();
+
+      const playlist = playlists.find(
+        (p) => p.id == id
+      );
+
+      if (!playlist) {
+        alert("Playlist not found");
+        return;
+      }
+
+      document.getElementById("name").value =
+        playlist.name || "";
+
+      document.getElementById("description").value =
+        playlist.description || "";
+
+      document.getElementById("genre").value =
+        playlist.genre || "";
+
+      document.getElementById("mood").value =
+        playlist.mood || "";
+    }
+
+    async function savePlaylist() {
+      const playlist = {
+        name: document.getElementById("name").value,
+        description: document.getElementById("description").value,
+        genre: document.getElementById("genre").value,
+        mood: document.getElementById("mood").value
+      };
+
+      const res = await fetch(
+        "/api/playlists/" + id,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(playlist)
+        }
+      );
+
+      if (!res.ok) {
+        alert("Failed to update playlist");
+        return;
+      }
+
+      window.location.href = "index.html";
+    }
+
+    loadPlaylist();
+  </script>
+</body>
+</html>

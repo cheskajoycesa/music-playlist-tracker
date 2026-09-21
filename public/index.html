@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>MyLibrary</title>
+</head>
+<script src="js/playlist.js"></script>
+<body>
+    <h1>Playlist ᓚᘏᗢ</h1>
+    <h3>➕ Create a new Playlist</h3>
+    <input id="name" placeholder="Name" />
+    <input id="description" placeholder="Description" />
+    <input id="genre" placeholder="Genre" />
+    <input id="mood" placeholder="Mood" />
+    <button onclick="addPlaylist()">Add Playlist</button>
+
+    <h3>My Playlists</h3>
+    <ul id="playlists"></ul>
+
+    <h3>Look up online</h3>
+    <input id="search" placeholder="Song to search" />
+    <button onclick="lookup()">Search online</button>
+    <ul id="results"></ul>
+
+</body>
+</html>
