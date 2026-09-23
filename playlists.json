@@ -4,6 +4,24 @@
     "name": "I am Tired",
     "description": "Projects are due.",
     "genre": "Mixed",
-    "mood": "Solemn and Moody"
+    "mood": "Solemn and Moody",
+    "notes": "Projects are due.",
+    "shell": "#1E6B65",
+    "stripe": "#EE8A83",
+    "fav": true,
+    "likedAt": 1790162087312,
+    "createdAt": 1789973357725,
+    "tracks": [
+      {
+        "id": "aj5sdgbh",
+        "previewUrl": "",
+        "art": "",
+        "title": "Staying Alive",
+        "artist": "Bee Gees",
+        "genre": "Disco",
+        "time": "3:45",
+        "side": "A"
+      }
+    ]
   }
 ]
