@@ -1756,109 +1756,6 @@
                      DISCOVERY
                 ====================== -->
 
-                <section
-                    class="dashboard-panel"
-                    id="discoveryPanel">
-
-                    <div class="panel-header">
-
-                        <div class="panel-title">
-
-                            <div class="panel-icon">
-                                ♫
-                            </div>
-
-                            <div>
-                                <h2>Music Discovery</h2>
-                                <p>Find your next vibe</p>
-                            </div>
-
-                        </div>
-
-                        <button
-                            class="panel-expand"
-                            onclick="togglePanel('discovery')"
-                            title="Maximize Music Discovery">
-                            ⛶
-                        </button>
-
-                    </div>
-
-
-                    <div class="panel-content">
-
-                        <div class="discovery-search">
-
-                            <input
-                                class="input"
-                                id="spotifySearch"
-                                placeholder="Search Spotify..."
-                            >
-
-                            <button
-                                class="small-button"
-                                onclick="searchDiscovery()">
-                                Search
-                            </button>
-
-                        </div>
-
-
-                        <div class="filter-row">
-
-                            <button
-                                class="filter-button active"
-                                data-discovery-filter="all">
-                                All
-                            </button>
-
-                            <button
-                                class="filter-button"
-                                data-discovery-filter="songs">
-                                Songs
-                            </button>
-
-                            <button
-                                class="filter-button"
-                                data-discovery-filter="artists">
-                                Artists
-                            </button>
-
-                            <button
-                                class="filter-button"
-                                data-discovery-filter="albums">
-                                Albums
-                            </button>
-
-                        </div>
-
-
-                        <div id="apiResults">
-
-                            <div class="empty-state">
-
-                                <div class="empty-icon">
-                                    ⌕
-                                </div>
-
-                                <h3>
-                                    Discover something new
-                                </h3>
-
-                                <p>
-                                    Search your connected music API.
-                                    No discovery results are preloaded.
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </section>
-
-
                 <!-- =====================
                      PLAYLIST
                 ====================== -->
@@ -4289,251 +4186,6 @@
 
 
     /* =====================================================
-       DISCOVERY
-       
-       No fake API results are generated.
-       To connect your backend, set:
-       
-       window.VIBEVAULT_SPOTIFY_ENDPOINT =
-           "/your/backend/spotify/search";
-       
-       Expected response can be:
-       { items: [...] }
-       or
-       [...]
-       ===================================================== */
-
-    async function searchDiscovery() {
-
-        const input =
-            document.getElementById(
-                "spotifySearch"
-            );
-
-        const results =
-            document.getElementById(
-                "apiResults"
-            );
-
-        const query =
-            input.value.trim();
-
-
-        if (!query) {
-
-            showToast(
-                "Enter something to search."
-            );
-
-            return;
-        }
-
-
-        const endpoint =
-            window.VIBEVAULT_SPOTIFY_ENDPOINT;
-
-
-        if (!endpoint) {
-
-            results.innerHTML = `
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        ♫
-                    </div>
-
-                    <h3>
-                        Spotify API not connected
-                    </h3>
-
-                    <p>
-                        Your UI is ready.
-                        Connect your backend Spotify
-                        search endpoint in this file.
-                    </p>
-
-                </div>
-            `;
-
-            return;
-        }
-
-
-        results.innerHTML = `
-            <div class="empty-state">
-                <div class="empty-icon">⌛</div>
-                <h3>Searching...</h3>
-                <p>Please wait.</p>
-            </div>
-        `;
-
-
-        try {
-
-            const response =
-                await fetch(
-                    endpoint +
-                    "?q=" +
-                    encodeURIComponent(query)
-                );
-
-
-            if (!response.ok) {
-                throw new Error(
-                    "API request failed"
-                );
-            }
-
-
-            const result =
-                await response.json();
-
-
-            const items =
-                Array.isArray(result)
-                    ? result
-                    : (
-                        result.items ||
-                        result.tracks?.items ||
-                        []
-                    );
-
-
-            if (!items.length) {
-
-                results.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">⌕</div>
-                        <h3>No results</h3>
-                        <p>
-                            Nothing was returned
-                            for this search.
-                        </p>
-                    </div>
-                `;
-
-                return;
-            }
-
-
-            results.innerHTML =
-                items.map(
-                    item => {
-
-                        const title =
-                            item.name ||
-                            item.song ||
-                            "Untitled";
-
-                        const artist =
-                            item.artist ||
-                            item.artists?.[0]?.name ||
-                            "Unknown artist";
-
-                        return `
-                            <div class="song-row">
-
-                                <div class="song-cover">
-                                    ♪
-                                </div>
-
-                                <div>
-
-                                    <div class="song-title">
-                                        ${escapeHtml(title)}
-                                    </div>
-
-                                    <div class="song-artist">
-                                        ${escapeHtml(artist)}
-                                    </div>
-
-                                </div>
-
-                            </div>
-                        `;
-
-                    }
-                ).join("");
-
-
-        } catch (error) {
-
-            console.error(error);
-
-            results.innerHTML = `
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        !
-                    </div>
-
-                    <h3>
-                        Search failed
-                    </h3>
-
-                    <p>
-                        Check your Spotify
-                        backend connection.
-                    </p>
-
-                </div>
-            `;
-
-        }
-
-    }
-
-
-    document
-        .getElementById("spotifySearch")
-        .addEventListener(
-            "keydown",
-            event => {
-
-                if (event.key === "Enter") {
-                    searchDiscovery();
-                }
-
-            }
-        );
-
-
-    /* =====================================================
-       FILTER BUTTONS
-       ===================================================== */
-
-    document
-        .querySelectorAll(
-            "[data-discovery-filter]"
-        )
-        .forEach(button => {
-
-            button.addEventListener(
-                "click",
-                () => {
-
-                    document
-                        .querySelectorAll(
-                            "[data-discovery-filter]"
-                        )
-                        .forEach(
-                            item =>
-                                item.classList.remove(
-                                    "active"
-                                )
-                        );
-
-                    button.classList.add(
-                        "active"
-                    );
-
-                }
-            );
-
-        });
-
-
-    /* =====================================================
        SIMPLE FORM COMPATIBILITY
        Keeps the older addPlaylist() / lookup() interface
        working with the current WebsiteName UI.
@@ -4571,13 +4223,33 @@
             return;
         }
 
-        const discoveryInput = document.getElementById("spotifySearch");
-        if (discoveryInput) {
-            discoveryInput.value = input;
+        showView("library");
+
+        const query = input.toLowerCase();
+        const matches = data.songs.filter(song =>
+            String(song.song || "").toLowerCase().includes(query) ||
+            String(song.artist || "").toLowerCase().includes(query) ||
+            String(song.genre || "").toLowerCase().includes(query)
+        );
+
+        const container = document.getElementById("librarySongs");
+
+        if (!container) return;
+
+        if (!matches.length) {
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">⌕</div>
+                    <h3>No matches</h3>
+                    <p>No songs matched "${escapeHtml(query)}".</p>
+                </div>
+            `;
+            return;
         }
 
-        showView("home");
-        searchDiscovery();
+        container.innerHTML = matches.map(song =>
+            createSongRow(song, matches.map(item => item.id))
+        ).join("");
     }
 
 
