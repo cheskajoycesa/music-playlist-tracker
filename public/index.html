@@ -2777,7 +2777,9 @@ a.tile:hover,
 <h1 class="h1">
           CASSETTE DECK
          </h1>
-
+<div class="sub">
+          side A, from the top
+         </div>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
 <label class="sr" for="deckSelect">
@@ -3722,7 +3724,12 @@ function closeEditorDialog(updateHash=true){
 window.addEventListener('message',(event)=>{
   if(event.source !== $('#editorOverlayFrame')?.contentWindow) return;
   if(event.data?.type==='cassettefy-close-editor'){
-    closeEditorDialog(true);
+    // The X button closes the editor but keeps the underlying Deck view.
+    closeEditorDialog(event.data?.stayDeck ? false : true);
+    if(event.data?.stayDeck){
+      location.hash='#deck';
+      route();
+    }
   }
   if(event.data?.type==='cassettefy-play-tape'){
     const id=event.data.id || '';

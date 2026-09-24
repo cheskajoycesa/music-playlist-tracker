@@ -2270,7 +2270,7 @@ input[type="file"]{
 <select class="tape-select" id="edSelect"></select>
 <a class="btn-outline" href="index.html#library" id="edBack">Back to library</a>
 <a class="btn-outline" href="index.html#deck" id="edPlay">Play in deck</a>
-<a class="dialog-close" href="index.html#library" aria-label="Close editor">×</a>
+<a class="dialog-close" href="index.html#deck" aria-label="Close editor and stay in deck">×</a>
 </div>
 </div>
 <div class="empty-box" id="edEmpty">
@@ -2972,7 +2972,29 @@ $('#edBack').addEventListener('click',(e)=>{
 
 // X button: behaves exactly like Back to Library.
 $('.dialog-close').addEventListener('click',(e)=>{
-  if(closeEditorFromParent()) e.preventDefault();
+  e.preventDefault();
+
+  // X only closes the editor. It must leave the underlying page on the Deck view.
+  if(window.parent !== window){
+    try{
+      if(typeof window.parent.closeEditorDialog === 'function'){
+        window.parent.closeEditorDialog(false);
+        return;
+      }
+    }catch(err){
+      // Use the message fallback below.
+    }
+
+    try{
+      window.parent.postMessage({ type:'cassettefy-close-editor', stayDeck:true }, '*');
+      return;
+    }catch(err){
+      // Ignore and use the normal link when opened as a standalone page.
+    }
+  }
+
+  // Standalone edit.html fallback: return directly to the Deck view.
+  location.href='index.html#deck';
 });
 
 // Play in deck: close the popup first, then let index.html handle playback.
