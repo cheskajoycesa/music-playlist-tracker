@@ -3350,6 +3350,7 @@ a.tile:hover,
 </audio>
 <audio id="previewAudio" preload="none">
 </audio>
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
 <!--Application JavaScript: state, routing, playback, search, library, editor, profile, and initialization logic.-->
 <script>
    /* ================= Cassettefy · shared code ================= */
@@ -3665,8 +3666,8 @@ function paintNowPlaying(info) {
 /* ---- Spotify: paste your app's Client ID from https://developer.spotify.com/dashboard ----
    In the Spotify dashboard, add this page's exact URL as a Redirect URI. With the Node server that is
    http://127.0.0.1:3000/index.html  (open the app at that same address — Spotify doesn't accept "localhost"). */
-const SPOTIFY_CLIENT_ID = '';
-const SPOTIFY_SCOPES = 'playlist-read-private playlist-read-collaborative user-read-private';
+const SPOTIFY_CLIENT_ID = 'e5d9a005633045a296b672629fff872a';
+const SPOTIFY_SCOPES = 'streaming playlist-read-private playlist-read-collaborative user-read-private';
 
 const deckAudio = $('#deckAudio'), previewAudio = $('#previewAudio');
 const ROUTES = ['home', 'search', 'library', 'deck', 'favorites', 'recent', 'profile'];
@@ -4404,7 +4405,7 @@ async function importSpotify() {
   for (const id of ids) {
     const meta = SP.lists.find((x) => x.id === id);
     try {
-      let items = [], next = 'playlists/' + id + '/tracks?limit=100';
+      let items = [], next = 'playlists/' + id + '/items?limit=50';
       while (next && items.length < 200) {
         const page = await spFetch(next);
         items = items.concat(page.items || []);
@@ -4413,7 +4414,7 @@ async function importSpotify() {
       const tracks = items.map((it) => it && (it.track || it.item)).filter((tr) => tr && tr.name && !tr.is_local);
       const half = Math.ceil(tracks.length / 2);
       const tape = Store.newTape({ name: meta ? meta.name : 'Spotify tape', genre: 'Spotify import', shellIdx: made % SHELLS.length,
-        tracks: tracks.map((tr, i) => ({ id: uid(), side: i < half ? 'A' : 'B', title: tr.name, artist: (tr.artists || []).map((a) => a.name).join(', '), genre: 'Spotify', time: fmt((tr.duration_ms || 0) / 1000), previewUrl: tr.preview_url || '' })) });
+        tracks: tracks.map((tr, i) => ({ id: uid(), side: i < half ? 'A' : 'B', title: tr.name, artist: (tr.artists || []).map((a) => a.name).join(', '), genre: 'Spotify', time: fmt((tr.duration_ms || 0) / 1000), previewUrl: tr.preview_url || '', spotifyUri: tr.uri})) });
       await Store.addTape(tape); made++;
     } catch (e) { toast('Couldn’t read “' + (meta ? meta.name : id) + '” from Spotify.'); }
   }

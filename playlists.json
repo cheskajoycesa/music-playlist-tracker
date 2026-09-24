@@ -23,5 +23,68 @@
         "side": "A"
       }
     ]
+  },
+  {
+    "id": 1790234289883,
+    "name": "My top tracks playlist",
+    "genre": "Spotify import",
+    "notes": "",
+    "shell": "#EE8A83",
+    "stripe": "#EE8A83",
+    "fav": true,
+    "likedAt": 1790237994560,
+    "createdAt": 1790234289814,
+    "tracks": [
+      {
+        "id": "vf4iilzf",
+        "side": "A",
+        "title": "Taste",
+        "artist": "Sabrina Carpenter",
+        "genre": "Spotify",
+        "time": "2:37",
+        "previewUrl": "",
+        "art": ""
+      },
+      {
+        "id": "fnml5ohi",
+        "side": "A",
+        "title": "Juno",
+        "artist": "Sabrina Carpenter",
+        "genre": "Spotify",
+        "time": "3:43",
+        "previewUrl": "",
+        "art": ""
+      },
+      {
+        "id": "zbl21ti0",
+        "side": "A",
+        "title": "Good Graces",
+        "artist": "Sabrina Carpenter",
+        "genre": "Spotify",
+        "time": "3:05",
+        "previewUrl": "",
+        "art": ""
+      },
+      {
+        "id": "z4n6dwmy",
+        "side": "B",
+        "title": "When Did You Get Hot?",
+        "artist": "Sabrina Carpenter",
+        "genre": "Spotify",
+        "time": "2:25",
+        "previewUrl": "",
+        "art": ""
+      },
+      {
+        "id": "6t4v0ir6",
+        "side": "B",
+        "title": "Bed Chem",
+        "artist": "Sabrina Carpenter",
+        "genre": "Spotify",
+        "time": "2:52",
+        "previewUrl": "",
+        "art": ""
+      }
+    ]
   }
 ]
