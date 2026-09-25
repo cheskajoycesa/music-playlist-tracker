@@ -1,2 +1,4 @@
 node_modules/
 .env
+# Saved playlists (app data, each person keeps their own local copy)
+playlists.json
