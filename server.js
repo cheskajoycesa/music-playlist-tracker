@@ -75,6 +75,6 @@ app.delete("/api/playlists/:id", (req, res) => {
 //Server
 app.listen(3000, () => {
   console.log(
-    "Server running at http://localhost:3000"
+    "Server running at http://127.0.0.1:3000/index.html"
   );
 });
