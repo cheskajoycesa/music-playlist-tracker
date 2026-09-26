@@ -2477,7 +2477,7 @@ function normalizeTape(p) {
     if (!time && t.duration != null) time = typeof t.duration === 'number' ? fmt(t.duration) : String(t.duration);
     return { id: String(t.id == null ? uid() : t.id), side: t.side === 'A' || t.side === 'B' ? t.side : i < half ? 'A' : 'B',
       title: t.title || t.name || t.trackName || 'Untitled', artist: t.artist || t.artistName || '', genre: t.genre || '',
-      time, previewUrl: t.previewUrl || '', art: t.art || t.artwork || '' };
+      time, previewUrl: t.previewUrl || '', spotifyUri: t.spotifyUri || '', art: t.art || t.artwork || '' };
   });
   const out = Object.assign({}, p, {
     id: key, name: p.name || p.title || 'Untitled tape', genre: p.genre || 'Mixed', notes: p.notes || p.description || '',
@@ -2924,8 +2924,14 @@ $('#esDelete').addEventListener('click', (e) => {
   confirmClick(e.currentTarget, 'Remove it?', () => {
     const tape = E.tape(), t = tape && tape.tracks.find((x) => x.id === E.song); if (!t) return;
     const playing = playingTrackId(tape);
+    const deletedTrackId = t.id;
     tape.tracks.splice(tape.tracks.indexOf(t), 1);
     keepPlayerOn(tape, playing);
+    window.parent.postMessage({
+      type: 'cassettefy-track-deleted',
+      tapeId: tape.id,
+      trackId: deletedTrackId
+    }, '*');
     Store.save(); toast('“' + t.title + '” removed.'); setSongForm(null); renderEdit(); tick();
   });
 });
