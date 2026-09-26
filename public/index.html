@@ -4417,6 +4417,26 @@
       const shell2 = (shell) => (LIGHT_SHELLS.includes(shell) ? RED : shell);
       const orderTracks = (tape) =>
         tape.tracks.filter((t) => t.side === 'A').concat(tape.tracks.filter((t) => t.side === 'B'));
+      
+      function insertOnSide(tape, track) {
+        if (!tape || !track) return;
+
+        if (!Array.isArray(tape.tracks)) {
+          tape.tracks = [];
+        }
+
+        if (track.side === 'A') {
+          const firstB = tape.tracks.findIndex((t) => t.side === 'B');
+
+          if (firstB === -1) {
+            tape.tracks.push(track);
+          } else {
+            tape.tracks.splice(firstB, 0, track);
+          }
+        } else {
+          tape.tracks.push(track);
+        }
+      }
 
       // Friendly play time: "Today, 3:05 PM", "Yesterday, …", a weekday within the week, otherwise "Sep 12".
       function timeLabel(ts) {
@@ -5191,6 +5211,11 @@
 
           // Spotify imported track
           if (t.spotifyUri) {
+            // If the song already finished, replay it from the beginning
+            if (this.pos >= this.dur() - 1) {
+              this.pos = 0;
+            }
+
             playSpotifyTrack(t.spotifyUri, this.pos).then((success) => {
               // Ignore a late answer if the listener already paused or moved to another song.
               if (!this.playing || this.track() !== t) return;
@@ -5814,17 +5839,35 @@
         });
       }
       previewAudio.addEventListener('ended', stopPreviewButtons);
-      $('#addSave').addEventListener('click', () => {
+      $('#addSave').addEventListener('click', async () => {
         const sel = S.selected;
         if (!sel) return;
+
         const ids = $$('#addTapes input:checked').map((i) => i.value);
+
         if (!ids.length) {
           toast('Tick at least one tape.');
           return;
         }
-        const side = ($('input[name="addSide"]:checked') || {}).value || 'B';
+
+        const side =
+          ($('input[name="addSide"]:checked') || {}).value || 'B';
+
+        // Try to find the same song on Spotify
+        const spotifyUri = await findSpotifyUri(
+          sel.title,
+          sel.artist
+        );
+
+        console.log(
+          'Spotify match for added song:',
+          sel.title,
+          spotifyUri
+        );
+
         ids.forEach((id) => {
           const t = Store.tape(id);
+
           const track = {
             id: uid(),
             side,
@@ -5832,13 +5875,25 @@
             artist: sel.artist,
             genre: sel.genre,
             time: sel.time || '',
-            previewUrl: sel.previewUrl,
+            previewUrl: spotifyUri ? '' : (sel.previewUrl || ''),
+            spotifyUri: spotifyUri || '',
             art: sel.art,
           };
+
           insertOnSide(t, track);
         });
+
         Store.save();
-        toast('“' + sel.title + '” recorded onto ' + ids.length + (ids.length === 1 ? ' tape' : ' tapes') + '.');
+
+        toast(
+          '“' +
+            sel.title +
+            '” recorded onto ' +
+            ids.length +
+            (ids.length === 1 ? ' tape' : ' tapes') +
+            '.'
+        );
+
         renderAddPanel();
       });
 
@@ -6368,6 +6423,72 @@
         if (!r.ok) throw new Error('spotify ' + r.status);
         return r.json();
       }
+
+      async function findSpotifyUri(title, artist) {
+        if (!Store.data.spotify) {
+          return '';
+        }
+
+        try {
+          // Use the first/main artist for matching
+          const mainArtist = (artist || '').split(',')[0].trim();
+
+          const query =
+            'track:' + title +
+            ' artist:' + mainArtist;
+
+          const result = await spFetch(
+            'search?q=' +
+            encodeURIComponent(query) +
+            '&type=track&limit=5'
+          );
+
+          const tracks = result.tracks?.items || [];
+
+          if (!tracks.length) {
+            console.warn('No Spotify match found for:', title, artist);
+            return '';
+          }
+
+          // Try to find the closest exact match
+          const normalize = (text) =>
+            String(text || '')
+              .toLowerCase()
+              .replace(/[^a-z0-9]/g, '');
+
+          const wantedTitle = normalize(title);
+          const wantedArtist = normalize(mainArtist);
+
+          const match = tracks.find((tr) => {
+            const sameTitle =
+              normalize(tr.name) === wantedTitle;
+
+            const sameArtist =
+              (tr.artists || []).some(
+                (a) => normalize(a.name) === wantedArtist
+              );
+
+            return sameTitle && sameArtist;
+          });
+
+          const selected = match || tracks[0];
+
+          console.log(
+            'Matched iTunes song to Spotify:',
+            title,
+            '→',
+            selected.name,
+            selected.uri
+          );
+
+          return selected.uri || '';
+
+        } catch (error) {
+          console.error('Spotify song matching error:', error);
+          return '';
+        }
+      }
+      
       // Loads the Spotify profile and playlists for the Profile page (once per session).
       async function loadSpotify() {
         if (!Store.data.spotify || SP.busy || SP.me) return;
