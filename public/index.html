@@ -5069,7 +5069,11 @@
       window.addEventListener('hashchange', route);
 
       /* ======================= deck player ======================= */
-      // Player controller: manages the selected tape, track order, playback state, and controls.
+      // Spotify Web Playback player and its device id, set up by onSpotifyWebPlaybackSDKReady at the end of this script.
+      let spotifyPlayer = null;
+      let spotifyDeviceId = null;
+
+      // Starts a Spotify song on this page's Spotify player; resolves to true if Spotify accepted it.
       async function playSpotifyTrack(uri, positionSeconds = 0) {
         if (!spotifyPlayer || !spotifyDeviceId) {
           toast('Spotify player is not ready yet.');
@@ -5114,6 +5118,8 @@
           return false;
         }
       }
+
+      // Player controller: manages the selected tape, track order, playback state, and controls.
       const Player = {
         tape: null,
         idx: 0,
@@ -5185,38 +5191,40 @@
 
           // Spotify imported track
           if (t.spotifyUri) {
-          playSpotifyTrack(t.spotifyUri, this.pos).then(success => {
-            if (!success) {
-              this.playing = false;
-              ui();
-              return;
-            }
+            playSpotifyTrack(t.spotifyUri, this.pos).then((success) => {
+              // Ignore a late answer if the listener already paused or moved to another song.
+              if (!this.playing || this.track() !== t) return;
+              if (!success) {
+                this.playing = false;
+                ui();
+                return;
+              }
 
-            // Keep the cassette timer synced with Spotify
-            clearInterval(this.timer);
+              // Keep the cassette timer synced with Spotify
+              clearInterval(this.timer);
+              let started = false;
+              this.timer = setInterval(async () => {
+                if (!this.playing || !spotifyPlayer || this.track() !== t) return;
+                const state = await spotifyPlayer.getCurrentState();
+                if (!state || !this.playing || this.track() !== t) return;
 
-            this.timer = setInterval(async () => {
-              if (!this.playing || !spotifyPlayer) return;
+                // Spotify reports a finished song as paused back at 0:00: move on like the other kinds of songs.
+                if (started && state.paused && state.position === 0) {
+                  this.next(true);
+                  return;
+                }
+                if (!state.paused) started = true;
 
-              const state = await spotifyPlayer.getCurrentState();
-
-              if (!state) return;
-
-              // Spotify gives position in milliseconds
-              this.pos = state.position / 1000;
-
-              // Update your existing cassette timer UI
-              tick();
-
-            }, 500);
-          });
-
-            // Existing preview audio
+                // Spotify gives position in milliseconds
+                this.pos = state.position / 1000;
+                tick();
+              }, 500);
+            });
           } else if (this.usesAudio()) {
+            // Existing preview audio
             deckAudio.play().catch(() => this.simulate());
-
-            // Manually added songs
           } else {
+            // Manually added songs
             this.simulate();
           }
 
@@ -5247,9 +5255,8 @@
             spotifyPlayer.pause().catch((error) => {
               console.error('Spotify pause error:', error);
             });
-
-          // Existing preview audio
           } else {
+            // Existing preview audio
             deckAudio.pause();
           }
 
@@ -5259,10 +5266,20 @@
         toggle() {
           this.playing ? this.pause() : this.play();
         },
-        halt() {
+        /**
+         * Silences the deck (used when switching songs or tapes, or erasing the playing tape).
+         * keepSpotify = true skips pausing Spotify because another Spotify song is about to replace this one.
+         */
+        halt(keepSpotify) {
+          const t = this.track();
           this.playing = false;
           clearInterval(this.timer);
           deckAudio.pause();
+          if (!keepSpotify && t && t.spotifyUri && spotifyPlayer) {
+            spotifyPlayer.pause().catch((error) => {
+              console.error('Spotify pause error:', error);
+            });
+          }
         },
         stop() {
           const t = this.track();
@@ -5273,14 +5290,14 @@
 
           // Spotify track
           if (t && t.spotifyUri && spotifyPlayer) {
-            spotifyPlayer.pause()
+            spotifyPlayer
+              .pause()
               .then(() => spotifyPlayer.seek(0))
               .catch((error) => {
                 console.error('Spotify stop error:', error);
               });
-
-          // Existing preview/local audio
           } else {
+            // Existing preview/local audio
             deckAudio.pause();
 
             try {
@@ -5296,7 +5313,8 @@
           const n = this.order().length;
           if (!n) return;
           const keep = play || this.playing;
-          this.halt();
+          const nextTrack = this.order()[(i + n) % n];
+          this.halt(keep && !!nextTrack.spotifyUri);
           this.idx = (i + n) % n;
           this.pos = 0;
           this.cue();
@@ -5316,8 +5334,10 @@
           }
           this.go(this.idx + 1, auto);
         },
+        // More than 3 seconds in, "previous" restarts the current song; otherwise it goes back one song.
         prev() {
-          this.go(this.idx - 1);
+          if (this.pos > 3) this.seek(0);
+          else this.go(this.idx - 1);
         },
         flip() {
           const cur = this.track();
@@ -5336,14 +5356,11 @@
 
           // Spotify song
           if (t && t.spotifyUri && spotifyPlayer) {
-            spotifyPlayer
-              .seek(Math.floor(this.pos * 1000))
-              .catch((error) => {
-                console.error('Spotify seek error:', error);
-              });
-
-          // Existing preview audio
+            spotifyPlayer.seek(Math.floor(this.pos * 1000)).catch((error) => {
+              console.error('Spotify seek error:', error);
+            });
           } else if (this.usesAudio()) {
+            // Existing preview audio
             try {
               deckAudio.currentTime = this.pos;
             } catch (e) {}
@@ -6572,26 +6589,21 @@
           history.replaceState(null, '', location.pathname + '#deck');
         }
         if (p.get('q')) {
-        const q = p.get('q');
-        history.replaceState(null, '', location.pathname + '#search');
-        route();
-        runSearch(q);
+          const q = p.get('q');
+          history.replaceState(null, '', location.pathname + '#search');
+          route();
+          runSearch(q);
+        } else if (await handleSpotifyCallback()) {
+          history.replaceState(null, '', location.pathname + '#home');
+          route();
+        } else {
+          // Always show Home after refreshing/opening the website
+          history.replaceState(null, '', location.pathname + '#home');
+          route();
+        }
 
-      } else if (await handleSpotifyCallback()) {
-        history.replaceState(null, '', location.pathname + '#home');
-        route();
-
-      } else {
-        // Always show Home after refreshing/opening the website
-        history.replaceState(null, '', location.pathname + '#home');
-        route();
-      }
-
-      tick();
+        tick();
       })();
-
-      let spotifyPlayer = null;
-      let spotifyDeviceId = null;
 
       window.onSpotifyWebPlaybackSDKReady = () => {
         spotifyPlayer = new Spotify.Player({
