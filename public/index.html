@@ -5185,12 +5185,31 @@
 
           // Spotify imported track
           if (t.spotifyUri) {
-            playSpotifyTrack(t.spotifyUri, this.pos).then((success) => {
-              if (!success) {
-                this.playing = false;
-                ui();
-              }
-            });
+          playSpotifyTrack(t.spotifyUri, this.pos).then(success => {
+            if (!success) {
+              this.playing = false;
+              ui();
+              return;
+            }
+
+            // Keep the cassette timer synced with Spotify
+            clearInterval(this.timer);
+
+            this.timer = setInterval(async () => {
+              if (!this.playing || !spotifyPlayer) return;
+
+              const state = await spotifyPlayer.getCurrentState();
+
+              if (!state) return;
+
+              // Spotify gives position in milliseconds
+              this.pos = state.position / 1000;
+
+              // Update your existing cassette timer UI
+              tick();
+
+            }, 500);
+          });
 
             // Existing preview audio
           } else if (this.usesAudio()) {
@@ -5218,9 +5237,22 @@
           }, 1000);
         },
         pause() {
+          const t = this.track();
+
           this.playing = false;
           clearInterval(this.timer);
-          deckAudio.pause();
+
+          // Spotify track
+          if (t && t.spotifyUri && spotifyPlayer) {
+            spotifyPlayer.pause().catch((error) => {
+              console.error('Spotify pause error:', error);
+            });
+
+          // Existing preview audio
+          } else {
+            deckAudio.pause();
+          }
+
           this.persist(true);
           ui();
         },
@@ -5233,12 +5265,31 @@
           deckAudio.pause();
         },
         stop() {
-          this.halt();
+          const t = this.track();
+
+          this.playing = false;
+          clearInterval(this.timer);
           this.pos = 0;
-          try {
-            deckAudio.currentTime = 0;
-          } catch (e) {}
+
+          // Spotify track
+          if (t && t.spotifyUri && spotifyPlayer) {
+            spotifyPlayer.pause()
+              .then(() => spotifyPlayer.seek(0))
+              .catch((error) => {
+                console.error('Spotify stop error:', error);
+              });
+
+          // Existing preview/local audio
+          } else {
+            deckAudio.pause();
+
+            try {
+              deckAudio.currentTime = 0;
+            } catch (e) {}
+          }
+
           this.persist(true);
+          tick();
           ui();
         },
         go(i, play) {
@@ -5266,8 +5317,7 @@
           this.go(this.idx + 1, auto);
         },
         prev() {
-          if (this.pos > 3) this.seek(0);
-          else this.go(this.idx - 1);
+          this.go(this.idx - 1);
         },
         flip() {
           const cur = this.track();
@@ -5281,11 +5331,24 @@
         },
         seek(s) {
           this.pos = Math.max(0, Math.min(s, this.dur()));
-          if (this.usesAudio()) {
+
+          const t = this.track();
+
+          // Spotify song
+          if (t && t.spotifyUri && spotifyPlayer) {
+            spotifyPlayer
+              .seek(Math.floor(this.pos * 1000))
+              .catch((error) => {
+                console.error('Spotify seek error:', error);
+              });
+
+          // Existing preview audio
+          } else if (this.usesAudio()) {
             try {
               deckAudio.currentTime = this.pos;
             } catch (e) {}
           }
+
           tick();
           this.persist(false);
         },
@@ -5987,7 +6050,17 @@
       $('#kStop').addEventListener('click', () => Player.stop());
       $('#kFlip').addEventListener('click', () => Player.flip());
       $('#vol').addEventListener('input', (e) => {
-        deckAudio.volume = e.target.value / 10;
+        const volume = e.target.value / 10;
+
+        // Existing preview/local audio
+        deckAudio.volume = volume;
+
+        // Spotify Web Playback
+        if (spotifyPlayer) {
+          spotifyPlayer.setVolume(volume).catch((error) => {
+            console.error('Spotify volume error:', error);
+          });
+        }
       });
       $('#deckFav').addEventListener('click', () => {
         const t = Player.tape;
@@ -6499,13 +6572,22 @@
           history.replaceState(null, '', location.pathname + '#deck');
         }
         if (p.get('q')) {
-          const q = p.get('q');
-          history.replaceState(null, '', location.pathname + '#search');
-          route();
-          runSearch(q);
-        } else if (await handleSpotifyCallback()) route();
-        else route();
-        tick();
+        const q = p.get('q');
+        history.replaceState(null, '', location.pathname + '#search');
+        route();
+        runSearch(q);
+
+      } else if (await handleSpotifyCallback()) {
+        history.replaceState(null, '', location.pathname + '#home');
+        route();
+
+      } else {
+        // Always show Home after refreshing/opening the website
+        history.replaceState(null, '', location.pathname + '#home');
+        route();
+      }
+
+      tick();
       })();
 
       let spotifyPlayer = null;
