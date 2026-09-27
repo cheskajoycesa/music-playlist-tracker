@@ -235,6 +235,55 @@
         transform: translateY(4px);
         box-shadow: 0 2px 0 #3A2A22;
       }
+      /* Deck keys and progress bar that only apply to the playing tape, dimmed while looking at another tape. */
+      .key:disabled,
+      .progress.off {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+      .key:disabled:active {
+        transform: none;
+        box-shadow: 0 6px 0 #3A2A22;
+      }
+      /* "Now playing: … / Back to it" strip on the Deck while looking at another tape. */
+      .now-strip {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px 16px;
+        padding: 12px 14px 12px 20px;
+        border-radius: 16px;
+        background: #241814;
+        color: #FAF3E0;
+        font-size: 17px;
+      }
+      .now-strip-text {
+        min-width: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+      }
+      .now-strip-text b {
+        color: #F2CF6B;
+      }
+      .now-strip-btn {
+        height: 42px;
+        padding: 0 20px;
+        border: 2px solid #F2CF6B;
+        border-radius: 21px;
+        background: transparent;
+        color: #F2CF6B;
+        font: inherit;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      .now-strip-btn:hover {
+        background: #F2CF6B;
+        color: #241814;
+      }
       .reel {
         animation: spin 2.6s linear infinite;
         animation-play-state: paused;
@@ -3345,7 +3394,7 @@
             <section class="view" hidden="" id="view-deck">
               <div class="pagehead">
                 <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0;">
-                  <span class="tag">Now spinning</span>
+                  <span class="tag" id="deckTag">Now spinning</span>
                   <h1 class="h1">CASSETTE DECK</h1>
                   <div class="sub">side A, from the top</div>
                 </div>
@@ -3399,6 +3448,11 @@
               </div>
               <div class="empty-box" id="deckEmpty">
                 Pick a tape from “Load a tape” above, or press play on any tape in your Library.
+              </div>
+              <!-- Shown while looking at a tape other than the one playing. -->
+              <div class="now-strip" hidden id="deckNowStrip" role="status">
+                <span class="now-strip-text" id="deckNowText"></span>
+                <button class="now-strip-btn" id="deckBackBtn" type="button">Back to it</button>
               </div>
               <section class="split" id="deckMain">
                 <div class="deck">
@@ -4417,7 +4471,7 @@
       const shell2 = (shell) => (LIGHT_SHELLS.includes(shell) ? RED : shell);
       const orderTracks = (tape) =>
         tape.tracks.filter((t) => t.side === 'A').concat(tape.tracks.filter((t) => t.side === 'B'));
-      
+
       function insertOnSide(tape, track) {
         if (!tape || !track) return;
 
@@ -5059,12 +5113,7 @@
 
           const current = Player.track();
 
-          if (
-            Player.tape &&
-            String(Player.tape.id) === tapeId &&
-            current &&
-            String(current.id) === trackId
-          ) {
+          if (Player.tape && String(Player.tape.id) === tapeId && current && String(current.id) === trackId) {
             Player.playing = false;
             clearInterval(Player.timer);
 
@@ -5105,6 +5154,8 @@
 
         const routeName = ROUTES.includes(r) ? r : 'home';
         currentRoute = routeName;
+        // Leaving the Deck forgets which tape was only being looked at; coming back shows the playing tape.
+        if (routeName !== 'deck') Deck.viewId = null;
 
         $$('.view').forEach((v) => (v.hidden = v.id !== 'view-' + routeName));
         $$('.navi').forEach((a) => {
@@ -5122,7 +5173,30 @@
       window.addEventListener('hashchange', route);
 
       /* ======================= deck player ======================= */
-      // Player controller: manages the selected tape, track order, playback state, and controls.
+      // Spotify Web Playback player and its device id, set up by onSpotifyWebPlaybackSDKReady at the end of this script.
+      let spotifyPlayer = null;
+      let spotifyDeviceId = null;
+
+      /**
+       * Which tape the Deck page is showing. It can differ from the tape in the player, so opening
+       * a tape to look at its songs doesn't stop the music. viewId = null means "show the playing tape".
+       */
+      const Deck = {
+        viewId: null,
+        tape() {
+          return (this.viewId && Store.tape(this.viewId)) || Player.tape;
+        },
+        /** True while looking at a tape other than the one in the player. */
+        browsing() {
+          const v = this.tape();
+          return !!v && v !== Player.tape;
+        },
+        open(id) {
+          this.viewId = Player.tape && Player.tape.id === String(id) ? null : String(id);
+        },
+      };
+
+      // Starts a Spotify song on this page's Spotify player; resolves to true if Spotify accepted it.
       async function playSpotifyTrack(uri, positionSeconds = 0) {
         if (!spotifyPlayer || !spotifyDeviceId) {
           toast('Spotify player is not ready yet.');
@@ -5167,6 +5241,8 @@
           return false;
         }
       }
+
+      // Player controller: manages the selected tape, track order, playback state, and controls.
       const Player = {
         tape: null,
         idx: 0,
@@ -5194,6 +5270,7 @@
           if (!tape) return;
           this.halt();
           this.tape = tape;
+          Deck.viewId = null; // the Deck follows the tape that's now in the player
           const i = trackId ? this.order().findIndex((t) => t.id === trackId) : 0;
           this.idx = Math.max(0, i);
           this.pos = pos || 0;
@@ -5243,38 +5320,32 @@
               this.pos = 0;
             }
 
-            playSpotifyTrack(t.spotifyUri, this.pos).then(success => {
-            if (!success) {
-              this.playing = false;
-              ui();
-              return;
-            }
+            playSpotifyTrack(t.spotifyUri, this.pos).then((success) => {
+              // Ignore a late answer if the listener already paused or moved to another song.
+              if (!this.playing || this.track() !== t) return;
+              if (!success) {
+                this.playing = false;
+                ui();
+                return;
+              }
 
-            // Keep the cassette timer synced with Spotify
-            clearInterval(this.timer);
+              // Keep the cassette timer synced with Spotify
+              clearInterval(this.timer);
+              this.timer = setInterval(async () => {
+                if (!this.playing || !spotifyPlayer || this.track() !== t) return;
+                const state = await spotifyPlayer.getCurrentState();
+                if (!state || !this.playing || this.track() !== t) return;
 
-            this.timer = setInterval(async () => {
-              if (!this.playing || !spotifyPlayer) return;
-
-              const state = await spotifyPlayer.getCurrentState();
-
-              if (!state) return;
-
-              // Spotify gives position in milliseconds
-              this.pos = state.position / 1000;
-
-              // Update your existing cassette timer UI
-              tick();
-
-            }, 500);
-          });
-
-            // Existing preview audio
+                // Spotify gives position in milliseconds
+                this.pos = state.position / 1000;
+                tick();
+              }, 500);
+            });
           } else if (this.usesAudio()) {
+            // Existing preview audio
             deckAudio.play().catch(() => this.simulate());
-
-            // Manually added songs
           } else {
+            // Manually added songs
             this.simulate();
           }
 
@@ -5305,9 +5376,8 @@
             spotifyPlayer.pause().catch((error) => {
               console.error('Spotify pause error:', error);
             });
-
-          // Existing preview audio
           } else {
+            // Existing preview audio
             deckAudio.pause();
           }
 
@@ -5317,7 +5387,11 @@
         toggle() {
           this.playing ? this.pause() : this.play();
         },
-        halt() {
+        /**
+         * Silences the deck (used when switching songs or tapes, or erasing the playing tape).
+         * keepSpotify = true skips pausing Spotify because another Spotify song is about to replace this one.
+         */
+        halt(keepSpotify) {
           const wasPlaying = this.playing;
           const t = this.track();
 
@@ -5327,8 +5401,9 @@
           deckAudio.pause();
 
           // Only pause Spotify if a Spotify track was actually playing
-          if (wasPlaying && t && t.spotifyUri && spotifyPlayer) {
-            spotifyPlayer.getCurrentState()
+          if (!keepSpotify && wasPlaying && t && t.spotifyUri && spotifyPlayer) {
+            spotifyPlayer
+              .getCurrentState()
               .then((state) => {
                 if (state && !state.paused) {
                   return spotifyPlayer.pause();
@@ -5348,14 +5423,14 @@
 
           // Spotify track
           if (t && t.spotifyUri && spotifyPlayer) {
-            spotifyPlayer.pause()
+            spotifyPlayer
+              .pause()
               .then(() => spotifyPlayer.seek(0))
               .catch((error) => {
                 console.error('Spotify stop error:', error);
               });
-
-          // Existing preview/local audio
           } else {
+            // Existing preview/local audio
             deckAudio.pause();
 
             try {
@@ -5371,7 +5446,8 @@
           const n = this.order().length;
           if (!n) return;
           const keep = play || this.playing;
-          this.halt();
+          const nextTrack = this.order()[(i + n) % n];
+          this.halt(keep && !!nextTrack.spotifyUri);
           this.idx = (i + n) % n;
           this.pos = 0;
           this.cue();
@@ -5391,8 +5467,10 @@
           }
           this.go(this.idx + 1, auto);
         },
+        // More than 3 seconds in, "previous" restarts the current song; otherwise it goes back one song.
         prev() {
-          this.go(this.idx - 1);
+          if (this.pos > 3) this.seek(0);
+          else this.go(this.idx - 1);
         },
         flip() {
           const cur = this.track();
@@ -5411,14 +5489,11 @@
 
           // Spotify song
           if (t && t.spotifyUri && spotifyPlayer) {
-            spotifyPlayer
-              .seek(Math.floor(this.pos * 1000))
-              .catch((error) => {
-                console.error('Spotify seek error:', error);
-              });
-
-          // Existing preview audio
+            spotifyPlayer.seek(Math.floor(this.pos * 1000)).catch((error) => {
+              console.error('Spotify seek error:', error);
+            });
           } else if (this.usesAudio()) {
+            // Existing preview audio
             try {
               deckAudio.currentTime = this.pos;
             } catch (e) {}
@@ -5451,8 +5526,13 @@
 
       // Playback UI update: synchronizes progress, elapsed time, and player indicators.
       function tick() {
-        const info = Player.info();
+        let info = Player.info();
         paintNowPlaying(info);
+        // The Deck is showing a different tape: its timer sits at 0:00 of that tape's first song.
+        if (Deck.browsing()) {
+          const first = orderTracks(Deck.tape())[0];
+          info = { pos: 0, dur: first ? secs(first.time) : 0 };
+        }
         if (!info) return;
         const pct = info.dur ? Math.min(100, (info.pos / info.dur) * 100) : 0;
         const fill = $('#progFill');
@@ -5521,31 +5601,21 @@
         e.preventDefault();
 
         const id = String(a.dataset.play);
-        const currentTapeId = Player.tape
-          ? String(Player.tape.id)
-          : null;
+        const currentTapeId = Player.tape ? String(Player.tape.id) : null;
 
         // Library Play button + same tape already loaded:
         // resume from the current saved position.
-        if (
-          a.classList.contains('library-play') &&
-          currentTapeId === id
-        ) {
+        if (a.classList.contains('library-play') && currentTapeId === id) {
           if (!Player.playing) {
             Player.play();
           }
-
         } else {
           // Different tape (or another data-play link):
           // use the normal load/play behavior.
-          Player.load(
-            id,
-            a.dataset.track || null,
-            +(a.dataset.pos || 0),
-            true
-          );
+          Player.load(id, a.dataset.track || null, +(a.dataset.pos || 0), true);
         }
 
+        Deck.viewId = null; // show the tape that is now playing
         location.hash = '#deck';
       });
 
@@ -5556,17 +5626,9 @@
         // Don't trigger when clicking Play, Edit, Favorite, Delete, etc.
         if (e.target.closest('a, button')) return;
 
-        const id = String(card.dataset.openDeck);
-
-        const currentTapeId = Player.tape
-          ? String(Player.tape.id)
-          : null;
-
-        // Only load the tape if it is a DIFFERENT tape.
-        // Clicking the currently playing tape keeps the music playing.
-        if (currentTapeId !== id) {
-          Player.load(id, null, 0, false);
-        }
+        // Only open the tape on the Deck to look at its songs: whatever is playing keeps playing.
+        Deck.open(card.dataset.openDeck);
+        if (currentRoute === 'deck') renderDeck();
 
         location.hash = '#deck';
       });
@@ -5932,20 +5994,12 @@
           return;
         }
 
-        const side =
-          ($('input[name="addSide"]:checked') || {}).value || 'B';
+        const side = ($('input[name="addSide"]:checked') || {}).value || 'B';
 
         // Try to find the same song on Spotify
-        const spotifyUri = await findSpotifyUri(
-          sel.title,
-          sel.artist
-        );
+        const spotifyUri = await findSpotifyUri(sel.title, sel.artist);
 
-        console.log(
-          'Spotify match for added song:',
-          sel.title,
-          spotifyUri
-        );
+        console.log('Spotify match for added song:', sel.title, spotifyUri);
 
         ids.forEach((id) => {
           const t = Store.tape(id);
@@ -5957,7 +6011,7 @@
             artist: sel.artist,
             genre: sel.genre,
             time: sel.time || '',
-            previewUrl: spotifyUri ? '' : (sel.previewUrl || ''),
+            previewUrl: spotifyUri ? '' : sel.previewUrl || '',
             spotifyUri: spotifyUri || '',
             art: sel.art,
           };
@@ -5967,14 +6021,7 @@
 
         Store.save();
 
-        toast(
-          '“' +
-            sel.title +
-            '” recorded onto ' +
-            ids.length +
-            (ids.length === 1 ? ' tape' : ' tapes') +
-            '.'
-        );
+        toast('“' + sel.title + '” recorded onto ' + ids.length + (ids.length === 1 ? ' tape' : ' tapes') + '.');
 
         renderAddPanel();
       });
@@ -6156,49 +6203,88 @@
       /* ======================= DECK ======================= */
       // Deck renderer: displays the selected cassette, track receipt, and playback controls.
       function renderDeck() {
+        const tape = Deck.tape(); // the tape being shown (not always the one playing)
+        const browsing = Deck.browsing();
+
         const sel = $('#deckSelect');
         const option = (t) => {
-          const selected = Player.tape && Player.tape.id === t.id ? ' selected' : '';
+          const selected = tape && tape.id === t.id ? ' selected' : '';
           return html`<option value="${t.id}"${selected}>${esc(t.name)}</option>`;
         };
         sel.innerHTML = '<option value="">Load a tape…</option>' + Store.data.playlists.map(option).join('');
-        const has = !!Player.tape;
-        $('#deckEmpty').hidden = has;
-        $('#deckMain').hidden = !has;
-        if (!has) return;
-        const t = Player.track(),
-          tape = Player.tape;
+
+        $('#deckTag').textContent = browsing ? 'Just looking' : 'Now spinning';
+        $('#deckEmpty').hidden = !!tape;
+        $('#deckMain').hidden = !tape;
+        renderNowStrip(browsing);
+        if (!tape) return;
+
+        // While just looking at another tape, show its first song, stopped at the start.
+        const t = browsing ? orderTracks(tape)[0] || null : Player.track();
+        const spinning = !browsing && Player.playing;
         $('#deckTape').innerHTML = tapeHTML(tape, {
           side: t ? t.side : 'A',
           box: 'max-width: 540px; margin: 0 auto;',
         });
-        $('#deckTape').classList.toggle('spinning', Player.playing);
-        $('#deckLed').classList.toggle('lit', Player.playing);
-        $('#deckLedLabel').textContent = Player.playing ? 'PLAYING' : 'PAUSED';
+        $('#deckTape').classList.toggle('spinning', spinning);
+        $('#deckLed').classList.toggle('lit', spinning);
+        $('#deckLedLabel').textContent = spinning ? 'PLAYING' : browsing ? 'NOT LOADED' : 'PAUSED';
         $('#nowTitle').textContent = t ? t.title : 'Blank tape';
         const sideTracks = t ? tape.tracks.filter((x) => x.side === t.side) : [];
-        $('#nowArtist').textContent = t
-          ? `${t.artist} · Side ${t.side}, track ${sideTracks.indexOf(t) + 1}${t.previewUrl ? ' · 30-sec preview' : ''}`
-          : 'Add songs in the editor';
+        if (browsing) {
+          $('#nowArtist').textContent = t ? 'Press play to switch to this tape' : 'Add songs in the editor';
+        } else {
+          $('#nowArtist').textContent = t
+            ? `${t.artist} · Side ${t.side}, track ${sideTracks.indexOf(t) + 1}${t.previewUrl ? ' · 30-sec preview' : ''}`
+            : 'Add songs in the editor';
+        }
+
         const k = $('#kPlay');
-        k.innerHTML = icon(Player.playing ? 'pause' : 'play', 22);
-        k.setAttribute('aria-label', Player.playing ? 'Pause' : 'Play');
-        k.classList.toggle('lit', Player.playing);
+        k.innerHTML = icon(spinning ? 'pause' : 'play', 22);
+        k.setAttribute('aria-label', spinning ? 'Pause' : browsing ? 'Play this tape' : 'Play');
+        k.classList.toggle('lit', spinning);
+        // Previous / next / stop / flip and the progress bar only make sense for the tape in the player.
+        ['#kPrev', '#kNext', '#kStop', '#kFlip'].forEach((id) => ($(id).disabled = browsing));
+        $('#progress').classList.toggle('off', browsing);
+        $('#progress').setAttribute('aria-disabled', browsing);
+
         $('#deckFav').innerHTML =
           icon(tape.fav ? 'heartf' : 'heart', 20) + (tape.fav ? 'Favorite' : 'Add to favorites');
         $('#deckFav').setAttribute('aria-pressed', !!tape.fav);
         $('#deckEdit').href = '#edit/' + encodeURIComponent(tape.id);
         $('#deckReceipt').innerHTML = receiptHTML(tape, {
-          sel: t && t.id,
+          sel: browsing ? null : t && t.id,
           mark: 'vol',
           note: 'CLICK A LINE TO PLAY IT',
         });
         tick();
       }
-      $('#deckSelect').addEventListener('change', (e) => {
-        if (e.target.value) Player.load(e.target.value, null, 0, false);
+      /** The "Now playing: … / Back to it" strip, shown while looking at a tape other than the one in the player. */
+      function renderNowStrip(browsing) {
+        const strip = $('#deckNowStrip');
+        const playing = Player.track();
+        strip.hidden = !(browsing && playing);
+        if (strip.hidden) return;
+        const label = Player.playing ? 'Now playing:' : 'Paused on:';
+        $('#deckNowText').innerHTML = html`
+          ${icon(Player.playing ? 'vol' : 'pause', 20)}
+          <span>${label} <b>${esc(playing.title)}</b> — ${esc(Player.tape.name)}</span>`;
+      }
+      $('#deckBackBtn').addEventListener('click', () => {
+        Deck.viewId = null;
+        renderDeck();
       });
-      $('#kPlay').addEventListener('click', () => Player.toggle());
+      // Picking a tape here only opens it; the music keeps playing until you press play on it.
+      $('#deckSelect').addEventListener('change', (e) => {
+        if (!e.target.value) return;
+        Deck.open(e.target.value);
+        renderDeck();
+      });
+      $('#kPlay').addEventListener('click', () => {
+        // Play on a tape you're only looking at switches the music to that tape.
+        if (Deck.browsing()) Player.load(Deck.tape().id, null, 0, true);
+        else Player.toggle();
+      });
       $('#kPrev').addEventListener('click', () => Player.prev());
       $('#kNext').addEventListener('click', () => Player.go(Player.idx + 1));
       $('#kStop').addEventListener('click', () => Player.stop());
@@ -6217,7 +6303,7 @@
         }
       });
       $('#deckFav').addEventListener('click', () => {
-        const t = Player.tape;
+        const t = Deck.tape();
         if (!t) return;
         t.fav = !t.fav;
         t.likedAt = t.fav ? Date.now() : null;
@@ -6227,6 +6313,11 @@
       $('#deckReceipt').addEventListener('click', (e) => {
         const row = e.target.closest('[data-track]');
         if (!row) return;
+        // A song on a tape you're only looking at: switch the music to that tape, starting at that song.
+        if (Deck.browsing()) {
+          Player.load(Deck.tape().id, row.dataset.track, 0, true);
+          return;
+        }
         Player.go(
           Player.order().findIndex((t) => t.id === row.dataset.track),
           true,
@@ -6234,11 +6325,13 @@
       });
       // Jumps playback to the spot clicked on the progress bar.
       function seekFromEvent(e) {
+        if (Deck.browsing()) return;
         const r = $('#progress').getBoundingClientRect();
         Player.seek(((e.clientX - r.left) / r.width) * Player.dur());
       }
       $('#progress').addEventListener('click', seekFromEvent);
       $('#progress').addEventListener('keydown', (e) => {
+        if (Deck.browsing()) return;
         if (e.key === 'ArrowRight') {
           Player.seek(Player.pos + 5);
           e.preventDefault();
@@ -6515,15 +6608,9 @@
           // Use the first/main artist for matching
           const mainArtist = (artist || '').split(',')[0].trim();
 
-          const query =
-            'track:' + title +
-            ' artist:' + mainArtist;
+          const query = 'track:' + title + ' artist:' + mainArtist;
 
-          const result = await spFetch(
-            'search?q=' +
-            encodeURIComponent(query) +
-            '&type=track&limit=5'
-          );
+          const result = await spFetch('search?q=' + encodeURIComponent(query) + '&type=track&limit=5');
 
           const tracks = result.tracks?.items || [];
 
@@ -6542,35 +6629,24 @@
           const wantedArtist = normalize(mainArtist);
 
           const match = tracks.find((tr) => {
-            const sameTitle =
-              normalize(tr.name) === wantedTitle;
+            const sameTitle = normalize(tr.name) === wantedTitle;
 
-            const sameArtist =
-              (tr.artists || []).some(
-                (a) => normalize(a.name) === wantedArtist
-              );
+            const sameArtist = (tr.artists || []).some((a) => normalize(a.name) === wantedArtist);
 
             return sameTitle && sameArtist;
           });
 
           const selected = match || tracks[0];
 
-          console.log(
-            'Matched iTunes song to Spotify:',
-            title,
-            '→',
-            selected.name,
-            selected.uri
-          );
+          console.log('Matched iTunes song to Spotify:', title, '→', selected.name, selected.uri);
 
           return selected.uri || '';
-
         } catch (error) {
           console.error('Spotify song matching error:', error);
           return '';
         }
       }
-      
+
       // Loads the Spotify profile and playlists for the Profile page (once per session).
       async function loadSpotify() {
         if (!Store.data.spotify || SP.busy || SP.me) return;
@@ -6792,26 +6868,21 @@
           history.replaceState(null, '', location.pathname + '#deck');
         }
         if (p.get('q')) {
-        const q = p.get('q');
-        history.replaceState(null, '', location.pathname + '#search');
-        route();
-        runSearch(q);
+          const q = p.get('q');
+          history.replaceState(null, '', location.pathname + '#search');
+          route();
+          runSearch(q);
+        } else if (await handleSpotifyCallback()) {
+          history.replaceState(null, '', location.pathname + '#home');
+          route();
+        } else {
+          // Always show Home after refreshing/opening the website
+          history.replaceState(null, '', location.pathname + '#home');
+          route();
+        }
 
-      } else if (await handleSpotifyCallback()) {
-        history.replaceState(null, '', location.pathname + '#home');
-        route();
-
-      } else {
-        // Always show Home after refreshing/opening the website
-        history.replaceState(null, '', location.pathname + '#home');
-        route();
-      }
-
-      tick();
+        tick();
       })();
-
-      let spotifyPlayer = null;
-      let spotifyDeviceId = null;
 
       window.onSpotifyWebPlaybackSDKReady = () => {
         spotifyPlayer = new Spotify.Player({
@@ -6867,11 +6938,7 @@
           const duration = Player.dur();
 
           // Detect a song that naturally reached the end
-          const endedNaturally =
-            state.paused &&
-            Player.playing &&
-            duration > 0 &&
-            Player.pos >= duration - 2;
+          const endedNaturally = state.paused && Player.playing && duration > 0 && Player.pos >= duration - 2;
 
           if (endedNaturally) {
             console.log('Spotify song ended — playing next track.');
