@@ -1220,7 +1220,7 @@
                       <option value="Funk"></option>
                       <option value="Soul"></option>
                       <option value="Doo-wop"></option>
-                      <option value="Rock &amp;#39;n&amp;#39; roll"></option>
+                      <option value="Rock & roll"></option>
                       <option value="Pop"></option>
                       <option value="Easy listening"></option>
                       <option value="Mixed"></option>
@@ -2828,10 +2828,12 @@
             </div>
             <div class="r-rule"></div>
             <div class="r-head"><span>#</span><span>ITEM</span><span style="text-align: right;">TIME</span><span></span></div>
-            <div class="r-side">&#8212; SIDE A &#8212;</div>
-            ${side(A)}
-            <div class="r-side">&#8212; SIDE B &#8212;</div>
-            ${side(B)}
+            <div class="r-songs">
+              <div class="r-side">&#8212; SIDE A &#8212;</div>
+              ${side(A)}
+              <div class="r-side">&#8212; SIDE B &#8212;</div>
+              ${side(B)}
+            </div>
             <div class="r-rule"></div>
             <div class="r-line"><span>SUBTOTAL SIDE A</span><span class="r-time">${fmt(sum(A))}</span></div>
             <div class="r-line"><span>SUBTOTAL SIDE B</span><span class="r-time">${fmt(sum(B))}</span></div>
@@ -4284,12 +4286,36 @@
           icon(tape.fav ? 'heartf' : 'heart', 20) + (tape.fav ? 'Favorite' : 'Add to favorites');
         $('#deckFav').setAttribute('aria-pressed', !!tape.fav);
         $('#deckEdit').href = '#edit/' + encodeURIComponent(tape.id);
+        const playingId = browsing ? null : t && t.id;
+        const oldList = $('#deckReceipt .r-songs');
+        const oldScroll = oldList ? oldList.scrollTop : 0;
         $('#deckReceipt').innerHTML = receiptHTML(tape, {
-          sel: browsing ? null : t && t.id,
+          sel: playingId,
           mark: 'vol',
           note: 'CLICK A LINE TO PLAY IT',
         });
+        keepReceiptScroll(tape.id + ':' + playingId, oldScroll);
         tick();
+      }
+      /**
+       * The deck receipt's song list scrolls on its own (see .r-songs in style.css) and is redrawn on every
+       * update. Keep the listener's scroll position; when the playing song or the tape changes, bring the
+       * playing line into view inside the list (without scrolling the page).
+       */
+      function keepReceiptScroll(key, oldScroll) {
+        const list = $('#deckReceipt .r-songs');
+        if (!list) return;
+        const changed = key !== keepReceiptScroll.last;
+        const sameTape = keepReceiptScroll.last && keepReceiptScroll.last.split(':')[0] === key.split(':')[0];
+        keepReceiptScroll.last = key;
+        list.scrollTop = sameTape ? oldScroll : 0;
+        const on = list.querySelector('.r-row.on');
+        if (!changed || !on || list.scrollHeight <= list.clientHeight) return;
+        const top = on.offsetTop,
+          bottom = top + on.offsetHeight;
+        if (top < list.scrollTop || bottom > list.scrollTop + list.clientHeight) {
+          list.scrollTop = Math.max(0, top - list.clientHeight / 3);
+        }
       }
       /** The "Now playing: … / Back to it" strip, shown while looking at a tape other than the one in the player. */
       function renderNowStrip(browsing) {

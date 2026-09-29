@@ -1317,6 +1317,25 @@ body {
   color: #6B5A48;
   padding: 4px 0 6px;
 }
+/* Deck receipt next to the deck (wider than 700px): only the song list scrolls, so the header and
+   the totals stay in place. About 5 songs show before scrolling (a song line is ~49px, ~64px when
+   titles wrap in the narrower column). On phones the receipt keeps its full length. */
+@media (min-width: 701px) {
+  #deckReceipt .r-songs {
+    position: relative; /* the playing line's position is measured from the list */
+    max-height: 290px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-right: 6px;
+    scrollbar-width: thin;
+    scrollbar-color: #C9B79A transparent;
+  }
+}
+@media (min-width: 701px) and (max-width: 1180px) {
+  #deckReceipt .r-songs {
+    max-height: 350px;
+  }
+}
 .on-deck .dock {
   display: none !important;
 }
