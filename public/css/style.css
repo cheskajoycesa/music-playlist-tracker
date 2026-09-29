@@ -10,6 +10,7 @@ body {
   margin: 0;
   background: #F2E8CF;
   font-family: 'Zilla Slab', Georgia, serif;
+  font-variant-numeric: lining-nums; /* even-height digits everywhere ("C-60", not "C-6o") */
   color: #4A2C22;
 }
 a {
@@ -23,6 +24,7 @@ input,
 select,
 textarea {
   font-family: inherit;
+  font-variant-numeric: inherit;
 }
 :focus-visible {
   outline: 3px solid #F2CF6B;
@@ -641,7 +643,8 @@ a.tile:hover {
   margin: 0 auto;
   background: #FFFDF6;
   color: #2B211C;
-  font-family: 'Courier Prime', 'Courier New', monospace;
+  font-family: 'Zilla Slab', Georgia, serif;
+  font-variant-numeric: lining-nums tabular-nums;
   padding: 26px 26px 30px;
   box-shadow: 0 16px 22px rgba(58, 42, 34, 0.3);
 }
@@ -738,7 +741,7 @@ a.tile:hover {
 }
 .r-time {
   text-align: right;
-  font-variant-numeric: tabular-nums;
+  font-variant-numeric: lining-nums tabular-nums;
   font-weight: 700;
 }
 .r-line {
@@ -1598,7 +1601,7 @@ body {
   width: 100%;
 }
 code {
-  font-family: 'Courier Prime', monospace;
+  font-family: 'Zilla Slab', Georgia, serif;
   background: rgba(0, 0, 0, 0.25);
   padding: 1px 5px;
   border-radius: 4px;

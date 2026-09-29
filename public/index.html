@@ -19,7 +19,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
-      href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Courier+Prime:wght@400;700&amp;family=Yellowtail&amp;family=Zilla+Slab:wght@400;500;600;700&amp;display=swap"
+      href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Yellowtail&amp;family=Zilla+Slab:wght@400;500;600;700&amp;display=swap"
       rel="stylesheet"
     />
     <!--Main stylesheet: layout, components, responsive behavior, and visual theme.-->
@@ -1322,7 +1322,7 @@
                     <div
                       class="display neon-yellow"
                       data-deck="elapsed"
-                      style="font-size: 24px; font-variant-numeric: tabular-nums; background: #241814; border-radius: 8px; padding: 4px 12px; flex-shrink: 0;"
+                      style="font-size: 24px; font-variant-numeric: lining-nums tabular-nums; background: #241814; border-radius: 8px; padding: 4px 12px; flex-shrink: 0;"
                     >
                       0:00
                     </div>
@@ -2147,7 +2147,7 @@
             </div>
             <div
               class="dock-wide"
-              style="flex: 1 1 200px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-variant-numeric: tabular-nums;"
+              style="flex: 1 1 200px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-variant-numeric: lining-nums tabular-nums;"
             >
               <span data-np="elapsed">0:00</span>
               <div
@@ -2655,6 +2655,8 @@
       /* ---------------- icons & art (templates generated from the design) ---------------- */
       const ICONS = {
         search: '<circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/>',
+        star: '<path d="M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 17l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z" fill="currentColor" stroke="none"/>',
+        note: '<path d="M9 17.5V6l10-2v11.5"/><circle cx="6.5" cy="17.5" r="2.5" fill="currentColor"/><circle cx="16.5" cy="15.5" r="2.5" fill="currentColor"/>',
         play: '<path d="M7 4.5l12.5 7.5L7 19.5z" fill="currentColor" stroke="none"/>',
         pause:
           '<rect x="6" y="4.5" width="4" height="15" rx="1" fill="currentColor" stroke="none"/><rect x="14" y="4.5" width="4" height="15" rx="1" fill="currentColor" stroke="none"/>',
@@ -2771,6 +2773,7 @@
         const clock = d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
         const date = `${pad2(d.getMonth() + 1)}/${pad2(d.getDate())}/${d.getFullYear()} · ${clock}`;
         const no = String(Store.tapeNo(tape) || 1).padStart(3, '0');
+        const star = icon('star', 15, ' vertical-align: -0.08em;'); // drawn, so no system symbol font is needed
         const stamp = tape.fav
           ? html`<div class="stamp" aria-label="Favorite tape">${icon('heartf', 20)}TOP<br>SHELF</div>`
           : '';
@@ -2778,7 +2781,7 @@
         return html`
           <div class="receipt">
             <div class="r-c">
-              <div class="display" style="font-size: 20px; color: #C1272D; letter-spacing: .04em;">&#9733; CASSETTEFY TAPE CO. &#9733;</div>
+              <div class="display" style="font-size: 20px; color: #C1272D; letter-spacing: .04em;">${star} CASSETTEFY TAPE CO. ${star}</div>
               <div style="font-size: 14px; letter-spacing: .12em; margin-top: 4px;">MIXTAPE RECEIPT</div>
               <div style="font-size: 14px; margin-top: 2px;">TAPE No. ${no} · C-60 CASSETTE</div>
               <div style="font-size: 14px;">${esc(date)}</div>
@@ -3732,7 +3735,7 @@
                   <div class="ellipsis" style="font-size: 19px; font-weight: 700;">${esc(r.title)}</div>
                   <div class="ellipsis" style="font-size: 15px; color: #6B4A3A;">${esc(r.artist)}${r.album ? ' · ' + esc(r.album) : ''}</div>
                 </div>
-                <span class="hide-phone" style="font-size: 15px; color: #6B4A3A; font-variant-numeric: tabular-nums;">${esc(r.time || '')}</span>
+                <span class="hide-phone" style="font-size: 15px; color: #6B4A3A; font-variant-numeric: lining-nums tabular-nums;">${esc(r.time || '')}</span>
                 ${action}
               </div>`;
           })
@@ -4616,9 +4619,10 @@
           $('#spWho').textContent = SP.busy
             ? 'Connecting…'
             : 'Connected as ' + (SP.me ? SP.me.display_name || SP.me.id : 'your Spotify account');
-          $('#spInitials').textContent = SP.me
-            ? (SP.me.display_name || SP.me.id || '?').slice(0, 1).toUpperCase()
-            : '♪';
+          // First letter of the Spotify name, or a music-note icon until the profile has loaded.
+          $('#spInitials').innerHTML = SP.me
+            ? esc((SP.me.display_name || SP.me.id || '?').slice(0, 1).toUpperCase())
+            : icon('note', 22);
           // One checkbox per Spotify playlist (or a loading / empty message).
           const listCheck = (p) => html`
             <label class="tape-check">
