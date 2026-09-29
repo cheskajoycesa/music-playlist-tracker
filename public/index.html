@@ -2324,12 +2324,35 @@
       const orderTracks = (tape) =>
         tape.tracks.filter((t) => t.side === 'A').concat(tape.tracks.filter((t) => t.side === 'B'));
 
+      /**
+       * Identity of a song for spotting duplicates: title + main artist, ignoring capitals, accents,
+       * punctuation and guest artists ("feat. …", "A, B" → "A"). Works for non-Latin titles too.
+       */
+      function songKey(song) {
+        const clean = (s) =>
+          String(s || '')
+            .normalize('NFKD')
+            .toLowerCase()
+            .replace(/[^\p{L}\p{N}]+/gu, '');
+        const mainArtist = String(song.artist || '').split(/,|&|\s(?:feat\.?|ft\.?|featuring|with)\s/i)[0];
+        return clean(song.title) + '|' + clean(mainArtist);
+      }
+      /** True if the tape already has this song (same Spotify track, or same title and main artist). */
+      function hasSong(tape, song) {
+        const key = songKey(song);
+        return (tape.tracks || []).some(
+          (t) => (song.spotifyUri && t.spotifyUri === song.spotifyUri) || songKey(t) === key,
+        );
+      }
+
+      /** Puts a song at the end of its side. Returns false (and adds nothing) if the tape already has it. */
       function insertOnSide(tape, track) {
-        if (!tape || !track) return;
+        if (!tape || !track) return false;
 
         if (!Array.isArray(tape.tracks)) {
           tape.tracks = [];
         }
+        if (hasSong(tape, track)) return false;
 
         if (track.side === 'A') {
           const firstB = tape.tracks.findIndex((t) => t.side === 'B');
@@ -2342,6 +2365,7 @@
         } else {
           tape.tracks.push(track);
         }
+        return true;
       }
 
       // Friendly play time: "Today, 3:05 PM", "Yesterday, …", a weekday within the week, otherwise "Sep 12".
@@ -3832,14 +3856,21 @@
         if (S.addTo) ticked.add(S.addTo);
         S.addTo = null;
 
-        // One checkbox per tape, with a little swatch of its shell color.
-        const tapeCheck = (t) => html`
-          <label class="tape-check">
-            <input type="checkbox" value="${t.id}"${ticked.has(t.id) ? ' checked' : ''}>
-            <span style="width: 12px; height: 12px; border-radius: 3px; background: ${t.shell}; flex-shrink: 0;"></span>
-            <span style="flex-grow: 1;">${esc(t.name)}</span>
-            <span style="font-size: 14px; color: #6B4A3A;">${t.tracks.length}</span>
-          </label>`;
+        // One checkbox per tape, with a little swatch of its shell color. A tape that already has the
+        // picked song says "on it" and can't be ticked for it (its tick is kept for the next song).
+        const tapeCheck = (t) => {
+          const onIt = !!sel && hasSong(t, sel);
+          const count = onIt
+            ? html`<span class="on-it-note">${icon('check', 14)}on it</span>`
+            : html`<span style="font-size: 14px; color: #6B4A3A;">${t.tracks.length}</span>`;
+          return html`
+            <label class="tape-check${onIt ? ' on-it' : ''}"${onIt ? ' title="This tape already has this song"' : ''}>
+              <input type="checkbox" value="${t.id}"${ticked.has(t.id) ? ' checked' : ''}${onIt ? ' disabled' : ''}>
+              <span style="width: 12px; height: 12px; border-radius: 3px; background: ${t.shell}; flex-shrink: 0;"></span>
+              <span style="flex-grow: 1;">${esc(t.name)}</span>
+              ${count}
+            </label>`;
+        };
         $('#addTapes').innerHTML =
           Store.data.playlists.map(tapeCheck).join('') ||
           '<p style="margin: 0;">No tapes yet — record one below.</p>';
@@ -3854,20 +3885,41 @@
         bar.hidden = !sel || S.panelInView;
         $('#view-search').classList.toggle('with-save-bar', !bar.hidden);
         if (!sel) return;
-        const n = $$('#addTapes input:checked').length;
+        const { ids, already } = addTargets();
+        const n = ids.length;
         $('#saveBarTitle').textContent = sel.title;
         $('#saveBarArtist').textContent = sel.artist;
-        $('#saveBarTapes').textContent = n ? '→ ' + n + (n === 1 ? ' tape' : ' tapes') : '→ pick tapes';
+        if (n) $('#saveBarTapes').textContent = '→ ' + n + (n === 1 ? ' tape' : ' tapes');
+        else if (already.length) $('#saveBarTapes').innerHTML = icon('check', 13) + ' already on it';
+        else $('#saveBarTapes').textContent = '→ pick tapes';
         $('#saveBarTapes').setAttribute('aria-label', 'Choose tapes and side: ' + (n || 'none') + ' ticked');
-        $('#saveBarSave').disabled = !!S.saving;
+        // Nothing to record when every ticked tape already has the song.
+        $('#saveBarSave').disabled = !!S.saving || (!n && already.length > 0);
       }
+      /** Ticked tapes that will get the picked song (ids), and ticked ones that already have it (names). */
+      function addTargets() {
+        const checked = $$('#addTapes input:checked');
+        return {
+          ids: checked.filter((i) => !i.disabled).map((i) => i.value),
+          already: checked
+            .filter((i) => i.disabled)
+            .map((i) => (Store.tape(i.value) || {}).name)
+            .filter(Boolean),
+        };
+      }
+      /** "A", "A and B", "A, B and C" */
+      const nameList = (names) =>
+        names
+          .map((x) => '“' + x + '”')
+          .join(', ')
+          .replace(/, ([^,]*)$/, ' and $1');
       $('#addTapes').addEventListener('change', renderSaveBar);
       // "→ 2 tapes" opens the full panel to change the tapes or the side.
       $('#saveBarTapes').addEventListener('click', () =>
         $('#addPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }),
       );
       $('#saveBarSave').addEventListener('click', () => {
-        if (!$$('#addTapes input:checked').length) {
+        if (!addTargets().ids.length && !addTargets().already.length) {
           toast('Pick at least one tape to record it onto.');
           $('#addPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
           return;
@@ -3945,10 +3997,15 @@
         const sel = S.selected;
         if (!sel || S.saving) return;
 
-        const ids = $$('#addTapes input:checked').map((i) => i.value);
+        // Tapes that already have this song are skipped: no duplicates on a tape.
+        const { ids, already } = addTargets();
 
         if (!ids.length) {
-          toast('Tick at least one tape.');
+          toast(
+            already.length
+              ? '“' + sel.title + '” is already on ' + nameList(already) + '.'
+              : 'Tick at least one tape.',
+          );
           return;
         }
 
@@ -3965,6 +4022,7 @@
 
         console.log('Spotify match for added song:', sel.title, spotifyUri);
 
+        let added = 0;
         ids.forEach((id) => {
           const t = Store.tape(id);
 
@@ -3980,12 +4038,19 @@
             art: sel.art,
           };
 
-          insertOnSide(t, track);
+          // insertOnSide refuses a duplicate (also covers the same Spotify track under a different title).
+          if (insertOnSide(t, track)) added++;
+          else already.push(t.name);
         });
 
         Store.save();
 
-        toast('“' + sel.title + '” recorded onto ' + ids.length + (ids.length === 1 ? ' tape' : ' tapes') + '.');
+        const skipped = already.length ? ' Already on ' + nameList(already) + '.' : '';
+        toast(
+          added
+            ? '“' + sel.title + '” recorded onto ' + added + (added === 1 ? ' tape' : ' tapes') + '.' + skipped
+            : '“' + sel.title + '” is already on ' + nameList(already) + '.',
+        );
 
         // Done with this song: clear the pick (hides the save bar, "Adding" goes back to "+ Add").
         // The ticked tapes stay ticked for the next song.
@@ -4660,9 +4725,18 @@
               items = items.concat(page.items || []);
               next = page.next ? page.next.replace('https://api.spotify.com/v1/', '') : null;
             }
+            // A Spotify playlist can list the same song twice: keep only its first appearance.
+            const seen = new Set();
             const tracks = items
               .map((it) => it && (it.track || it.item))
-              .filter((tr) => tr && tr.name && !tr.is_local);
+              .filter((tr) => tr && tr.name && !tr.is_local)
+              .filter((tr) => {
+                const key = songKey({ title: tr.name, artist: (tr.artists || []).map((a) => a.name).join(', ') });
+                if (seen.has(key) || (tr.uri && seen.has(tr.uri))) return false;
+                seen.add(key);
+                if (tr.uri) seen.add(tr.uri);
+                return true;
+              });
             const half = Math.ceil(tracks.length / 2);
             const tape = Store.newTape({
               name: meta ? meta.name : 'Spotify tape',

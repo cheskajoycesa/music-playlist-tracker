@@ -1442,6 +1442,24 @@ body {
   accent-color: #C1272D;
   flex-shrink: 0;
 }
+/* A tape that already has the picked song: can't be ticked for it (no duplicates). */
+.tape-check.on-it {
+  cursor: not-allowed;
+  background: #F6EBC8;
+  color: #6B4A3A;
+}
+.tape-check.on-it input {
+  opacity: 0.45;
+}
+.on-it-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #1E6B65;
+  white-space: nowrap;
+}
 .swatch {
   width: 38px;
   height: 38px;
