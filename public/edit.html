@@ -2096,6 +2096,89 @@ html.embedded-editor .edit-dialog{
   color:#FAF3E0;
 }
 
+/* "Add songs from Search" and "Edit songs" under the tape preview. */
+.ed-song-actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.ed-song-actions .btn-ribbon{
+  flex:1 1 240px;
+}
+.ed-song-actions .btn-outline{
+  flex:0 1 auto;
+  height:52px;
+  font-size:19px;
+}
+
+/* Edit songs popup: sits over the editor card with the tape's receipt inside. */
+.songs-overlay{
+  position:absolute;
+  inset:0;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(23,79,74,.45);
+  backdrop-filter:blur(2px);
+}
+.songs-dialog{
+  width:min(560px,100%);
+  max-height:100%;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:#FAF3E0;
+  border:4px solid #174F4A;
+  border-radius:20px;
+  box-shadow:8px 8px 0 #C1272D;
+}
+.songs-head{
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:14px 18px;
+  border-bottom:3px solid #C1272D;
+}
+.songs-head h2{
+  margin:0;
+  font-size:28px;
+  color:#C1272D;
+}
+.songs-body{
+  overflow:auto;
+  padding:24px 16px 28px;
+}
+/* Receipt lines in this popup aren't clickable; the trash button on each line removes the song. */
+.r-row.with-trash{
+  grid-template-columns:30px minmax(0,1fr) 54px auto;
+  cursor:default;
+}
+.r-row.with-trash:hover{
+  background:transparent;
+}
+.r-trash{
+  min-width:32px;
+  height:32px;
+  margin-top:-5px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#9B1B22;
+  font:inherit;
+  font-size:14px;
+  cursor:pointer;
+}
+.r-trash:hover{
+  background:#F7D9D3;
+}
+
 /* Empty state lives inside the same popup. */
 #view-edit > .edit-dialog > #edEmpty{
   flex:1 1 auto;
@@ -2284,8 +2367,10 @@ input[type="file"]{
 <div style="background: #174F4A; border-radius: 22px; padding: 22px 22px 26px;">
 <div id="edTape"></div>
 </div>
-<div class="stage" style="padding: 30px 18px; background: #FAF3E0;">
-<div id="edReceipt" style="position: relative;"></div>
+<!-- Songs are added from the Search page; this popup only lists and removes them. -->
+<div class="ed-song-actions">
+<button class="btn-ribbon" id="edAddSongs" type="button">Add songs from Search</button>
+<button class="btn-outline" id="edSongsBtn" type="button">Edit songs</button>
 </div>
 </div>
 <div style="display: flex; flex-direction: column; gap: 28px; min-width: 0;">
@@ -2315,43 +2400,18 @@ input[type="file"]{
 <button class="btn-ribbon" style="width: 100%;" type="submit">Save changes</button>
 </form>
 </aside>
-<aside aria-label="Add or edit a song" class="editor">
-<div class="ed-tab display" id="edSongTab">ADD SONG</div>
-<form class="ed-body" id="edSongForm">
-<label class="ed-l">
-                  Song title
-                  <input class="field" id="esTitle" maxlength="100" placeholder="e.g. Stayin' Alive" required="" type="text"/>
-</label>
-<label class="ed-l">
-                  Artist
-                  <input class="field" id="esArtist" maxlength="80" placeholder="e.g. Bee Gees" type="text"/>
-</label>
-<div class="ed-row">
-<label class="ed-l">
-                    Genre
-                    <input class="field" id="esGenre" list="genreList" placeholder="e.g. Disco" type="text"/>
-</label>
-<label class="ed-l">
-                    Duration
-                    <input class="field" id="esTime" inputmode="numeric" pattern="\d{1,3}:[0-5]\d" placeholder="3:45" required="" title="Minutes and seconds, like 3:45" type="text"/>
-</label>
-</div>
-<fieldset style="border: 0; margin: 0; padding: 0; display: flex; align-items: center; gap: 16px;">
-<legend class="sr">Side</legend>
-<span style="font-size: 16px; font-weight: 600;">Side</span>
-<label style="display: inline-flex; align-items: center; gap: 6px; font-size: 16px;"><input name="esSide" style="accent-color: #F2CF6B; width: 18px; height: 18px;" type="radio" value="A"/> A</label>
-<label style="display: inline-flex; align-items: center; gap: 6px; font-size: 16px;"><input name="esSide" style="accent-color: #F2CF6B; width: 18px; height: 18px;" type="radio" value="B"/> B</label>
-</fieldset>
-<button class="btn-ribbon" id="esSave" style="width: 100%;" type="submit">Record song</button>
-<div hidden="" id="esEditBtns" style="display: flex; flex-wrap: wrap; gap: 10px;">
-<button class="btn-outline" id="esCancel" style="border-color: #FAF3E0; color: #FAF3E0; height: 44px; font-size: 17px;" type="button">Cancel</button>
-<button class="btn-outline" id="esDelete" style="border-color: #EE8A83; color: #EE8A83; height: 44px; font-size: 17px;" type="button">Remove song</button>
-</div>
-<p style="margin: 0; font-size: 14px; line-height: 1.4; color: #CFE3DC;">Click any line on the receipt to edit or remove that song.</p>
-</form>
-</aside>
 </div>
 </section>
+<!-- Edit songs popup: the tape's receipt with a remove button on each song. -->
+<div class="songs-overlay" hidden id="songsOverlay">
+<div aria-labelledby="songsTitle" aria-modal="true" class="songs-dialog" role="dialog">
+<div class="songs-head">
+<h2 class="display" id="songsTitle">EDIT SONGS</h2>
+<button aria-label="Close the song list" class="dialog-close" id="songsClose" type="button">×</button>
+</div>
+<div class="songs-body" id="songsReceipt"></div>
+</div>
+</div>
 </div>
 </section>
 </main>
@@ -2620,6 +2680,14 @@ function receiptHTML(tape, opts) {
   const row = (t) => {
     n++;
     const on = t.id === opts.sel, num = pad2(n);
+    // opts.trash: a plain line with a remove button at the end (used by the Edit songs popup).
+    if (opts.trash) {
+      return '<div class="r-row with-trash" data-track="' + t.id + '">' +
+        '<span>' + num + '</span><span style="min-width: 0;"><span class="r-t"><b>' + esc(t.title || 'Untitled') + '</b><span class="r-lead"></span></span>' +
+        '<span class="r-sub">' + esc(t.artist || 'Unknown artist') + ' · ' + esc(t.genre || '—') + '</span></span>' +
+        '<span class="r-time">' + esc(t.time || '-:--') + '</span>' +
+        '<button type="button" class="r-trash" data-remove="' + t.id + '" aria-label="Remove ' + esc(t.title || 'this song') + ' from the tape">' + icon('trash', 18) + '</button></div>';
+    }
     return '<button type="button" class="r-row' + (on ? ' on' : '') + '" data-track="' + t.id + '" aria-pressed="' + on + '" aria-label="' + verb + ' line ' + num + ', ' + esc(t.title || 'untitled') + '">' +
       '<span>' + num + '</span><span style="min-width: 0;"><span class="r-t"><b>' + esc(t.title || 'Untitled') + '</b><span class="r-lead"></span></span>' +
       '<span class="r-sub">' + esc(t.artist || 'Unknown artist') + ' · ' + esc(t.genre || '—') + '</span></span>' +
@@ -2806,20 +2874,13 @@ const STRIPES = [
 const E = {
   id: null,          // tape being edited
   draft: null,       // customize fields not saved yet, shown live on the preview tape
-  song: null,        // id of the song loaded into the song form (null = adding a new one)
-  resetSong: false,
   tape() { return Store.tape(this.id); },
   /** Opens a tape in the editor. `fresh` drops unsaved changes, e.g. when arriving from another page. */
   open(id, fresh) {
     if (id === this.id && !fresh) return;
-    this.id = id || null; this.draft = null; this.song = null; this.resetSong = true;
+    this.id = id || null; this.draft = null;
   }
 };
-/** Puts a track at the end of its side (side A songs stay ahead of side B). */
-// Function: insertOnSide — handles this part of the app.
-function insertOnSide(tape, track) {
-  if (track.side === 'A') { const last = tape.tracks.map((x) => x.side).lastIndexOf('A'); tape.tracks.splice(last + 1, 0, track); } else tape.tracks.push(track);
-}
 /** After a tape's songs change, keeps the deck on the song it was on, or stops if that song is gone. */
 // Function: keepPlayerOn — handles this part of the app.
 function keepPlayerOn(tape, trackId) {
@@ -2842,11 +2903,11 @@ function renderEdit() {
     E.draft = { name: tape.name, notes: tape.notes, genre: tape.genre, shell: tape.shell, stripe: tape.stripe };
     $('#edName').value = tape.name; $('#edNotes').value = tape.notes || ''; $('#edGenre').value = tape.genre || '';
   }
-  if (E.resetSong || (E.song && !tape.tracks.some((t) => t.id === E.song))) { E.resetSong = false; setSongForm(null); }
   $('#edTag').textContent = tapeMeta(tape);
   $('#edPlay').dataset.play = tape.id; $('#edPlay').href = 'index.html?play=' + encodeURIComponent(tape.id) + '#deck';
+  $('#edSongsBtn').textContent = 'Edit songs (' + tape.tracks.length + ')';
   renderEditPreview();
-  $('#edReceipt').innerHTML = receiptHTML(tape, { sel: E.song, mark: 'pencil', note: 'CLICK ANY LINE TO EDIT IT' });
+  if (!$('#songsOverlay').hidden) renderSongs();
 }
 // Function: renderEditPreview — handles this part of the app.
 function renderEditPreview() {
@@ -2854,26 +2915,6 @@ function renderEditPreview() {
   $('#edTape').innerHTML = tapeHTML(Object.assign({}, d, { name: d.name.trim() || 'Untitled tape' }), { box: 'max-width: 540px; margin: 0 auto;' });
   $('#edShells').innerHTML = SHELLS.map((s, i) => '<button type="button" class="swatch" data-shell="' + i + '" aria-label="' + s.name + ' shell" aria-pressed="' + (d.shell === s.shell) + '" style="background: ' + s.shell + ';"></button>').join('');
   $('#edStripes').innerHTML = STRIPES.map((s, i) => '<button type="button" class="swatch" data-stripe="' + i + '" aria-label="' + s.name + ' stripe" aria-pressed="' + (d.stripe === s.color) + '" style="background: ' + s.color + ';"></button>').join('');
-}
-/** Loads a song into the song form for editing, or clears the form for adding a new one. */
-// Song-form helper: prepares the editor for adding or editing one track.
-// Function: setSongForm — handles this part of the app.
-function setSongForm(track) {
-  const tape = E.tape();
-  E.song = track ? track.id : null;
-  $('#esTitle').value = track ? track.title : '';
-  $('#esArtist').value = track ? track.artist : '';
-  $('#esGenre').value = track ? track.genre : '';
-  $('#esTime').value = track ? track.time : '';
-  // New songs go on whichever side is shorter so far.
-  const len = (s) => (tape ? tape.tracks.filter((t) => t.side === s).reduce((a, t) => a + secs(t.time), 0) : 0);
-  const side = track ? track.side : len('A') <= len('B') ? 'A' : 'B';
-  $$('input[name="esSide"]').forEach((r) => (r.checked = r.value === side));
-  $('#edSongTab').textContent = track ? 'EDIT SONG' : 'ADD SONG';
-  $('#esSave').textContent = track ? 'Save song' : 'Record song';
-  $('#esEditBtns').hidden = !track;
-  const del = $('#esDelete');
-  if (del.dataset.armed === '1') { del.dataset.armed = ''; del.classList.remove('armed'); del.innerHTML = del.dataset.orig; }
 }
 $('#edSelect').addEventListener('change', (e) => { if (e.target.value) location.search = '?id=' + encodeURIComponent(e.target.value); });
 $('#edTapeForm').addEventListener('input', () => {
@@ -2900,50 +2941,53 @@ $('#edTapeForm').addEventListener('submit', (e) => {
   E.draft = null; Store.save();
   toast('“' + name + '” saved.'); renderEdit(); tick();
 });
-$('#edSongForm').addEventListener('submit', (e) => {
-  e.preventDefault();
-  const tape = E.tape(); if (!tape) return;
-  const title = $('#esTitle').value.trim(), time = $('#esTime').value.trim();
-  if (!title) { toast('Give the song a title.'); $('#esTitle').focus(); return; }
-  if (!durOk(time)) { toast('Type the duration as minutes:seconds, like 3:45.'); $('#esTime').focus(); return; }
-  const side = ($('input[name="esSide"]:checked') || {}).value || 'A';
-  const fields = { title, artist: $('#esArtist').value.trim(), genre: $('#esGenre').value.trim(), time, side };
-  const playing = playingTrackId(tape);
-  const old = E.song && tape.tracks.find((t) => t.id === E.song);
-  if (old) {
-    const moved = old.side !== side;
-    Object.assign(old, fields);
-    if (moved) { tape.tracks.splice(tape.tracks.indexOf(old), 1); insertOnSide(tape, old); }
-    toast('“' + title + '” updated.');
-  } else {
-    insertOnSide(tape, Object.assign({ id: uid(), previewUrl: '' }, fields));
-    toast('“' + title + '” recorded onto side ' + side + '.');
-  }
-  keepPlayerOn(tape, playing);
-  Store.save(); setSongForm(null); renderEdit(); tick();
-  $('#esTitle').focus();
-});
-$('#esCancel').addEventListener('click', () => { setSongForm(null); renderEdit(); });
-$('#esDelete').addEventListener('click', (e) => {
-  confirmClick(e.currentTarget, 'Remove it?', () => {
-    const tape = E.tape(), t = tape && tape.tracks.find((x) => x.id === E.song); if (!t) return;
+/* ---------- Edit songs popup: the tape's receipt with a remove button on each song ---------- */
+function renderSongs() {
+  const tape = E.tape();
+  if (!tape) { closeSongs(); return; }
+  $('#songsReceipt').innerHTML = receiptHTML(tape, { trash: true, note: 'ADD SONGS FROM THE SEARCH PAGE' });
+}
+function openSongs() {
+  if (!E.tape()) return;
+  renderSongs();
+  $('#songsOverlay').hidden = false;
+  $('#songsClose').focus();
+}
+function closeSongs() {
+  $('#songsOverlay').hidden = true;
+  $('#edSongsBtn').focus();
+}
+$('#edSongsBtn').addEventListener('click', openSongs);
+$('#songsClose').addEventListener('click', closeSongs);
+// Clicking the dimmed area around the popup, or pressing Esc, closes it too.
+$('#songsOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSongs(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#songsOverlay').hidden) closeSongs(); });
+$('#songsReceipt').addEventListener('click', (e) => {
+  const btn = e.target.closest('[data-remove]'); if (!btn) return;
+  // Two clicks, like erasing a tape: the first turns the button into "Remove?".
+  confirmClick(btn, 'Remove?', () => {
+    const tape = E.tape(), t = tape && tape.tracks.find((x) => x.id === btn.dataset.remove); if (!t) return;
     const playing = playingTrackId(tape);
-    const deletedTrackId = t.id;
     tape.tracks.splice(tape.tracks.indexOf(t), 1);
     keepPlayerOn(tape, playing);
-    window.parent.postMessage({
-      type: 'cassettefy-track-deleted',
-      tapeId: tape.id,
-      trackId: deletedTrackId
-    }, '*');
-    Store.save(); toast('“' + t.title + '” removed.'); setSongForm(null); renderEdit(); tick();
+    // Lets index.html stop the song if it's the one playing in the deck.
+    window.parent.postMessage({ type: 'cassettefy-track-deleted', tapeId: tape.id, trackId: t.id }, '*');
+    Store.save(); toast('“' + t.title + '” removed.'); renderEdit(); tick();
   });
 });
-$('#edReceipt').addEventListener('click', (e) => {
-  const row = e.target.closest('[data-track]'), tape = E.tape(); if (!row || !tape) return;
-  setSongForm(E.song === row.dataset.track ? null : tape.tracks.find((t) => t.id === row.dataset.track));
-  renderEdit();
-  $('#esTitle').focus();
+
+/* ---------- Add songs from Search ---------- */
+// Lets index.html wait for this page's last save before it reloads the tapes.
+window.cassettefyFlush = () => Store.flush();
+$('#edAddSongs').addEventListener('click', async () => {
+  const tape = E.tape(); if (!tape) return;
+  await Store.flush();
+  if (window.parent !== window) {
+    // Inside the popup: index.html closes the editor and opens Search with this tape ticked.
+    window.parent.postMessage({ type: 'cassettefy-add-songs', id: tape.id, name: tape.name }, '*');
+  } else {
+    location.href = 'index.html?addto=' + encodeURIComponent(tape.id);
+  }
 });
 
 /* ======================= edit.html boot ======================= */

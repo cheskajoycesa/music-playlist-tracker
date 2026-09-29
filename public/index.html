@@ -2923,14 +2923,47 @@
       function closeEditorDialog(updateHash = true) {
         const overlay = $('#editorOverlay');
         if (!overlay) return;
+        const wasOpen = !overlay.hidden;
         overlay.hidden = true;
         document.body.classList.remove('editor-open');
         const frame = $('#editorOverlayFrame');
-        if (frame) frame.src = 'about:blank';
+        if (frame && wasOpen) {
+          // The editor saves through its own copy of the tapes. Wait for its last save (at most 2 s),
+          // then reload ours, so this page doesn't show - or later save over - an older copy.
+          let flushing = null;
+          try {
+            flushing = frame.contentWindow.cassettefyFlush && frame.contentWindow.cassettefyFlush();
+          } catch (e) {
+            /* editor page not loaded */
+          }
+          const timeout = new Promise((r) => setTimeout(r, 2000));
+          Promise.race([Promise.resolve(flushing).catch(() => {}), timeout]).then(() => {
+            if (overlay.hidden) frame.src = 'about:blank'; // unless the editor was reopened meanwhile
+            reloadTapes();
+          });
+        }
         if (updateHash && location.hash.slice(1).split('/')[0] === 'edit') {
           history.replaceState(null, '', location.pathname + location.search + '#library');
           route();
         }
+      }
+
+      /** Reloads the tapes from the server and redraws, keeping the deck on the same song. */
+      async function reloadTapes() {
+        if (!Store.online) return;
+        await Store.refresh();
+        if (Player.tape) {
+          const current = Player.track();
+          const fresh = Store.tape(Player.tape.id);
+          if (fresh) {
+            Player.tape = fresh;
+            const i = current ? Player.order().findIndex((t) => t.id === current.id) : -1;
+            if (i >= 0) Player.idx = i;
+            else Player.idx = Math.min(Player.idx, Math.max(0, Player.order().length - 1));
+          }
+        }
+        RENDER[currentRoute]();
+        tick();
       }
 
       // edit.html uses postMessage when its Close/Back controls are pressed inside
@@ -2951,6 +2984,11 @@
           location.hash = '#deck';
           if (id) Player.load(id, null, 0, false);
           route();
+        }
+        // "Add songs from Search" in the editor: open Search with that tape ticked in the add panel.
+        if (event.data?.type === 'cassettefy-add-songs') {
+          closeEditorDialog(false);
+          openSearchFor(String(event.data.id || ''), event.data.name);
         }
         if (event.data?.type === 'cassettefy-track-deleted') {
           const tapeId = String(event.data.tapeId || '');
@@ -3165,9 +3203,11 @@
               this.pos = 0;
             }
 
+            // Compare by id: reloading the tapes replaces the song objects but keeps their ids.
+            const sameSong = () => !!this.track() && this.track().id === t.id;
             playSpotifyTrack(t.spotifyUri, this.pos).then((success) => {
               // Ignore a late answer if the listener already paused or moved to another song.
-              if (!this.playing || this.track() !== t) return;
+              if (!this.playing || !sameSong()) return;
               if (!success) {
                 this.playing = false;
                 ui();
@@ -3177,9 +3217,9 @@
               // Keep the cassette timer synced with Spotify
               clearInterval(this.timer);
               this.timer = setInterval(async () => {
-                if (!this.playing || !spotifyPlayer || this.track() !== t) return;
+                if (!this.playing || !spotifyPlayer || !sameSong()) return;
                 const state = await spotifyPlayer.getCurrentState();
-                if (!state || !this.playing || this.track() !== t) return;
+                if (!state || !this.playing || !sameSong()) return;
 
                 // Spotify gives position in milliseconds
                 this.pos = state.position / 1000;
@@ -3480,7 +3520,8 @@
 
       /* ======================= SEARCH (iTunes Search + Lookup API) ======================= */
       // Search state: stores current iTunes results, selected item, loading state, and messages.
-      const S = { results: [], selected: null, loading: false, error: '', heading: '' };
+      // addTo = a tape to tick in the "record onto" list the next time it draws (set by openSearchFor).
+      const S = { results: [], selected: null, loading: false, error: '', heading: '', addTo: null };
       // Loads an iTunes URL through a <script> tag (JSONP) and resolves with its data.
       function jsonp(url) {
         /*
@@ -3765,10 +3806,16 @@
             <div style="font-size: 16px;">Pick a song with <b>+ Add</b> to record it onto your tapes.</div>`;
         }
 
+        // Keep the tapes the listener already ticked (this panel redraws whenever a song is picked),
+        // plus the tape they came to fill from the editor's "Add songs from Search" button.
+        const ticked = new Set($$('#addTapes input:checked').map((i) => i.value));
+        if (S.addTo) ticked.add(S.addTo);
+        S.addTo = null;
+
         // One checkbox per tape, with a little swatch of its shell color.
         const tapeCheck = (t) => html`
           <label class="tape-check">
-            <input type="checkbox" value="${t.id}">
+            <input type="checkbox" value="${t.id}"${ticked.has(t.id) ? ' checked' : ''}>
             <span style="width: 12px; height: 12px; border-radius: 3px; background: ${t.shell}; flex-shrink: 0;"></span>
             <span style="flex-grow: 1;">${esc(t.name)}</span>
             <span style="font-size: 14px; color: #6B4A3A;">${t.tracks.length}</span>
@@ -3777,6 +3824,16 @@
           Store.data.playlists.map(tapeCheck).join('') ||
           '<p style="margin: 0;">No tapes yet — record one below.</p>';
         $('#addSave').disabled = !sel;
+      }
+      /** Opens Search ready to add songs to one tape: that tape is ticked in the "record onto" list. */
+      // `name` comes from the editor, which may have just renamed the tape before this page reloads it.
+      function openSearchFor(id, name) {
+        S.addTo = id;
+        if (location.hash === '#search') route();
+        else location.hash = '#search';
+        const tapeName = name || (Store.tape(id) || {}).name;
+        if (tapeName) toast('Search for songs, then press + Add to record them onto “' + tapeName + '”.');
+        setTimeout(() => $('#q').focus(), 0);
       }
       $('#searchForm').addEventListener('submit', (e) => {
         e.preventDefault();
@@ -4695,13 +4752,7 @@
         RENDER[currentRoute]();
         tick();
       });
-      window.addEventListener('focus', async () => {
-        if (!Store.online) return;
-        await Store.refresh();
-        if (Player.tape) Player.tape = Store.tape(Player.tape.id) || Player.tape;
-        RENDER[currentRoute]();
-        tick();
-      });
+      window.addEventListener('focus', reloadTapes);
       // Application bootstrap: initializes stored data, handles callbacks, and renders the first route.
       (async function boot() {
         const online = await Store.init();
@@ -4718,6 +4769,10 @@
           history.replaceState(null, '', location.pathname + '#search');
           route();
           runSearch(q);
+        } else if (p.get('addto') && Store.tape(p.get('addto'))) {
+          // From the editor's "Add songs from Search" when edit.html was opened as its own page.
+          history.replaceState(null, '', location.pathname + '#search');
+          openSearchFor(p.get('addto'));
         } else if (await handleSpotifyCallback()) {
           history.replaceState(null, '', location.pathname + '#home');
           route();
