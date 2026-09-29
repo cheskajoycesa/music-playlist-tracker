@@ -1954,6 +1954,34 @@ a.tile:hover,
   color: var(--ui-ink);
 }
 
+/* "Export to Spotify" sits beside the heart, so the action row keeps its three slots.
+   The title shares the top line with those two buttons; the meta line below uses the full card width. */
+.library-card-tools {
+  grid-column: 2;
+  grid-row: 1;
+  display: inline-flex;
+  align-items: flex-start;
+}
+.library-card-copy {
+  display: contents;
+}
+.library-card-info {
+  row-gap: 0; /* the meta line keeps its own small margin under the title */
+}
+.library-card-title {
+  grid-column: 1;
+  grid-row: 1;
+}
+.library-card-meta {
+  grid-column: 1 / -1;
+  grid-row: 2;
+}
+.library-export {
+  background: transparent;
+  color: var(--ui-teal);
+  margin-top: 1px;
+}
+
 .library-play {
   justify-self: center;
   background: var(--ui-teal);
