@@ -1442,6 +1442,13 @@ body {
   accent-color: #C1272D;
   flex-shrink: 0;
 }
+/* Under the Spotify playlist list: "N playlists are already in your Library…" */
+.sp-imported-note {
+  margin: 4px 0 0;
+  font-size: 14px;
+  line-height: 1.4;
+  color: #CFE3DC;
+}
 /* A tape that already has the picked song: can't be ticked for it (no duplicates). */
 .tape-check.on-it {
   cursor: not-allowed;

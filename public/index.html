@@ -4705,6 +4705,19 @@
         renderProfile();
       }
       // Spotify importer: converts selected Spotify playlists into cassette tapes.
+      /**
+       * The Library tape that was imported from this Spotify playlist, or null. Tapes imported before
+       * the playlist id was stored are recognised by their name and the "Spotify import" genre.
+       */
+      function importedTape(playlist) {
+        return (
+          Store.data.playlists.find((t) =>
+            t.spotifyPlaylistId
+              ? t.spotifyPlaylistId === playlist.id
+              : t.genre === 'Spotify import' && t.name === playlist.name,
+          ) || null
+        );
+      }
       async function importSpotify() {
         const ids = $$('#spLists input:checked').map((i) => i.value);
         if (!ids.length) {
@@ -4717,6 +4730,8 @@
         let made = 0;
         for (const id of ids) {
           const meta = SP.lists.find((x) => x.id === id);
+          // Never import the same playlist twice (e.g. a second click while the first import runs).
+          if (importedTape(meta || { id })) continue;
           try {
             let items = [],
               next = 'playlists/' + id + '/items?limit=50';
@@ -4753,6 +4768,7 @@
                 spotifyUri: tr.uri,
               })),
             });
+            tape.spotifyPlaylistId = id; // remembers where it came from, so the playlist can't be imported twice
             await Store.addTape(tape);
             made++;
           } catch (e) {
@@ -4761,6 +4777,7 @@
         }
         btn.disabled = false;
         btn.textContent = 'Import as tapes';
+        renderProfile(); // imported playlists drop off the list
         if (made)
           toast(
             made + (made === 1 ? ' Spotify playlist is' : ' Spotify playlists are') + ' now tapes in your Library.',
@@ -4819,19 +4836,34 @@
           $('#spInitials').innerHTML = SP.me
             ? esc((SP.me.display_name || SP.me.id || '?').slice(0, 1).toUpperCase())
             : icon('note', 22);
-          // One checkbox per Spotify playlist (or a loading / empty message).
-          const listCheck = (p) => html`
-            <label class="tape-check">
-              <input type="checkbox" value="${esc(p.id)}">
-              <span style="flex-grow: 1; font-weight: 600;">${esc(p.name)}</span>
-              <span style="font-size: 14px; color: #6B4A3A;">${(p.tracks || p.items || {}).total ?? ''} songs</span>
-            </label>`;
+          // One checkbox per Spotify playlist (or a loading / empty message). Playlists that are already a tape
+          // in the Library are left out, so a playlist can't be imported twice; erasing its tape brings it back.
+          const listCheck = (p) => {
+            const total = (p.tracks || p.items || {}).total;
+            const count = total == null ? '' : total + (total === 1 ? ' song' : ' songs');
+            return html`
+              <label class="tape-check">
+                <input type="checkbox" value="${esc(p.id)}">
+                <span style="flex-grow: 1; font-weight: 600;">${esc(p.name)}</span>
+                <span style="font-size: 14px; color: #6B4A3A;">${count}</span>
+              </label>`;
+          };
           if (!SP.lists) {
             $('#spLists').innerHTML = '<p style="margin: 0;"><span class="spin"></span>Loading your playlists…</p>';
           } else if (!SP.lists.length) {
             $('#spLists').innerHTML = '<p style="margin: 0;">No playlists on this Spotify account yet.</p>';
           } else {
-            $('#spLists').innerHTML = SP.lists.map(listCheck).join('');
+            const available = SP.lists.filter((p) => !importedTape(p));
+            const done = SP.lists.length - available.length;
+            if (!available.length) {
+              $('#spLists').innerHTML = html`
+                <p style="margin: 0;">All your Spotify playlists are already tapes in your Library.</p>`;
+            } else {
+              const note = done
+                ? html`<p class="sp-imported-note">${done} ${done === 1 ? 'playlist is' : 'playlists are'} already in your Library.</p>`
+                : '';
+              $('#spLists').innerHTML = available.map(listCheck).join('') + note;
+            }
           }
           loadSpotify();
         }
