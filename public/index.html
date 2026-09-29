@@ -1056,6 +1056,7 @@
                     style="display: flex; align-items: center; gap: 12px; background: #C1272D; color: #FAF3E0; border-radius: 12px; padding: 12px;"
                   ></div>
                   <fieldset
+                    class="add-tapes-box"
                     style="border: 0; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px;"
                   >
                     <legend style="font-size: 16px; font-weight: 700; margin-bottom: 6px;">
@@ -1113,6 +1114,15 @@
                   </a>
                 </aside>
               </section>
+              <!-- Phones: slim bar to record the picked song without scrolling down to the panel under the results. -->
+              <div aria-label="Record the picked song" class="save-bar" hidden id="saveBar" role="region">
+                <div class="save-bar-song">
+                  <b id="saveBarTitle"></b>
+                  <span id="saveBarArtist"></span>
+                </div>
+                <button class="save-bar-tapes" id="saveBarTapes" type="button"></button>
+                <button class="save-bar-btn" id="saveBarSave" type="button">Record</button>
+              </div>
             </section>
             <!-- Local tape library, filters, sorting, and new-tape form. -->
             <section class="view" hidden="" id="view-library">
@@ -3520,8 +3530,18 @@
 
       /* ======================= SEARCH (iTunes Search + Lookup API) ======================= */
       // Search state: stores current iTunes results, selected item, loading state, and messages.
-      // addTo = a tape to tick in the "record onto" list the next time it draws (set by openSearchFor).
-      const S = { results: [], selected: null, loading: false, error: '', heading: '', addTo: null };
+      // addTo = a tape to tick in the "record onto" list the next time it draws (set by openSearchFor);
+      // saving = a song is being recorded; panelInView = the full "Add to a mixtape" panel is on screen.
+      const S = {
+        results: [],
+        selected: null,
+        loading: false,
+        error: '',
+        heading: '',
+        addTo: null,
+        saving: false,
+        panelInView: false,
+      };
       // Loads an iTunes URL through a <script> tag (JSONP) and resolves with its data.
       function jsonp(url) {
         /*
@@ -3823,8 +3843,45 @@
         $('#addTapes').innerHTML =
           Store.data.playlists.map(tapeCheck).join('') ||
           '<p style="margin: 0;">No tapes yet — record one below.</p>';
-        $('#addSave').disabled = !sel;
+        $('#addSave').disabled = !sel || S.saving;
+        renderSaveBar();
       }
+      /** Phones: the slim bar above the dock with the picked song, where it'll go, and a Record button. */
+      function renderSaveBar() {
+        const sel = S.selected;
+        const bar = $('#saveBar');
+        // Not needed while the full panel is on screen (and it's hidden by CSS on wider screens).
+        bar.hidden = !sel || S.panelInView;
+        $('#view-search').classList.toggle('with-save-bar', !bar.hidden);
+        if (!sel) return;
+        const n = $$('#addTapes input:checked').length;
+        $('#saveBarTitle').textContent = sel.title;
+        $('#saveBarArtist').textContent = sel.artist;
+        $('#saveBarTapes').textContent = n ? '→ ' + n + (n === 1 ? ' tape' : ' tapes') : '→ pick tapes';
+        $('#saveBarTapes').setAttribute('aria-label', 'Choose tapes and side: ' + (n || 'none') + ' ticked');
+        $('#saveBarSave').disabled = !!S.saving;
+      }
+      $('#addTapes').addEventListener('change', renderSaveBar);
+      // "→ 2 tapes" opens the full panel to change the tapes or the side.
+      $('#saveBarTapes').addEventListener('click', () =>
+        $('#addPanel').scrollIntoView({ behavior: 'smooth', block: 'start' }),
+      );
+      $('#saveBarSave').addEventListener('click', () => {
+        if (!$$('#addTapes input:checked').length) {
+          toast('Pick at least one tape to record it onto.');
+          $('#addPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+          return;
+        }
+        $('#addSave').click();
+      });
+      // Hide the save bar while the full panel is visible, so the same controls don't show twice.
+      new IntersectionObserver(
+        ([entry]) => {
+          S.panelInView = entry.isIntersecting;
+          renderSaveBar();
+        },
+        { root: $('#content'), threshold: 0.2 },
+      ).observe($('#addPanel'));
       /** Opens Search ready to add songs to one tape: that tape is ticked in the "record onto" list. */
       // `name` comes from the editor, which may have just renamed the tape before this page reloads it.
       function openSearchFor(id, name) {
@@ -3851,10 +3908,9 @@
           look = e.target.closest('[data-lookup]'),
           pv = e.target.closest('[data-preview]');
         if (pick) {
+          // No jump to the panel: it stays pinned beside the results, and on phones the save bar appears.
           S.selected = S.results[+pick.dataset.pick];
           renderResults();
-          if (window.matchMedia('(max-width: 1180px)').matches)
-            $('#addPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
         if (look) openLookup(S.results[+look.dataset.lookup]);
         if (pv) {
@@ -3887,7 +3943,7 @@
       previewAudio.addEventListener('ended', stopPreviewButtons);
       $('#addSave').addEventListener('click', async () => {
         const sel = S.selected;
-        if (!sel) return;
+        if (!sel || S.saving) return;
 
         const ids = $$('#addTapes input:checked').map((i) => i.value);
 
@@ -3898,8 +3954,14 @@
 
         const side = ($('input[name="addSide"]:checked') || {}).value || 'B';
 
+        // Block a second tap while the Spotify lookup below is still running (it would record the song twice).
+        S.saving = true;
+        renderAddPanel();
+
         // Try to find the same song on Spotify
-        const spotifyUri = await findSpotifyUri(sel.title, sel.artist);
+        const spotifyUri = await findSpotifyUri(sel.title, sel.artist).finally(() => {
+          S.saving = false;
+        });
 
         console.log('Spotify match for added song:', sel.title, spotifyUri);
 
@@ -3925,7 +3987,10 @@
 
         toast('“' + sel.title + '” recorded onto ' + ids.length + (ids.length === 1 ? ' tape' : ' tapes') + '.');
 
-        renderAddPanel();
+        // Done with this song: clear the pick (hides the save bar, "Adding" goes back to "+ Add").
+        // The ticked tapes stay ticked for the next song.
+        if (S.selected === sel) S.selected = null;
+        renderResults();
       });
 
       /* ======================= LIBRARY ======================= */

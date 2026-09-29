@@ -2160,3 +2160,94 @@ a.tile:hover,
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ========================================================================== */
+/* Search: keep "Add to a mixtape" within reach while scrolling the results   */
+/* ========================================================================== */
+
+/* Side-by-side layout (wider than 700px): the panel stays pinned beside the results.
+   The tape list gets whatever height is left above the player dock and scrolls when it's longer:
+   the rest of the panel is about 320px, plus 18px at the top and 140px kept free for the dock. */
+@media (min-width: 701px) {
+  #addPanel {
+    position: sticky;
+    top: 18px;
+  }
+  #addTapes {
+    max-height: max(96px, calc(100vh - 480px));
+    max-height: max(96px, calc(100dvh - 480px));
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+}
+
+/* Phones (one column, panel below the results): a slim bar above the player dock
+   records the picked song without scrolling down. */
+.save-bar {
+  display: none;
+}
+@media (max-width: 700px) {
+  .save-bar {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 150px; /* just above the dock (bottom: 78px, about 64px tall) */
+    z-index: 45; /* above the dock (40), below toasts (50) */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 8px 8px 14px;
+    background: #EE8A83;
+    color: #5C0C12;
+    border: 3px solid #C1272D;
+    border-radius: 14px;
+    box-shadow: 0 4px 0 #C1272D;
+  }
+  .save-bar-song {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    line-height: 1.25;
+  }
+  .save-bar-song b,
+  .save-bar-song span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .save-bar-song span {
+    font-size: 13px;
+  }
+  .save-bar-tapes {
+    flex: 0 0 auto;
+    padding: 6px 4px;
+    border: 0;
+    background: transparent;
+    color: #5C0C12;
+    font-size: 13px;
+    font-weight: 700;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .save-bar-btn {
+    flex: 0 0 auto;
+    height: 40px;
+    padding: 0 16px;
+    border: 0;
+    border-radius: 10px;
+    background: #C1272D;
+    color: #FAF3E0;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .save-bar-btn:disabled {
+    background: #A8877A;
+    cursor: wait;
+  }
+  /* Room under the last result so the bar never covers it. */
+  #view-search.with-save-bar {
+    padding-bottom: 72px;
+  }
+}
