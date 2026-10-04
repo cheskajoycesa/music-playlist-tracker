@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-
+<!-- ===================================================================== -->
+<!-- Cassettefy: retro iTunes playlist tracker interface.                 -->
+<!-- ===================================================================== -->
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -970,20 +972,24 @@
             </section>
             <!-- iTunes search and the add-to-mixtape workflow. -->
             <section class="view" hidden="" id="view-search">
-              <div class="pagehead">
-                <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0;">
+              <!-- ================= SEARCH PAGE HEADING ================= -->
+              <!-- This wrapper controls the complete search-page heading row. -->
+              <div class="pagehead search-pagehead">
+                <!-- This inner flex column keeps the API label, SEARCH title, and subtitle together. -->
+                <div
+                  class="search-page-copy"
+                  style="display: flex; flex-direction: column; gap: 8px; min-width: 0; width: 100%; align-items: center; text-align: center;"
+                >
+                  <!-- Small ribbon label: CSS centers this independently from the global tag style. -->
                   <span class="tag">iTunes Search API</span>
+                  <!-- Main page title for the iTunes search screen. -->
                   <h1 class="h1">SEARCH</h1>
+                  <!-- Decorative retro subtitle shown directly under the title. -->
                   <div class="sub">dig through the crates</div>
                 </div>
-                <p
-                  class="hide-phone"
-                  style="margin: 0; max-width: 340px; font-size: 16px; line-height: 1.45; color: #6B4A3A; text-align: right;"
-                >
-                  Results come from the iTunes catalogue. Play a 30-second preview, then add the track to any
-                  mixtape.
-                </p>
               </div>
+              <!-- ================= SEARCH CONTROLS ================= -->
+              <!-- This section contains the search input, entity dropdown, and Search button. -->
               <section style="display: flex; flex-direction: column; gap: 14px;">
                 <form
                   class="ticket"
@@ -1000,8 +1006,9 @@
                     style="flex: 1 1 260px; min-width: 0;"
                     type="search"
                   />
+                  <!-- Search-type dropdown: choose songs, albums, or artists. -->
                   <label class="sr" for="entity">Search in</label>
-                  <select class="pill" id="entity" style="flex: 0 0 150px; font-size: 18px; padding: 0 18px;">
+                  <select class="pill dropdown-select" id="entity" style="flex: 0 0 150px; font-size: 18px; padding: 0 18px;">
                     <option value="song">Songs</option>
                     <option value="album">Albums</option>
                     <option value="musicArtist">Artists</option>
@@ -1132,7 +1139,7 @@
                   <h1 class="h1">LIBRARY</h1>
                   <div class="sub">every tape you've recorded</div>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <div class="library-tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                   <label class="sr" for="libFind">Find a mixtape</label>
                   <div
                     style="display: flex; align-items: center; gap: 8px; height: 48px; padding: 0 16px; background: #FAF3E0; border: 2px solid #C1272D; border-radius: 24px; color: #C1272D;"
@@ -1159,10 +1166,12 @@
                       type="search"
                     />
                   </div>
+                  <!-- Library sorting dropdown: controls the order of mixtapes. -->
                   <label class="sr" for="libSort">Sort mixtapes</label>
                   <select
+                    class="dropdown-select"
                     id="libSort"
-                    style="height: 48px; padding: 0 14px; border: 2px solid #C1272D; border-radius: 24px; background: #FAF3E0; color: #4A2C22; font-size: 17px;"
+                    style="height: 48px; padding: 0 14px; border: 2px solid #C1272D; border-radius: 24px; background-color: #FAF3E0; color: #4A2C22; font-size: 17px;"
                   >
                     <option value="played">Last played</option>
                     <option value="added">Recently added</option>
@@ -1244,15 +1253,16 @@
             </section>
             <!-- Cassette deck playback controls and receipt view. -->
             <section class="view" hidden="" id="view-deck">
-              <div class="pagehead">
+              <div class="pagehead deck-pagehead">
                 <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0;">
                   <span class="tag" id="deckTag">Now spinning</span>
                   <h1 class="h1">CASSETTE DECK</h1>
                   <div class="sub">side A, from the top</div>
                 </div>
-                <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                <div class="deck-tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+                  <!-- Deck dropdown: selects which cassette is loaded into the player. -->
                   <label class="sr" for="deckSelect">Load a tape</label>
-                  <select class="tape-select" id="deckSelect"></select>
+                  <select class="tape-select dropdown-select" id="deckSelect"></select>
                   <button
                     aria-pressed="false"
                     class="btn-outline"
