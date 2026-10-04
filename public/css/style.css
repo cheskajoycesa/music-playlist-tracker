@@ -2974,3 +2974,440 @@ a.tile:hover,
   text-align: left !important;
   text-align-last: left !important;
 }
+
+/* ========================================================================== */
+/* Editor popup (edit.html)                                                    */
+/* edit.html loads this stylesheet and adds class="edit-page" to its <body>.    */
+/* Every rule here starts with .edit-page, so none of it touches index.html.    */
+/* ========================================================================== */
+
+.edit-page .genre-pill {
+  font-size:14px;
+  font-weight:600;
+  color:#1E6B65;
+  border:2px solid #1E6B65;
+  border-radius:999px;
+  padding:3px 10px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  min-width:0;
+}
+.edit-page .field,
+.edit-page .plain-input,
+.edit-page .pill {
+  transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
+}
+.edit-page .field:focus,
+.edit-page .plain-input:focus,
+.edit-page .pill:focus {
+  outline:none;
+  box-shadow:0 0 0 3px var(--ui-gold), 0 5px 0 #8A5A2B;
+}
+@media (max-width:1180px) {
+  .edit-page .content {
+    padding:28px 28px 140px;
+  }
+  .edit-page .dock {
+    left:126px;
+    right:24px;
+    bottom:18px;
+  }
+}
+@media (max-width:700px) {
+  .edit-page .content {
+    padding:22px 16px 118px;
+  }
+  .edit-page .side {
+    box-shadow:0 -5px 0 rgba(155,27,34,.12);
+  }
+  .edit-page .navi.on {
+    transform:none;
+  }
+  .edit-page .dock {
+    left:12px;
+    right:12px;
+    bottom:78px;
+    min-height:64px;
+    padding:8px 12px;
+    border-width:3px;
+    border-radius:14px;
+  }
+  .edit-page .dock .dock-wide {
+    display:none;
+  }
+  .edit-page .dock .icon-btn {
+    width:42px;
+    height:42px;
+  }
+  .edit-page .hero {
+    gap:24px;
+  }
+  .edit-page .tile {
+    min-height:130px;
+  }
+  .edit-page .editor {
+    position:static;
+  }
+}
+@media (prefers-reduced-motion:reduce) {
+  .edit-page *,
+  .edit-page *::before,
+  .edit-page *::after {
+    scroll-behavior:auto!important;
+    transition-duration:.01ms!important;
+    animation-duration:.01ms!important;
+  }
+}
+html:has(> body.edit-page),
+body.edit-page {
+  min-height:100%;
+}
+body.edit-page {
+  min-height:100vh;
+  min-height:100dvh;
+  overflow:hidden;
+}
+.edit-page .shell,
+.edit-page .app,
+.edit-page .main,
+.edit-page #content {
+  width:100%;
+  min-width:0;
+  min-height:100%;
+}
+.edit-page .shell {
+  height:100vh;
+  height:100dvh;
+  overflow:hidden;
+}
+.edit-page .app {
+  display:block;
+  height:100%;
+}
+.edit-page .main {
+  height:100%;
+  overflow:hidden;
+}
+.edit-page #view-edit {
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  height:100dvh;
+  margin:0;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  isolation:isolate;
+}
+html.embedded-editor:has(> body.edit-page),
+html.embedded-editor body.edit-page,
+html.embedded-editor .edit-page .paper,
+html.embedded-editor .edit-page .shell,
+html.embedded-editor .edit-page .app,
+html.embedded-editor .edit-page .main,
+html.embedded-editor .edit-page #content {
+  background:transparent!important;
+}
+html.embedded-editor .edit-page #view-edit {
+  padding:0;
+}
+html.embedded-editor .edit-page #view-edit::before {
+  display:none;
+}
+html.embedded-editor .edit-page .edit-dialog {
+  width:100%;
+  max-width:none;
+  max-height:none;
+  height:100%;
+  border-radius:22px;
+  box-shadow:none;
+}
+.edit-page #view-edit::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:rgba(23,79,74,.38);
+  backdrop-filter:blur(2px);
+}
+.edit-page .edit-dialog {
+  position:relative;
+  z-index:1;
+  width:min(1160px,94vw);
+  max-height:min(900px,92vh);
+  max-height:min(900px,92dvh);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:#FAF3E0;
+  border:4px solid #174F4A;
+  border-radius:24px;
+  box-shadow:12px 12px 0 #C1272D;
+}
+.edit-page #view-edit > .edit-dialog > .pagehead {
+  flex:0 0 auto;
+  width:100%;
+  margin:0;
+  padding:18px 20px 16px;
+  display:flex;
+  align-items:center;
+  gap:16px 24px;
+  background:#FAF3E0;
+  border:0;
+  border-bottom:3px solid #C1272D;
+  border-radius:0;
+  box-shadow:none;
+}
+.edit-page #view-edit > .edit-dialog > .pagehead > div:first-child {
+  flex:1 1 auto;
+}
+.edit-page #view-edit .h1 {
+  font-size:clamp(32px,4vw,50px);
+  line-height:1;
+}
+.edit-page #view-edit .sub {
+  font-size:24px;
+}
+.edit-page #view-edit .tag {
+  margin-bottom:6px;
+  padding:5px 18px;
+  font-size:13px;
+}
+.edit-page #view-edit .pagehead > div:last-child {
+  justify-content:flex-end;
+  gap:8px!important;
+}
+.edit-page #view-edit .btn-outline {
+  height:44px;
+  font-size:16px;
+}
+.edit-page .dialog-close {
+  width:42px;
+  height:42px;
+  flex:0 0 42px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:3px solid #C1272D;
+  border-radius:50%;
+  background:#FAF3E0;
+  color:#C1272D;
+  font-family:'Zilla Slab',Georgia,serif;
+  font-size:30px;
+  line-height:1;
+  text-decoration:none;
+  cursor:pointer;
+}
+.edit-page .dialog-close:hover {
+  background:#C1272D;
+  color:#FAF3E0;
+}
+.edit-page .ed-song-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+}
+.edit-page .ed-song-actions .btn-ribbon {
+  flex:1 1 240px;
+}
+.edit-page .ed-song-actions .btn-outline {
+  flex:0 1 auto;
+  height:52px;
+  font-size:19px;
+}
+.edit-page .songs-overlay {
+  position:absolute;
+  inset:0;
+  z-index:5;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(23,79,74,.45);
+  backdrop-filter:blur(2px);
+}
+.edit-page .songs-dialog {
+  width:min(560px,100%);
+  max-height:100%;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  background:#FAF3E0;
+  border:4px solid #174F4A;
+  border-radius:20px;
+  box-shadow:8px 8px 0 #C1272D;
+}
+.edit-page .songs-head {
+  flex:0 0 auto;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding:14px 18px;
+  border-bottom:3px solid #C1272D;
+}
+.edit-page .songs-head h2 {
+  margin:0;
+  font-size:28px;
+  color:#C1272D;
+}
+.edit-page .songs-body {
+  overflow:auto;
+  padding:24px 16px 28px;
+}
+.edit-page .r-row.with-trash {
+  grid-template-columns:30px minmax(0,1fr) 54px auto;
+  cursor:default;
+}
+.edit-page .r-row.with-trash:hover {
+  background:transparent;
+}
+.edit-page .r-trash {
+  min-width:32px;
+  height:32px;
+  margin-top:-5px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:8px;
+  background:transparent;
+  color:#9B1B22;
+  font:inherit;
+  font-size:14px;
+  cursor:pointer;
+}
+.edit-page .r-trash:hover {
+  background:#F7D9D3;
+}
+.edit-page #view-edit > .edit-dialog > #edEmpty {
+  flex:1 1 auto;
+  width:auto;
+  margin:20px;
+  padding:28px 20px;
+  background:#F2E8CF;
+  border:3px dashed #C9B78F;
+  border-radius:14px;
+  text-align:center;
+  box-shadow:none;
+}
+.edit-page #edMain {
+  flex:1 1 auto;
+  width:100%;
+  min-height:0;
+  margin:0;
+  padding:20px;
+  background:#FAF3E0;
+  border:0;
+  border-radius:0;
+  box-shadow:none;
+  overflow:auto;
+  scrollbar-color:#1E6B65 #F2E8CF;
+}
+.edit-page #edMain.split {
+  grid-template-columns:minmax(0,1.08fr) minmax(300px,.92fr);
+  gap:20px;
+  align-items:start;
+}
+.edit-page #edMain .editor {
+  position:static;
+  top:auto;
+}
+.edit-page #edMain .stage {
+  border:3px dashed #C9B78F;
+  border-radius:14px;
+}
+.edit-page #edMain > div:first-child > div:first-child {
+  border:3px solid #1E6B65;
+  border-radius:16px!important;
+  padding:18px!important;
+}
+.edit-page #edMain > div:first-child,
+.edit-page #edMain > div:nth-child(2) {
+  gap:18px!important;
+}
+.edit-page #edMain .editor {
+  border-radius:14px;
+}
+.edit-page #edMain .ed-body {
+  gap:14px;
+}
+.edit-page #edMain .ed-row {
+  gap:12px;
+}
+.edit-page input[type="file"] {
+  display:none!important;
+}
+@media (max-width:900px) {
+  .edit-page #view-edit {
+    padding:14px;
+  }
+  .edit-page .edit-dialog {
+    width:min(96vw,760px);
+    max-height:94vh;
+    max-height:94dvh;
+    border-width:3px;
+    border-radius:18px;
+    box-shadow:8px 8px 0 #C1272D;
+  }
+  .edit-page #view-edit > .edit-dialog > .pagehead {
+    padding:15px;
+    align-items:flex-start;
+  }
+  .edit-page #view-edit .pagehead > div:last-child {
+    flex:0 0 100%;
+    justify-content:flex-start;
+  }
+  .edit-page #edMain {
+    padding:14px;
+  }
+  .edit-page #edMain.split {
+    grid-template-columns:1fr;
+  }
+}
+@media (max-width:560px) {
+  .edit-page #view-edit {
+    padding:8px;
+  }
+  .edit-page .edit-dialog {
+    width:calc(100vw - 16px);
+    max-height:96vh;
+    max-height:96dvh;
+    border-radius:14px;
+    box-shadow:5px 5px 0 #C1272D;
+  }
+  .edit-page #view-edit > .edit-dialog > .pagehead {
+    padding:12px;
+    gap:12px;
+  }
+  .edit-page #view-edit .h1 {
+    font-size:30px;
+  }
+  .edit-page #view-edit .sub {
+    font-size:20px;
+  }
+  .edit-page #view-edit .pagehead > div:last-child {
+    display:grid!important;
+    grid-template-columns:1fr 1fr auto;
+    width:100%;
+  }
+  .edit-page #view-edit .btn-outline {
+    width:100%;
+    min-width:0;
+    height:40px;
+    padding:0 12px;
+    font-size:14px;
+  }
+  .edit-page .dialog-close {
+    width:40px;
+    height:40px;
+    flex-basis:40px;
+  }
+  .edit-page #edMain {
+    padding:10px;
+  }
+}
