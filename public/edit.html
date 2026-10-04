@@ -2337,7 +2337,72 @@ input[type="file"]{
   }
 }
 
-  </style>
+  
+/* Dropdowns: same look as index.html (css/style.css, .dropdown-select). */
+.dropdown-select {
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  margin: 0 !important;
+  flex-shrink: 0;
+  text-align: center;
+  text-align-last: center;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  border: 3px solid var(--ui-teal) !important;
+  color: var(--ui-teal) !important;
+  background-color: var(--ui-cream) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  background-size: 17px 17px;
+  padding-left: 18px !important;
+  padding-right: 46px !important;
+  /* One clean border only — no outer or inset shadow. */
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    transform 0.16s ease,
+    background-color 0.16s ease;
+}
+.dropdown-select:hover {
+  border-color: var(--ui-red) !important;
+  color: var(--ui-red) !important;
+  background-color: #FFFDF6 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23C1272D' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  /* Keep the hover state to a single border with no shadow. */
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+.dropdown-select:focus {
+  outline: none;
+  border-color: var(--ui-gold) !important;
+  /* Focus does not create a second ring or shadow. */
+  box-shadow: none;
+}
+.dropdown-select,
+.dropdown-select:hover,
+.dropdown-select:focus,
+.dropdown-select:focus-visible {
+  border: 3px solid var(--ui-teal) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+/* The editor tape picker matches the Deck tape picker: playlist name on the left. */
+#edSelect.dropdown-select {
+  width: fit-content;
+  min-width: 220px;
+  max-width: 340px;
+  padding-left: 24px !important;
+  padding-right: 48px !important;
+  text-align: left !important;
+  text-align-last: left !important;
+}
+</style>
 </head>
 <body>
 <div class="shell paper">
@@ -2353,7 +2418,7 @@ input[type="file"]{
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
 <label class="sr" for="edSelect">Pick a tape to edit</label>
-<select class="tape-select" id="edSelect"></select>
+<select class="tape-select dropdown-select" id="edSelect"></select>
 <a class="btn-outline" href="index.html#library" id="edBack">Back to library</a>
 <a class="btn-outline" href="index.html#deck" id="edPlay">Play in deck</a>
 <a class="dialog-close" href="index.html#deck" aria-label="Close editor and stay in deck">×</a>

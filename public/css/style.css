@@ -2710,6 +2710,37 @@ a.tile:hover,
   }
 }
 
+/* ========================================================================== */
+/* Bottom player: the whole bar opens the cassette deck; its progress bar is a  */
+/* slider (click, drag, or arrow keys)                                         */
+/* ========================================================================== */
+.dock {
+  cursor: pointer;
+}
+.dock-open:hover [data-np='title'] {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.dock-open:focus-visible,
+.np-seek:focus-visible {
+  outline: 3px solid var(--ui-gold);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+/* The bar is only 10px tall; the wrapper adds padding so it's easy to hit. */
+.np-seek {
+  flex-grow: 1;
+  padding: 8px 0;
+  touch-action: none; /* dragging on touch screens moves the bar, not the page */
+}
+.np-seek:hover .np-seek-track,
+.np-seek.dragging .np-seek-track {
+  border-color: var(--ui-gold) !important;
+}
+.np-seek[aria-disabled='true'] {
+  cursor: default;
+}
+
 /* ---------- Final dropdown alignment + centering correction ---------- */
 /*
    All three visible dropdown controls now use their own centered position.
