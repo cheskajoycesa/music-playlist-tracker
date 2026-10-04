@@ -8,20 +8,24 @@
 <title>Cassettefy · Edit mixtape</title>
 <meta content="Cassettefy mixtape editor — customize tape details and tracks." name="description"/>
 <meta content="#C1272D" name="theme-color"/>
-<!--External font resources used by the retro UI typography.-->
+<!--Browser tab icon: the Cassettefy logo, drawn inline as an SVG.-->
 <link href="data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 200 200' role='img' aria-label='Cassettefy logo' style='flex-shrink: 0; display: block;'%3E%3Crect x='8' y='14' width='184' height='180' rx='28' fill='%230F3A36'/%3E%3Crect x='8' y='6' width='184' height='180' rx='28' fill='%231E6B65'/%3E%3Ccircle cx='26' cy='22' r='5' fill='%23174F4A'/%3E%3Cpath d='M23 22h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Ccircle cx='174' cy='22' r='5' fill='%23174F4A'/%3E%3Cpath d='M171 22h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Ccircle cx='26' cy='170' r='5' fill='%23174F4A'/%3E%3Cpath d='M23 170h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Ccircle cx='174' cy='170' r='5' fill='%23174F4A'/%3E%3Cpath d='M171 170h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Crect x='24' y='34' width='152' height='108' rx='10' fill='%23FAF3E0'/%3E%3Cpath d='M24 44a10 10 0 0 1 10-10h132a10 10 0 0 1 10 10v5H24z' fill='%23F2CF6B'/%3E%3Crect x='24' y='52' width='152' height='5' fill='%23C1272D'/%3E%3Crect x='36' y='70' width='128' height='56' rx='28' fill='%233A2A22'/%3E%3Crect x='88' y='88' width='24' height='20' rx='2' fill='none' stroke='%23FAF3E0' stroke-opacity='.45' stroke-width='2'/%3E%3Cpath d='M89 105h22' stroke='%236B3B2A' stroke-width='4'/%3E%3Ccircle cx='66' cy='98' r='22.0' fill='%236B3B2A'/%3E%3Ccircle cx='66' cy='98' r='17.2' fill='none' stroke='%238A5238' stroke-width='1'/%3E%3Ccircle cx='66' cy='98' r='12.0' fill='%23FAF3E0'/%3E%3Ccircle cx='66' cy='98' r='6.6' fill='%232A1D17'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(0 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(60 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(120 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(180 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(240 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(300 66 98)'/%3E%3Ccircle cx='134' cy='98' r='16.0' fill='%236B3B2A'/%3E%3Ccircle cx='134' cy='98' r='12.5' fill='none' stroke='%238A5238' stroke-width='1'/%3E%3Ccircle cx='134' cy='98' r='12.0' fill='%23FAF3E0'/%3E%3Ccircle cx='134' cy='98' r='6.6' fill='%232A1D17'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(0 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(60 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(120 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(180 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(240 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(300 134 98)'/%3E%3Cpath d='M54 186L64 152h72l10 34z' fill='%23174F4A'/%3E%3Ccircle cx='84' cy='170' r='5' fill='%230F3A36'/%3E%3Ccircle cx='116' cy='170' r='5' fill='%230F3A36'/%3E%3Crect x='96' y='160' width='8' height='6' rx='1' fill='%230F3A36'/%3E%3C/svg%3E" rel="icon"/>
+<!--Google Fonts used by the retro look: Alfa Slab One (headings), Zilla Slab (text), Yellowtail (script).-->
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&amp;family=Yellowtail&amp;family=Zilla+Slab:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
-<!--Main stylesheet: layout, components, responsive behavior, and visual theme.-->
+<!--Shared stylesheet; the editor's own rules are in its "Editor popup (edit.html)" section.-->
 <link href="css/style.css" rel="stylesheet" />
 </head>
+<!--The editor popup. index.html shows this page inside an iframe (edit.html?id=<tape id>&embedded=1);
+    it can also be opened on its own as edit.html?id=<tape id>.-->
 <body class="edit-page">
 <div class="shell paper">
 <div class="app">
 <main class="main" id="content" tabindex="-1">
 <section class="view" id="view-edit">
 <div class="edit-dialog" role="dialog" aria-modal="true" aria-labelledby="editDialogTitle">
+<!-- Header: song count and length, title, and the Back / Play in deck / close buttons. -->
 <div class="pagehead">
 <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0;">
 <span class="tag" id="edTag">In the workshop</span>
@@ -34,10 +38,12 @@
 <a class="dialog-close" href="index.html#deck" aria-label="Close editor and stay in deck">×</a>
 </div>
 </div>
+<!-- Shown instead of the editor when no tape id was given. -->
 <div class="empty-box" id="edEmpty">
           No tape chosen. Open one with the pencil button on a tape in your Library.
         </div>
 <section class="split" id="edMain">
+<!-- Left column: a live preview of the cassette, which changes as the form is edited. -->
 <div style="display: flex; flex-direction: column; gap: 24px; min-width: 0;">
 <div style="background: #174F4A; border-radius: 22px; padding: 22px 22px 26px;">
 <div id="edTape"></div>
@@ -48,6 +54,7 @@
 <button class="btn-outline" id="edSongsBtn" type="button">Edit songs</button>
 </div>
 </div>
+<!-- Right column: the Customize form (name, liner notes, genre, shell color, label stripe). -->
 <div style="display: flex; flex-direction: column; gap: 28px; min-width: 0;">
 <aside aria-label="Customize this tape" class="editor">
 <div class="ed-tab display">CUSTOMIZE</div>
@@ -90,11 +97,13 @@
 </div>
 </section>
 </main>
+<!-- Pop-up message bar (see toast()) and the audio players used by the shared Player code. -->
 <div aria-live="polite" id="toast" role="status"></div>
 <audio id="deckAudio" preload="none"></audio>
 <audio id="previewAudio" preload="none"></audio>
 </div>
 </div>
+<!-- Suggestions for the Genre field (any other genre can be typed in too). -->
 <datalist id="genreList">
 <option value="Disco"></option>
 <option value="Funk"></option>
@@ -106,7 +115,19 @@
 <option value="Mixed"></option>
 </datalist>
 <script>
-   /* ================= Cassettefy · shared code ================= */
+/* ================= Cassettefy · Edit mixtape (edit.html) =================
+   The editor popup for one tape. It lets the listener:
+     - rename the tape, write liner notes, set the genre, and pick the shell and stripe colors (Customize form)
+     - see every change live on the cassette preview before saving
+     - remove songs in the "Edit songs" popup (songs are added from the Search page)
+     - jump to Search to add songs, or play the tape in the deck
+   index.html opens this page in an iframe and the two pages talk through postMessage.
+
+   The first part of this script is code shared with index.html (colors, helpers, the data Store,
+   the cassette and receipt drawings, a small Player); the editor itself starts at "EDIT MIXTAPE". */
+
+/* ================= Cassettefy · shared code ================= */
+// Brand colors and the six shell/stripe color pairs a tape can have.
 const RED = '#C1272D', DRED = '#9B1B22', TEAL = '#1E6B65', DTEAL = '#174F4A', PINK = '#EE8A83', MUST = '#F2CF6B', PAPER = '#FAF3E0';
 const SHELLS = [
   { name: 'Cherry red', shell: RED, stripe: MUST },
@@ -119,15 +140,15 @@ const SHELLS = [
 const LIGHT_SHELLS = ['#F2CF6B', '#EE8A83', '#E4D3A8'];
 const GENRES = ['Disco', 'Funk', 'Soul', 'Europop', 'Electronic', 'Doo-wop', "Rock 'n' roll", 'Pop', 'Easy listening', 'R&B', 'Jazz', 'Hip-hop'];
 
+// Small helpers: $ / $$ find elements, esc() makes text safe to put in HTML, uid() makes ids,
+// secs() turns "3:45" into seconds and fmt() turns seconds back into "3:45".
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const esc = (s) => String(s == null ? '' : s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const uid = () => Math.random().toString(36).slice(2, 10);
 const pad2 = (n) => (n < 10 ? '0' : '') + n;
 const durOk = (t) => /^\d{1,3}:[0-5]\d$/.test(String(t || '').trim());
-// Function: secs — handles this part of the app.
 function secs(t) { const m = /^(\d{1,3}):([0-5]\d)$/.exec(String(t || '').trim()); return m ? +m[1] * 60 + +m[2] : 0; }
-// Function: fmt — handles this part of the app.
 function fmt(s) {
   s = Math.max(0, Math.round(s || 0));
   const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
@@ -136,10 +157,10 @@ function fmt(s) {
 const tapeSeconds = (tape) => tape.tracks.reduce((a, t) => a + secs(t.time), 0);
 const tapeMeta = (tape) => tape.tracks.length + (tape.tracks.length === 1 ? ' track' : ' tracks') + ' · ' + Math.round(tapeSeconds(tape) / 60) + ' min';
 const shell2 = (shell) => (LIGHT_SHELLS.includes(shell) ? RED : shell);
+// A tape's songs in play order: all of side A, then side B.
 const orderTracks = (tape) => tape.tracks.filter((t) => t.side === 'A').concat(tape.tracks.filter((t) => t.side === 'B'));
 
-// Function: timeLabel — handles this part of the app.
-
+// "Today, 3:20 PM", "Yesterday, …", a weekday or a date (used for listening history).
 function timeLabel(ts) {
   const d = new Date(ts), now = new Date();
   const day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
@@ -150,7 +171,7 @@ function timeLabel(ts) {
   if (diff < 7) return d.toLocaleDateString([], { weekday: 'long' });
   return d.toLocaleDateString([], { month: 'short', day: 'numeric' });
 }
-// Function: groupLabel — handles this part of the app.
+// Heading for a group of history entries: TODAY, YESTERDAY, EARLIER THIS WEEK or EARLIER.
 function groupLabel(ts) {
   const d = new Date(ts), now = new Date();
   const day = (x) => new Date(x.getFullYear(), x.getMonth(), x.getDate()).getTime();
@@ -164,8 +185,7 @@ function groupLabel(ts) {
    If the page is opened without the server (file://, or the server is down) tapes fall back to localStorage too. */
 const API = location.protocol === 'file:' ? null : 'api';
 
-// Function: sampleTapes — handles this part of the app.
-
+// The demo tapes (classic disco, doo-wop, funk, rock 'n' roll and soul songs) used to fill an empty Library.
 function sampleTapes() {
   const now = Date.now();
   const tr = (side, title, artist, genre, time) => ({ id: uid(), side, title, artist, genre, time });
@@ -200,7 +220,6 @@ function sampleTapes() {
 }
 
 /** Accepts playlists saved by older versions of the server (e.g. {title, songs}) and fills in what the UI needs. */
-// Function: normalizeTape — handles this part of the app.
 function normalizeTape(p) {
   p = p || {};
   const key = String(p.id == null ? uid() : p.id);
@@ -226,7 +245,10 @@ function normalizeTape(p) {
   return out;
 }
 
-// Data store: loads, saves, and manages tapes, playlists, profile data, and history.
+/* Data store: the one place tapes are read and saved.
+   init() loads the tapes from the server, save() writes changes back (a quarter second later, so several
+   quick edits go out as one request), and addTape()/removeTape() create and delete tapes on the server.
+   Changed tapes are also saved when the page closes, so nothing is lost. */
 const Store = (() => {
   const KEY = 'cassettefy.v2';          // per-browser state
   const TAPES_KEY = 'cassettefy.tapes';  // tapes, only used when the server can't be reached
@@ -242,27 +264,26 @@ const Store = (() => {
   const toServer = (t) => { const c = Object.assign({}, t); delete c.id; return c; };
   const snap = (t) => JSON.stringify(toServer(t));
   const sortTapes = () => data.playlists.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
-  // Function: writeLocal — handles this part of the app.
+  // Saves the per-browser data to localStorage (and the tapes too while the server can't be reached).
   function writeLocal() {
     const local = Object.assign({}, data); delete local.playlists;
     writeJSON(KEY, local);
     if (!online) writeJSON(TAPES_KEY, data.playlists);
   }
-  // Function: api — handles this part of the app.
+  // One request to the Node server's /api/playlists routes; resolves to the JSON it sends back.
   async function api(method, path, body) {
     const r = await fetch(API + path, { method, keepalive: method !== 'GET' && !!body && JSON.stringify(body).length < 60000, headers: body ? { 'Content-Type': 'application/json' } : {}, body: body ? JSON.stringify(body) : undefined });
     if (!r.ok) throw new Error(method + ' ' + path + ' → ' + r.status);
     const text = await r.text();
     return text ? JSON.parse(text) : null;
   }
-  // Function: load — handles this part of the app.
   async function load() {
     const list = await api('GET', '/playlists');
     data.playlists = (Array.isArray(list) ? list : []).map(normalizeTape);
     synced.clear(); data.playlists.forEach((t) => synced.set(t.id, snap(t)));
     sortTapes();
   }
-  // Function: syncNow — handles this part of the app.
+  // Sends every tape that changed since the last save to the server (PUT /api/playlists/:id).
   async function syncNow() {
     clearTimeout(timer);
     if (!online) return;
@@ -328,16 +349,17 @@ const Store = (() => {
   };
 })();
 
-/* ---------------- icons & art (templates generated from the design) ---------------- */
+/* ---------------- icons & art ----------------
+   The icons, the logo and the cassette drawing are SVG/HTML templates. Placeholders such as __SHELL__
+   and __TITLE__ are swapped for each tape's colors and name. */
 const ICONS = {"star": "<path d=\"M12 3.2l2.7 5.6 6.1.8-4.5 4.2 1.1 6.1L12 17l-5.4 2.9 1.1-6.1-4.5-4.2 6.1-.8z\" fill=\"currentColor\" stroke=\"none\"/>", "search": "<circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-4-4\"/>", "play": "<path d=\"M7 4.5l12.5 7.5L7 19.5z\" fill=\"currentColor\" stroke=\"none\"/>", "pause": "<rect x=\"6\" y=\"4.5\" width=\"4\" height=\"15\" rx=\"1\" fill=\"currentColor\" stroke=\"none\"/><rect x=\"14\" y=\"4.5\" width=\"4\" height=\"15\" rx=\"1\" fill=\"currentColor\" stroke=\"none\"/>", "prev": "<path d=\"M19 5.5L9 12l10 6.5z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M5.5 5.5v13\"/>", "next": "<path d=\"M5 5.5L15 12 5 18.5z\" fill=\"currentColor\" stroke=\"none\"/><path d=\"M18.5 5.5v13\"/>", "rew": "<path d=\"M11.5 6L3 12l8.5 6zM21 6l-8.5 6 8.5 6z\" fill=\"currentColor\" stroke=\"none\"/>", "ffw": "<path d=\"M12.5 6L21 12l-8.5 6zM3 6l8.5 6L3 18z\" fill=\"currentColor\" stroke=\"none\"/>", "stop": "<rect x=\"6\" y=\"6\" width=\"12\" height=\"12\" rx=\"1.5\" fill=\"currentColor\" stroke=\"none\"/>", "eject": "<path d=\"M12 5l7.5 8.5h-15z\" fill=\"currentColor\" stroke=\"none\"/><rect x=\"4.5\" y=\"16\" width=\"15\" height=\"3\" rx=\"1\" fill=\"currentColor\" stroke=\"none\"/>", "heart": "<path d=\"M12 20s-7.2-4.4-9.1-9.1A5 5 0 0 1 12 6.2a5 5 0 0 1 9.1 4.7C19.2 15.6 12 20 12 20z\"/>", "heartf": "<path d=\"M12 20s-7.2-4.4-9.1-9.1A5 5 0 0 1 12 6.2a5 5 0 0 1 9.1 4.7C19.2 15.6 12 20 12 20z\" fill=\"currentColor\"/>", "plus": "<path d=\"M12 5v14M5 12h14\"/>", "pencil": "<path d=\"M4 20h4L19 9l-4-4L4 16z\"/><path d=\"M13.5 6.5l4 4\"/>", "trash": "<path d=\"M4 7h16M9.5 7V4.5h5V7M6.5 7l1 13h9l1-13\"/>", "clock": "<circle cx=\"12\" cy=\"12\" r=\"8.5\"/><path d=\"M12 7.5V12l3 2\"/>", "chev": "<path d=\"M6 6l6 6-6 6M13 6l6 6-6 6\"/>", "shuffle": "<path d=\"M3 7h4l10 10h4M3 17h4l3-3M14 10l3-3h4M18.5 4.5L21 7l-2.5 2.5M18.5 14.5L21 17l-2.5 2.5\"/>", "repeat": "<path d=\"M4 12V9.5A3.5 3.5 0 0 1 7.5 6H20M17 3l3 3-3 3M20 12v2.5a3.5 3.5 0 0 1-3.5 3.5H4M7 21l-3-3 3-3\"/>", "vinyl": "<circle cx=\"12\" cy=\"12\" r=\"9\"/><circle cx=\"12\" cy=\"12\" r=\"2.5\"/><path d=\"M7.5 9.5a5 5 0 0 1 2-2\"/>", "vol": "<path d=\"M4 9.5h3.5L12 5.5v13l-4.5-4H4z\" fill=\"currentColor\"/><path d=\"M15.5 9a4 4 0 0 1 0 6M18.5 6.5a8 8 0 0 1 0 11\"/>", "tape": "<rect x=\"2.5\" y=\"5\" width=\"19\" height=\"14\" rx=\"2\"/><circle cx=\"8.5\" cy=\"11\" r=\"2\"/><circle cx=\"15.5\" cy=\"11\" r=\"2\"/><path d=\"M6 19l1.5-3h9l1.5 3\"/>", "stack": "<path d=\"M5 4v16M10 4v16M14.5 5.5l5 14\"/>", "home": "<path d=\"M3.5 11L12 4l8.5 7M6 9.5V20h12V9.5\"/>", "user": "<circle cx=\"12\" cy=\"8\" r=\"4\"/><path d=\"M4 21a8 8 0 0 1 16 0\"/>", "lock": "<rect x=\"5\" y=\"11\" width=\"14\" height=\"10\" rx=\"2\"/><path d=\"M8 11V8a4 4 0 0 1 8 0v3\"/>", "check": "<path d=\"M5 12.5l4.5 4.5L19 7.5\"/>", "link": "<path d=\"M10 14a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1M14 10a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1\"/>", "up": "<path d=\"M12 19V5M6 11l6-6 6 6\"/>", "down": "<path d=\"M12 5v14M6 13l6 6 6-6\"/>", "back": "<path d=\"M18 6l-6 6 6 6M11 6l-6 6 6 6\"/>"};
-// Function: icon — handles this part of the app.
 function icon(name, size, extra) {
   return '<svg width="' + (size || 22) + '" height="' + (size || 22) + '" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink: 0;' + (extra || '') + '">' + ICONS[name] + '</svg>';
 }
 const LOGO_FULL = "<svg width=\"__S__\" height=\"__S__\" viewBox=\"0 0 200 200\" role=\"img\" aria-label=\"Cassettefy logo\" style=\"flex-shrink: 0; display: block;\"><rect x=\"8\" y=\"14\" width=\"184\" height=\"180\" rx=\"28\" fill=\"#0F3A36\"/><rect x=\"8\" y=\"6\" width=\"184\" height=\"180\" rx=\"28\" fill=\"#1E6B65\"/><circle cx=\"26\" cy=\"22\" r=\"5\" fill=\"#174F4A\"/><path d=\"M23 22h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><circle cx=\"174\" cy=\"22\" r=\"5\" fill=\"#174F4A\"/><path d=\"M171 22h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><circle cx=\"26\" cy=\"170\" r=\"5\" fill=\"#174F4A\"/><path d=\"M23 170h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><circle cx=\"174\" cy=\"170\" r=\"5\" fill=\"#174F4A\"/><path d=\"M171 170h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><rect x=\"24\" y=\"34\" width=\"152\" height=\"108\" rx=\"10\" fill=\"#FAF3E0\"/><path d=\"M24 44a10 10 0 0 1 10-10h132a10 10 0 0 1 10 10v5H24z\" fill=\"#F2CF6B\"/><rect x=\"24\" y=\"52\" width=\"152\" height=\"5\" fill=\"#C1272D\"/><text x=\"100\" y=\"87\" text-anchor=\"middle\" font-family=\"Alfa Slab One, Georgia, serif\" font-size=\"18.5\" letter-spacing=\".4\" fill=\"#C1272D\">CASSETTE<tspan font-family=\"Yellowtail, cursive\" font-size=\"29\" fill=\"#1E6B65\">fy</tspan></text><rect x=\"48\" y=\"100\" width=\"104\" height=\"32\" rx=\"16\" fill=\"#3A2A22\"/><rect x=\"88\" y=\"109\" width=\"24\" height=\"14\" rx=\"2\" fill=\"none\" stroke=\"#FAF3E0\" stroke-opacity=\".45\" stroke-width=\"1.5\"/><path d=\"M89 121h22\" stroke=\"#6B3B2A\" stroke-width=\"3\"/><circle cx=\"70\" cy=\"116\" r=\"13.0\" fill=\"#6B3B2A\"/><circle cx=\"70\" cy=\"116\" r=\"10.1\" fill=\"none\" stroke=\"#8A5238\" stroke-width=\"1\"/><circle cx=\"70\" cy=\"116\" r=\"7.5\" fill=\"#FAF3E0\"/><circle cx=\"70\" cy=\"116\" r=\"4.1\" fill=\"#2A1D17\"/><rect x=\"68.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(0 70 116)\"/><rect x=\"68.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(60 70 116)\"/><rect x=\"68.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(120 70 116)\"/><rect x=\"68.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(180 70 116)\"/><rect x=\"68.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(240 70 116)\"/><rect x=\"68.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(300 70 116)\"/><circle cx=\"130\" cy=\"116\" r=\"10.0\" fill=\"#6B3B2A\"/><circle cx=\"130\" cy=\"116\" r=\"7.8\" fill=\"none\" stroke=\"#8A5238\" stroke-width=\"1\"/><circle cx=\"130\" cy=\"116\" r=\"7.5\" fill=\"#FAF3E0\"/><circle cx=\"130\" cy=\"116\" r=\"4.1\" fill=\"#2A1D17\"/><rect x=\"128.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(0 130 116)\"/><rect x=\"128.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(60 130 116)\"/><rect x=\"128.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(120 130 116)\"/><rect x=\"128.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(180 130 116)\"/><rect x=\"128.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(240 130 116)\"/><rect x=\"128.7\" y=\"111.3\" width=\"2.7\" height=\"2.2\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(300 130 116)\"/><path d=\"M54 186L64 152h72l10 34z\" fill=\"#174F4A\"/><circle cx=\"84\" cy=\"170\" r=\"5\" fill=\"#0F3A36\"/><circle cx=\"116\" cy=\"170\" r=\"5\" fill=\"#0F3A36\"/><rect x=\"96\" y=\"160\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#0F3A36\"/></svg>", LOGO_MARK = "<svg width=\"__S__\" height=\"__S__\" viewBox=\"0 0 200 200\" role=\"img\" aria-label=\"Cassettefy logo\" style=\"flex-shrink: 0; display: block;\"><rect x=\"8\" y=\"14\" width=\"184\" height=\"180\" rx=\"28\" fill=\"#0F3A36\"/><rect x=\"8\" y=\"6\" width=\"184\" height=\"180\" rx=\"28\" fill=\"#1E6B65\"/><circle cx=\"26\" cy=\"22\" r=\"5\" fill=\"#174F4A\"/><path d=\"M23 22h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><circle cx=\"174\" cy=\"22\" r=\"5\" fill=\"#174F4A\"/><path d=\"M171 22h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><circle cx=\"26\" cy=\"170\" r=\"5\" fill=\"#174F4A\"/><path d=\"M23 170h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><circle cx=\"174\" cy=\"170\" r=\"5\" fill=\"#174F4A\"/><path d=\"M171 170h6\" stroke=\"#5E9C93\" stroke-width=\"1.5\"/><rect x=\"24\" y=\"34\" width=\"152\" height=\"108\" rx=\"10\" fill=\"#FAF3E0\"/><path d=\"M24 44a10 10 0 0 1 10-10h132a10 10 0 0 1 10 10v5H24z\" fill=\"#F2CF6B\"/><rect x=\"24\" y=\"52\" width=\"152\" height=\"5\" fill=\"#C1272D\"/><rect x=\"36\" y=\"70\" width=\"128\" height=\"56\" rx=\"28\" fill=\"#3A2A22\"/><rect x=\"88\" y=\"88\" width=\"24\" height=\"20\" rx=\"2\" fill=\"none\" stroke=\"#FAF3E0\" stroke-opacity=\".45\" stroke-width=\"2\"/><path d=\"M89 105h22\" stroke=\"#6B3B2A\" stroke-width=\"4\"/><circle cx=\"66\" cy=\"98\" r=\"22.0\" fill=\"#6B3B2A\"/><circle cx=\"66\" cy=\"98\" r=\"17.2\" fill=\"none\" stroke=\"#8A5238\" stroke-width=\"1\"/><circle cx=\"66\" cy=\"98\" r=\"12.0\" fill=\"#FAF3E0\"/><circle cx=\"66\" cy=\"98\" r=\"6.6\" fill=\"#2A1D17\"/><rect x=\"63.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(0 66 98)\"/><rect x=\"63.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(60 66 98)\"/><rect x=\"63.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(120 66 98)\"/><rect x=\"63.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(180 66 98)\"/><rect x=\"63.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(240 66 98)\"/><rect x=\"63.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(300 66 98)\"/><circle cx=\"134\" cy=\"98\" r=\"16.0\" fill=\"#6B3B2A\"/><circle cx=\"134\" cy=\"98\" r=\"12.5\" fill=\"none\" stroke=\"#8A5238\" stroke-width=\"1\"/><circle cx=\"134\" cy=\"98\" r=\"12.0\" fill=\"#FAF3E0\"/><circle cx=\"134\" cy=\"98\" r=\"6.6\" fill=\"#2A1D17\"/><rect x=\"131.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(0 134 98)\"/><rect x=\"131.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(60 134 98)\"/><rect x=\"131.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(120 134 98)\"/><rect x=\"131.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(180 134 98)\"/><rect x=\"131.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(240 134 98)\"/><rect x=\"131.8\" y=\"90.6\" width=\"4.3\" height=\"3.6\" rx=\".6\" fill=\"#FAF3E0\" transform=\"rotate(300 134 98)\"/><path d=\"M54 186L64 152h72l10 34z\" fill=\"#174F4A\"/><circle cx=\"84\" cy=\"170\" r=\"5\" fill=\"#0F3A36\"/><circle cx=\"116\" cy=\"170\" r=\"5\" fill=\"#0F3A36\"/><rect x=\"96\" y=\"160\" width=\"8\" height=\"6\" rx=\"1\" fill=\"#0F3A36\"/></svg>";
 const logoSVG = (size, variant) => (variant === 'mark' ? LOGO_MARK : LOGO_FULL).split('__S__').join(size);
 const TAPE_TPL = "<div class=\"tapebox\" style=\"__BOX__\"><div style=\"font-size: 1cqi; position: relative; width: 100em; background: __SHELL__; border-radius: 5em; padding: 4.5em 4.5em 0; box-shadow: 0 1.2em 0 rgba(58,42,34,.28);\"><span style=\"position: absolute; left: 1.8em; top: 1.8em; width: 1.8em; height: 1.8em; border-radius: 50%; background: rgba(0,0,0,.28);\"></span><span style=\"position: absolute; right: 1.8em; top: 1.8em; width: 1.8em; height: 1.8em; border-radius: 50%; background: rgba(0,0,0,.28);\"></span><span style=\"position: absolute; left: 1.8em; bottom: 1.8em; width: 1.8em; height: 1.8em; border-radius: 50%; background: rgba(0,0,0,.28);\"></span><span style=\"position: absolute; right: 1.8em; bottom: 1.8em; width: 1.8em; height: 1.8em; border-radius: 50%; background: rgba(0,0,0,.28);\"></span><div style=\"background: #FAF3E0; border-radius: 2em; padding: 3em 4em 3.5em; display: flex; flex-direction: column; align-items: center; gap: 2.5em;\"><div style=\"width: 100%; display: flex; align-items: center; gap: 2.5em;\"><span style=\"width: 7.5em; height: 7.5em; flex-shrink: 0; border-radius: 1em; background: __SHELL2__; display: flex; align-items: center; justify-content: center;\"><span class=\"display\" style=\"font-size: 5em; color: #FAF3E0; line-height: 1;\">__SIDE__</span></span><span class=\"script\" style=\"flex-grow: 1; min-width: 0; text-align: center; font-size: 7.5em; line-height: 1.1; color: #4A2C22; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;\">__TITLE__</span><span style=\"width: 7.5em; flex-shrink: 0; text-align: right;\"><span style=\"font-size: max(9px, 2.6em); font-weight: 700; letter-spacing: .06em; color: #4A2C22;\">C-60</span></span></div><div style=\"width: 100%; display: flex; flex-direction: column; gap: .6em;\"><div style=\"height: 1.2em; background: __STRIPE__;\"></div><div style=\"height: 1.2em; background: __SHELL2__;\"></div></div><div style=\"width: 80%; height: 20em; background: #3A2A22; border-radius: 10em; padding: 0 3em; display: flex; align-items: center; justify-content: space-between; gap: 3em;\"><svg class=\"reel\" viewBox=\"-50 -50 100 100\" aria-hidden=\"true\" style=\"width: 15.5em; height: 15.5em; flex-shrink: 0;\"><circle r=\"46\" fill=\"#6B3B2A\"/><circle r=\"30\" fill=\"none\" stroke=\"#83503A\" stroke-width=\"1\"/><circle r=\"36\" fill=\"none\" stroke=\"#83503A\" stroke-width=\"1\"/><circle r=\"42\" fill=\"none\" stroke=\"#83503A\" stroke-width=\"1\"/><circle r=\"26\" fill=\"#FAF3E0\"/><circle r=\"13\" fill=\"#2A1D17\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(0)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(60)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(120)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(180)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(240)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(300)\" fill=\"#FAF3E0\"/><circle cx=\"0\" cy=\"-19\" r=\"3\" fill=\"#2A1D17\"/><circle cx=\"16.5\" cy=\"9.5\" r=\"3\" fill=\"#2A1D17\"/><circle cx=\"-16.5\" cy=\"9.5\" r=\"3\" fill=\"#2A1D17\"/></svg><div style=\"flex-grow: 1; height: 44%; border: 2px solid rgba(250,243,224,.35); border-radius: 4px; display: flex; align-items: flex-end;\"><div style=\"width: 100%; height: 1em; min-height: 3px; background: #6B3B2A;\"></div></div><svg class=\"reel\" viewBox=\"-50 -50 100 100\" aria-hidden=\"true\" style=\"width: 15.5em; height: 15.5em; flex-shrink: 0;\"><circle r=\"34\" fill=\"#6B3B2A\"/><circle r=\"30\" fill=\"none\" stroke=\"#83503A\" stroke-width=\"1\"/><circle r=\"26\" fill=\"#FAF3E0\"/><circle r=\"13\" fill=\"#2A1D17\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(0)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(60)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(120)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(180)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(240)\" fill=\"#FAF3E0\"/><rect x=\"-3\" y=\"-13\" width=\"6\" height=\"6\" rx=\"1\" transform=\"rotate(300)\" fill=\"#FAF3E0\"/><circle cx=\"0\" cy=\"-19\" r=\"3\" fill=\"#2A1D17\"/><circle cx=\"16.5\" cy=\"9.5\" r=\"3\" fill=\"#2A1D17\"/><circle cx=\"-16.5\" cy=\"9.5\" r=\"3\" fill=\"#2A1D17\"/></svg></div></div><div style=\"margin: 2.5em auto 0; width: 62%; height: 8.5em; background: rgba(0,0,0,.2); clip-path: polygon(7% 0, 93% 0, 100% 100%, 0 100%); display: flex; align-items: center; justify-content: center; gap: 30%;\"><span style=\"width: 2.2em; height: 2.2em; border-radius: 50%; background: rgba(0,0,0,.35);\"></span><span style=\"width: 2.2em; height: 2.2em; border-radius: 50%; background: rgba(0,0,0,.35);\"></span></div></div></div>";
-// Function: tapeHTML — handles this part of the app.
+// Draws a tape as a cassette in its shell and stripe colors, with its name on the label.
 function tapeHTML(t, opts) {
   opts = opts || {};
   return TAPE_TPL.split('__SHELL2__').join(shell2(t.shell)).split('__SHELL__').join(t.shell).split('__STRIPE__').join(t.stripe)
@@ -347,7 +369,8 @@ const MINI_TPL = "<svg width=\"__W__\" height=\"__H__\" viewBox=\"0 0 80 52\" ar
 const miniTape = (w, shell, stripe) => MINI_TPL.split('__W__').join(w).split('__H__').join(Math.round(w * 52 / 80)).split('__SHELL__').join(shell).split('__STRIPE__').join(stripe);
 
 /* ---------------- receipt ---------------- */
-// Function: receiptHTML — handles this part of the app.
+// Draws a tape's song list as a shop receipt: tape number and date, songs by side, subtotals and total time.
+// With opts.trash every song gets a remove button (the Edit songs popup).
 function receiptHTML(tape, opts) {
   opts = opts || {};
   const mark = opts.mark || 'pencil', verb = mark === 'pencil' ? 'Edit' : 'Play';
@@ -396,21 +419,19 @@ function receiptHTML(tape, opts) {
 }
 
 /* ---------------- small UI helpers ---------------- */
-// Function: toast — handles this part of the app.
+// Shows a short message at the bottom of the screen for about 3 seconds.
 function toast(msg) {
   const el = $('#toast'); if (!el) return;
   el.textContent = msg; el.classList.add('show');
   clearTimeout(toast.t); toast.t = setTimeout(() => el.classList.remove('show'), 2800);
 }
 /** Two-step confirm for destructive buttons (no browser dialogs). */
-// Function: confirmClick — handles this part of the app.
 function confirmClick(btn, label, action) {
   if (btn.dataset.armed === '1') { action(); return; }
   btn.dataset.armed = '1'; btn.dataset.orig = btn.innerHTML; btn.classList.add('armed'); btn.textContent = label;
   setTimeout(() => { if (btn.isConnected && btn.dataset.armed === '1') { btn.dataset.armed = ''; btn.classList.remove('armed'); btn.innerHTML = btn.dataset.orig; } }, 3500);
 }
 /** Fills the sidebar mini player + tablet/phone dock with the current track. */
-// Function: paintNowPlaying — handles this part of the app.
 function paintNowPlaying(info) {
   const t = info && info.track, tape = info && info.tape;
   $$('[data-np="title"]').forEach((e) => (e.textContent = t ? t.title : 'Nothing playing'));
@@ -422,6 +443,8 @@ function paintNowPlaying(info) {
   $$('[data-np="tape"]').forEach((e) => (e.innerHTML = miniTape(e.dataset.w || 58, tape ? tape.shell : RED, tape ? tape.stripe : MUST)));
   $$('[data-np="play"]').forEach((b) => { b.innerHTML = icon(info && info.playing ? 'pause' : 'play', 22); b.setAttribute('aria-label', info && info.playing ? 'Pause' : 'Play'); });
 }
+/* A small copy of the deck's Player. The editor uses it to keep the deck on the right song when songs are
+   removed from the tape that is playing (see keepPlayerOn). The full player with Spotify is in index.html. */
 const Player = {
   tape: null, idx: 0, playing: false, pos: 0, timer: null,
   order() { return this.tape ? orderTracks(this.tape) : []; },
@@ -515,7 +538,6 @@ deckAudio.addEventListener('loadedmetadata', tick);
 deckAudio.addEventListener('ended', () => Player.next(true));
 
 // Playback UI update: synchronizes progress, elapsed time, and player indicators.
-// Function: tick — handles this part of the app.
 function tick() {
   const info = Player.info();
   paintNowPlaying(info);
@@ -526,26 +548,27 @@ function tick() {
   const tot = $('#progTotal'); if (tot) tot.textContent = fmt(info.dur);
   const bar = $('#progress'); if (bar) { bar.setAttribute('aria-valuenow', Math.round(info.pos)); bar.setAttribute('aria-valuemax', Math.round(info.dur)); bar.setAttribute('aria-valuetext', fmt(info.pos) + ' of ' + fmt(info.dur)); }
 }
-// Player UI bindings: connects playback buttons to the Player controller.
-// Function: ui — handles this part of the app.
+// Redraws everything that shows playback state.
 function ui() {
   tick();
   if (currentRoute === 'deck') renderDeck();
   if (!Player.info()) paintNowPlaying(null);
 }
+// Play / previous / next buttons of the mini player.
 $$('[data-np="play"]').forEach((b) => b.addEventListener('click', () => (Player.tape ? Player.toggle() : (location.hash = '#deck'))));
 $$('[data-np="prev"]').forEach((b) => b.addEventListener('click', () => Player.prev()));
 $$('[data-np="next"]').forEach((b) => b.addEventListener('click', () => Player.go(Player.idx + 1)));
 
-/* The dedicated editor page has no search preview buttons. */
+/* The editor has no search preview buttons, so there is nothing to reset. */
 function stopPreviewButtons() {}
 
 /* ======================= EDIT MIXTAPE ======================= */
+// Label stripe colors offered in the Customize form.
 const STRIPES = [
   { name: 'Mustard', color: MUST }, { name: 'Soda pink', color: PINK }, { name: 'Diner teal', color: TEAL },
   { name: 'Cherry red', color: RED }, { name: 'Night teal', color: DTEAL }, { name: 'Paper', color: PAPER }
 ];
-// Editor state: manages the currently edited tape and its draft metadata.
+// Editor state: which tape is open, and the Customize changes that haven't been saved yet (the draft).
 const E = {
   id: null,          // tape being edited
   draft: null,       // customize fields not saved yet, shown live on the preview tape
@@ -557,7 +580,6 @@ const E = {
   }
 };
 /** After a tape's songs change, keeps the deck on the song it was on, or stops if that song is gone. */
-// Function: keepPlayerOn — handles this part of the app.
 function keepPlayerOn(tape, trackId) {
   if (Player.tape !== tape) return;
   const i = Player.order().findIndex((t) => t.id === trackId);
@@ -566,8 +588,8 @@ function keepPlayerOn(tape, trackId) {
   Player.cue(); Player.persist(false); ui();
 }
 const playingTrackId = (tape) => (Player.tape === tape && Player.track() ? Player.track().id : null);
-// Editor renderer: builds the mixtape editor and song list.
-// Function: renderEdit — handles this part of the app.
+// Draws the editor for the open tape: fills the form, the header and the "Edit songs (n)" button,
+// or shows the "No tape chosen" message when there is no tape.
 function renderEdit() {
   const tape = E.tape();
   $('#edEmpty').hidden = !!tape; $('#edMain').hidden = !tape; $('#edPlay').hidden = !tape;
@@ -582,28 +604,32 @@ function renderEdit() {
   renderEditPreview();
   if (!$('#songsOverlay').hidden) renderSongs();
 }
-// Function: renderEditPreview — handles this part of the app.
+// Live preview: redraws the cassette and the color swatches from the draft.
 function renderEditPreview() {
   const d = E.draft;
   $('#edTape').innerHTML = tapeHTML(Object.assign({}, d, { name: d.name.trim() || 'Untitled tape' }), { box: 'max-width: 540px; margin: 0 auto;' });
   $('#edShells').innerHTML = SHELLS.map((s, i) => '<button type="button" class="swatch" data-shell="' + i + '" aria-label="' + s.name + ' shell" aria-pressed="' + (d.shell === s.shell) + '" style="background: ' + s.shell + ';"></button>').join('');
   $('#edStripes').innerHTML = STRIPES.map((s, i) => '<button type="button" class="swatch" data-stripe="' + i + '" aria-label="' + s.name + ' stripe" aria-pressed="' + (d.stripe === s.color) + '" style="background: ' + s.color + ';"></button>').join('');
 }
+// Typing in the name, notes or genre updates the preview straight away (saved only with "Save changes").
 $('#edTapeForm').addEventListener('input', () => {
   if (!E.draft) return;
   Object.assign(E.draft, { name: $('#edName').value, notes: $('#edNotes').value, genre: $('#edGenre').value });
   renderEditPreview();
 });
+// Shell color swatches: picking a shell also picks its matching stripe color.
 $('#edShells').addEventListener('click', (e) => {
   const b = e.target.closest('[data-shell]'); if (!b || !E.draft) return;
   const s = SHELLS[+b.dataset.shell]; E.draft.shell = s.shell; E.draft.stripe = s.stripe;
   renderEditPreview(); $('#edShells [data-shell="' + b.dataset.shell + '"]').focus();
 });
+// Label stripe swatches.
 $('#edStripes').addEventListener('click', (e) => {
   const b = e.target.closest('[data-stripe]'); if (!b || !E.draft) return;
   E.draft.stripe = STRIPES[+b.dataset.stripe].color;
   renderEditPreview(); $('#edStripes [data-stripe="' + b.dataset.stripe + '"]').focus();
 });
+// "Save changes": copies the draft onto the tape and saves it to the server (a name is required).
 $('#edTapeForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const tape = E.tape(); if (!tape || !E.draft) return;
@@ -634,9 +660,10 @@ $('#songsClose').addEventListener('click', closeSongs);
 // Clicking the dimmed area around the popup, or pressing Esc, closes it too.
 $('#songsOverlay').addEventListener('click', (e) => { if (e.target === e.currentTarget) closeSongs(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !$('#songsOverlay').hidden) closeSongs(); });
+// Removing a song: takes two clicks (the first turns the trash button into "Remove?"), then deletes the
+// song, saves the tape, and tells index.html in case that song is playing in the deck.
 $('#songsReceipt').addEventListener('click', (e) => {
   const btn = e.target.closest('[data-remove]'); if (!btn) return;
-  // Two clicks, like erasing a tape: the first turns the button into "Remove?".
   confirmClick(btn, 'Remove?', () => {
     const tape = E.tape(), t = tape && tape.tracks.find((x) => x.id === btn.dataset.remove); if (!t) return;
     const playing = playingTrackId(tape);
@@ -651,6 +678,7 @@ $('#songsReceipt').addEventListener('click', (e) => {
 /* ---------- Add songs from Search ---------- */
 // Lets index.html wait for this page's last save before it reloads the tapes.
 window.cassettefyFlush = () => Store.flush();
+// "Add songs from Search": saves first, then opens the Search page with this tape ticked in its add panel.
 $('#edAddSongs').addEventListener('click', async () => {
   const tape = E.tape(); if (!tape) return;
   await Store.flush();
@@ -664,13 +692,13 @@ $('#edAddSongs').addEventListener('click', async () => {
 
 /* ======================= edit.html boot ======================= */
 
-// Detect when this editor is being shown inside the index.html popup.
+// True when this editor is shown inside the index.html popup (its URL has &embedded=1).
 const EMBEDDED_EDITOR = new URLSearchParams(location.search).get('embedded') === '1';
 if (EMBEDDED_EDITOR) document.documentElement.classList.add('embedded-editor');
 
-// Close the editor through index.html when this page is inside the popup iframe.
-// The direct parent call is the primary method; postMessage is kept as a safe
-// fallback so the controls continue working even if the parent implementation changes.
+// Closes the popup by asking index.html (the parent page) to close it. It calls index.html's
+// closeEditorDialog() directly, and sends a postMessage instead if that call isn't possible.
+// Returns false when this page is open on its own, not inside the popup.
 function closeEditorFromParent(){
   if(window.parent === window) return false;
 
@@ -680,7 +708,7 @@ function closeEditorFromParent(){
       return true;
     }
   }catch(err){
-    // Fall through to postMessage when direct parent access is unavailable.
+    // The parent page couldn't be reached directly; the message below is sent instead.
   }
 
   try{
@@ -691,16 +719,15 @@ function closeEditorFromParent(){
   }
 }
 
-// Back to Library: closes the centered popup and reveals index.html again.
+// "Back to library": closes the popup and shows the Library page again.
 $('#edBack').addEventListener('click',(e)=>{
   if(closeEditorFromParent()) e.preventDefault();
 });
 
-// X button: behaves exactly like Back to Library.
+// × button: closes the popup and leaves the page underneath as it was (e.g. still on the Deck).
 $('.dialog-close').addEventListener('click',(e)=>{
   e.preventDefault();
 
-  // X only closes the editor. It must leave the underlying page on the Deck view.
   if(window.parent !== window){
     try{
       if(typeof window.parent.closeEditorDialog === 'function'){
@@ -708,22 +735,23 @@ $('.dialog-close').addEventListener('click',(e)=>{
         return;
       }
     }catch(err){
-      // Use the message fallback below.
+      // The parent page couldn't be reached directly; the message below is sent instead.
     }
 
     try{
       window.parent.postMessage({ type:'cassettefy-close-editor', stayDeck:true }, '*');
       return;
     }catch(err){
-      // Ignore and use the normal link when opened as a standalone page.
+      // No parent page to message: handled like the standalone page below.
     }
   }
 
-  // Standalone edit.html fallback: return directly to the Deck view.
+  // Opened on its own (not in the popup): goes to the Deck page.
   location.href='index.html#deck';
 });
 
-// Play in deck: close the popup first, then let index.html handle playback.
+// "Play in deck": closes the popup and loads this tape into the deck on index.html.
+// Opened on its own, the button is a plain link to index.html?play=<tape id>#deck.
 $('#edPlay').addEventListener('click',(e)=>{
   if(window.parent !== window){
     e.preventDefault();
@@ -740,16 +768,17 @@ $('#edPlay').addEventListener('click',(e)=>{
         return;
       }
     }catch(err){
-      // Use postMessage fallback below.
+      // The parent page couldn't be reached directly; the message below is sent instead.
     }
 
     window.parent.postMessage({ type:'cassettefy-play-tape', id }, '*');
   }
 });
 
+// The shared Player code checks which page is showing; the editor has no Deck page to redraw.
 let currentRoute = 'edit';
 
-// Open the requested tape from ?id=... and render the editor.
+// Start-up: loads the tapes from the server, opens the tape named in ?id=... and draws the editor.
 (async function bootEditor() {
   const online = await Store.init();
   if (!online && API) toast('Can’t reach the server — working offline in this browser.');
