@@ -2850,3 +2850,30 @@ a.tile:hover,
   }
 }
 
+/* ========================================================================== */
+/* Spacing fixes: deck frame and sidebar ribbon                                */
+/* ========================================================================== */
+
+/* The thin frame around the deck also wraps the deck's 9px 3D edge at the bottom,
+   leaving about the same gap below it as on the other sides. */
+.deck::before {
+  bottom: -22px;
+}
+
+/* Sidebar menu items (incl. the selected ribbon and its 5px nudge) stop 6px short of the
+   mustard line down the sidebar's edge instead of running over it. */
+@media (min-width: 1181px) {
+  .navi {
+    margin-right: 12px;
+  }
+}
+/* Icon-only sidebar (laptops / tablets): slightly narrower pills, no nudge. */
+@media (min-width: 701px) and (max-width: 1180px) {
+  .navi {
+    width: 56px;
+    margin-right: 8px;
+  }
+  .navi.on {
+    transform: none;
+  }
+}
