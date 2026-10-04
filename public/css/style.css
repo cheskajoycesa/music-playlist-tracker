@@ -2367,9 +2367,8 @@ a.tile:hover,
   background-size: 17px 17px;
   padding-left: 18px !important;
   padding-right: 46px !important;
-  box-shadow:
-    0 4px 0 rgba(23, 79, 74, 0.28),
-    0 0 0 2px rgba(242, 207, 107, 0.5) inset;
+  /* One clean border only — no outer or inset shadow. */
+  box-shadow: none;
   cursor: pointer;
   transition:
     border-color 0.16s ease,
@@ -2385,10 +2384,8 @@ a.tile:hover,
   color: var(--ui-red) !important;
   background-color: #FFFDF6 !important;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23C1272D' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  box-shadow:
-    0 4px 0 rgba(193, 39, 45, 0.22),
-    0 0 0 2px rgba(193, 39, 45, 0.18) inset,
-    0 0 14px rgba(193, 39, 45, 0.12);
+  /* Keep the hover state to a single border with no shadow. */
+  box-shadow: none;
   transform: translateY(-1px);
 }
 
@@ -2397,10 +2394,8 @@ a.tile:hover,
 .dropdown-select:focus {
   outline: none;
   border-color: var(--ui-gold) !important;
-  box-shadow:
-    0 4px 0 rgba(23, 79, 74, 0.28),
-    0 0 0 3px var(--ui-gold),
-    0 0 16px rgba(242, 207, 107, 0.32);
+  /* Focus does not create a second ring or shadow. */
+  box-shadow: none;
 }
 
 /* Consistent widths keep the three dropdowns visually aligned in their own areas. */
@@ -2416,16 +2411,16 @@ a.tile:hover,
 
 /* PART: #deckSelect.dropdown-select — styles this component or layout area. */
 #deckSelect.dropdown-select {
-  /* Deck selector: size the control from its playlist text instead of forcing a large box. */
+  /* Deck selector: size the control from its playlist text without making it oversized. */
   width: fit-content;
   min-width: 220px;
   max-width: 340px;
 
-  /* Keep the playlist name close to the left edge of the dropdown. */
+  /* Keep the playlist name close to the left side of the Deck dropdown. */
   padding-left: 24px !important;
   padding-right: 48px !important;
 
-  /* Playlist names read naturally from left to right. */
+  /* The Deck playlist name stays left-aligned; only Songs and Last played are centered. */
   text-align: left !important;
   text-align-last: left !important;
 }
@@ -2800,6 +2795,22 @@ a.tile:hover,
 /* PART: #deckSelect.dropdown-select:focus-visible — styles this component or layout area. */
 #deckSelect.dropdown-select:focus-visible {
   transform: none !important;
+}
+
+/* ---------- Clean dropdown finish ---------- */
+/* Every native dropdown has exactly ONE visible border and ZERO shadow. */
+.dropdown-select,
+.dropdown-select:hover,
+.dropdown-select:focus,
+.dropdown-select:focus-visible {
+  border: 3px solid var(--ui-teal) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* The hover state may change color, but it never adds another border or shadow. */
+.dropdown-select:hover {
+  border-color: var(--ui-red) !important;
 }
 
 /* Responsive: stack each tool cleanly while keeping the dropdown centered. */
