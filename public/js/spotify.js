@@ -2,7 +2,7 @@
    Everything that talks to Spotify lives in this file:
      1. Settings          Client ID, permissions (scopes) and the Redirect URI
      2. Login             Authorization Code with PKCE, tokens, and the spFetch() Web API helper
-     3. Playback          the Web Playback SDK player and the helpers the deck uses (play, pause, seek, …)
+     3. Playback          the Web Playback SDK player and the helpers the deck uses (play, pause, seek, song length, …)
      4. Song matching     finds the Spotify version of a song added from Search (iTunes)
      5. Export            a tape -> a new playlist in the listener's Spotify library
      6. Import            the listener's Spotify playlists -> tapes in the Library
@@ -199,6 +199,46 @@ async function spotifyPosition() {
   const state = await spotifyPlayer.getCurrentState();
   // Spotify gives position in milliseconds
   return state ? state.position / 1000 : null;
+}
+
+// Spotify's length of each song, in seconds, by URI. A song added from Search carries iTunes' length,
+// which can be a few seconds off from the Spotify version that actually plays.
+const spotifyLengths = new Map();
+
+/** Spotify's length of the song in seconds, or 0 if not known yet. */
+const spotifyLength = (uri) => spotifyLengths.get(uri) || 0;
+
+/** Looks up (once per song) how long the song is on Spotify; resolves to the seconds, or 0 if unknown. */
+async function loadSpotifyLength(uri) {
+  if (!spotifyLengths.has(uri)) {
+    try {
+      const track = await spFetch('tracks/' + encodeURIComponent(uri.split(':').pop()));
+      if (track && track.duration_ms) spotifyLengths.set(uri, track.duration_ms / 1000);
+    } catch (error) {
+      console.warn('Could not get the Spotify length of', uri, error);
+    }
+  }
+  return spotifyLength(uri);
+}
+
+/**
+ * Seconds left in the song according to Spotify: 0 if Spotify has stopped or moved on to another song,
+ * or null if the Spotify player doesn't answer within 1.5 s.
+ */
+async function spotifySecondsLeft(uri) {
+  if (!spotifyPlayer) return null;
+  const state = await Promise.race([
+    spotifyPlayer.getCurrentState().catch(() => undefined),
+    new Promise((resolve) => setTimeout(() => resolve(undefined), 1500)),
+  ]);
+  if (state === undefined) return null;
+  if (!state || state.paused) return 0;
+  const current = state.track_window && state.track_window.current_track;
+  // Spotify may play a "relinked" copy of the song (another URI), which keeps the original in linked_from.
+  if (current && current.uri !== uri && !(current.linked_from && current.linked_from.uri === uri)) return 0;
+  if (!state.duration) return null;
+  spotifyLengths.set(uri, state.duration / 1000);
+  return Math.max(0, (state.duration - state.position) / 1000);
 }
 
 /** Pauses Spotify. `why` names the deck action in the console if Spotify refuses. */

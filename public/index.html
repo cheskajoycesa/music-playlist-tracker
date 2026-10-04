@@ -3079,7 +3079,7 @@
 
           if (Player.tape && String(Player.tape.id) === tapeId && current && String(current.id) === trackId) {
             Player.playing = false;
-            clearInterval(Player.timer);
+            Player.stopTimers();
 
             deckAudio.pause();
 
@@ -3155,6 +3155,8 @@
         playing: false,
         pos: 0,
         timer: null,
+        endTimer: null, // wakes up once when the current song should be over (see armEnd)
+        clock: 0, // Date.now() at which the current song would have been at 0:00
         order() {
           return this.tape ? orderTracks(this.tape) : [];
         },
@@ -3169,7 +3171,54 @@
           const t = this.track();
           if (!t) return 0;
           if (t.previewUrl && isFinite(deckAudio.duration) && deckAudio.duration > 0) return deckAudio.duration;
+          // Spotify's own length once known: songs added from Search carry iTunes' length, which can differ a bit.
+          if (t.spotifyUri && spotifyLength(t.spotifyUri)) return spotifyLength(t.spotifyUri);
           return secs(t.time) || (t.previewUrl ? 30 : 0);
+        },
+        /** Seconds into the song by the wall clock, which keeps time even while the page is in the background. */
+        clockPos() {
+          return (Date.now() - this.clock) / 1000;
+        },
+        startClock() {
+          this.clock = Date.now() - this.pos * 1000;
+        },
+        stopTimers() {
+          clearInterval(this.timer);
+          clearTimeout(this.endTimer);
+        },
+        /**
+         * Wakes up once, when the current song should be over, to move on to the next one. In a background tab
+         * the browser slows repeating timers down and Spotify's "song ended" event can arrive only once the tab
+         * is visible again; this one-off timer still fires on time, so the next song starts without a delay.
+         */
+        armEnd() {
+          clearTimeout(this.endTimer);
+          const t = this.track();
+          if (!this.playing || !t) return;
+          const left = Math.max(0, this.dur() - this.pos);
+          this.endTimer = setTimeout(() => this.checkEnd(t.id), left * 1000 + 750);
+        },
+        /** Called by armEnd's timer: plays the next song if this one is really over, or waits a little longer. */
+        async checkEnd(id) {
+          // Compare by id: reloading the tapes replaces the song objects but keeps their ids.
+          const sameSong = () => this.playing && !!this.track() && this.track().id === id;
+          if (!sameSong()) return;
+          const t = this.track();
+          let left = this.dur() - this.clockPos();
+          if (t.spotifyUri) {
+            // Ask Spotify how much is left (it may have buffered for a moment). Its answer is ignored only if it
+            // is clearly out of date: the clock says the song ended more than 5 seconds ago.
+            const spotifyLeft = await spotifySecondsLeft(t.spotifyUri);
+            if (!sameSong()) return;
+            if (spotifyLeft !== null && left > -5) left = spotifyLeft;
+          }
+          if (left > 1) {
+            this.pos = Math.max(0, this.dur() - left);
+            this.startClock();
+            this.armEnd();
+          } else {
+            this.next(true);
+          }
         },
         load(tapeId, trackId, pos, autoplay) {
           const tape = Store.tape(tapeId);
@@ -3217,7 +3266,7 @@
           stopPreviewButtons();
 
           this.playing = true;
-          clearInterval(this.timer);
+          this.stopTimers();
 
           // Spotify imported track
           if (t.spotifyUri) {
@@ -3228,7 +3277,7 @@
 
             // Compare by id: reloading the tapes replaces the song objects but keeps their ids.
             const sameSong = () => !!this.track() && this.track().id === t.id;
-            playSpotifyTrack(t.spotifyUri, this.pos).then((success) => {
+            playSpotifyTrack(t.spotifyUri, this.pos).then(async (success) => {
               // Ignore a late answer if the listener already paused or moved to another song.
               if (!this.playing || !sameSong()) return;
               if (!success) {
@@ -3236,6 +3285,14 @@
                 ui();
                 return;
               }
+              this.startClock();
+
+              // Spotify's real length of the song, so the deck knows exactly when it ends
+              await loadSpotifyLength(t.spotifyUri);
+              if (!this.playing || !sameSong()) return;
+              this.pos = Math.min(this.clockPos(), this.dur());
+              tick();
+              this.armEnd();
 
               // Keep the cassette timer synced with Spotify
               clearInterval(this.timer);
@@ -3245,6 +3302,7 @@
                 if (position === null || !this.playing || !sameSong()) return;
 
                 this.pos = position;
+                this.startClock();
                 tick();
               }, 500);
             });
@@ -3260,23 +3318,30 @@
           ui();
         },
         simulate() {
-          // Songs typed in by hand have no audio, so the deck counts through their duration.
-          clearInterval(this.timer);
+          // Songs typed in by hand have no audio, so the deck counts through their duration (by the clock,
+          // so the count stays right even when a background tab only lets this timer run now and then).
+          this.stopTimers();
+          this.startClock();
+          let saved = Math.floor(this.pos / 10);
           this.timer = setInterval(() => {
             if (!this.playing) return;
-            this.pos += 1;
+            this.pos = Math.min(this.clockPos(), this.dur());
             if (this.pos >= this.dur()) this.next(true);
             else {
               tick();
-              if (Math.floor(this.pos) % 10 === 0) this.persist(false);
+              if (Math.floor(this.pos / 10) !== saved) {
+                saved = Math.floor(this.pos / 10);
+                this.persist(false);
+              }
             }
           }, 1000);
+          this.armEnd();
         },
         pause() {
           const t = this.track();
 
           this.playing = false;
-          clearInterval(this.timer);
+          this.stopTimers();
 
           // Spotify track
           if (t && t.spotifyUri && spotifyReady()) {
@@ -3301,7 +3366,7 @@
           const t = this.track();
 
           this.playing = false;
-          clearInterval(this.timer);
+          this.stopTimers();
 
           deckAudio.pause();
 
@@ -3314,7 +3379,7 @@
           const t = this.track();
 
           this.playing = false;
-          clearInterval(this.timer);
+          this.stopTimers();
           this.pos = 0;
 
           // Spotify track
@@ -3386,6 +3451,11 @@
             try {
               deckAudio.currentTime = this.pos;
             } catch (e) {}
+          }
+          // Spotify and no-audio songs: the song now ends at a different time
+          if (this.playing && !this.usesAudio()) {
+            this.startClock();
+            this.armEnd();
           }
 
           tick();
