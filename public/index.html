@@ -1257,7 +1257,6 @@
                 <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0;">
                   <span class="tag" id="deckTag">Now spinning</span>
                   <h1 class="h1">CASSETTE DECK</h1>
-                  <div class="sub">your collection in one place</div>
                 </div>
                 <div class="deck-tools" style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                   <!-- Deck dropdown: selects which cassette is loaded into the player. -->
@@ -1537,7 +1536,7 @@
                 <div style="display: flex; flex-direction: column; gap: 8px; min-width: 0;">
                   <span class="tag" id="favTag">Top shelf</span>
                   <h1 class="h1">FAVORITES</h1>
-                  <div class="sub">the keepers, the loved ones</div>
+                  <div class="sub">the keepers</div>
                 </div>
                 <a class="btn-outline" href="#library">
                   <svg
@@ -4280,6 +4279,8 @@
           tracks: (a, b) => b.tracks.length - a.tracks.length,
         };
         list.sort(sorters[L.sort]);
+        // Resize the sorting dropdown to match the currently selected label.
+        fitLibrarySortToText();
         const favs = Store.data.playlists.filter((t) => t.fav).length;
         $('#chipAll').classList.toggle('on', L.filter === 'all');
         $('#chipAll').setAttribute('aria-pressed', L.filter === 'all');
@@ -4412,6 +4413,52 @@
       });
 
       /* ======================= DECK ======================= */
+      // Resize a select control to the width of its currently selected text.
+      // Short labels get a short box, while longer labels receive only the space they need.
+      function fitSelectToText(sel, minWidth, maxWidth, extraWidth) {
+        if (!sel) return;
+
+        const selected = sel.options[sel.selectedIndex];
+        const text = selected ? selected.textContent.trim() : '';
+        const cs = getComputedStyle(sel);
+        const probe = document.createElement('span');
+
+        // Copy the visible font settings so the hidden measurement matches the real text.
+        probe.textContent = text;
+        probe.style.position = 'fixed';
+        probe.style.visibility = 'hidden';
+        probe.style.whiteSpace = 'nowrap';
+        probe.style.pointerEvents = 'none';
+        probe.style.fontFamily = cs.fontFamily;
+        probe.style.fontSize = cs.fontSize;
+        probe.style.fontWeight = cs.fontWeight;
+        probe.style.letterSpacing = cs.letterSpacing;
+        document.body.appendChild(probe);
+
+        // Measure the text and add only the space needed for the arrow, padding, and border.
+        const textWidth = probe.getBoundingClientRect().width;
+        const width = Math.min(
+          maxWidth,
+          Math.max(minWidth, Math.ceil(textWidth + extraWidth)),
+        );
+
+        probe.remove();
+
+        // Store the measured width so CSS can size the visible select exactly.
+        sel.style.setProperty('--select-fit-width', width + 'px');
+      }
+
+      // Deck playlist: very short names stay compact; longer names grow naturally.
+      function fitDeckSelectToText() {
+        fitSelectToText($('#deckSelect'), 0, 380, 84);
+      }
+
+      // Library sort: give “Recently added” enough room without making “Last played” huge.
+      function fitLibrarySortToText() {
+        fitSelectToText($('#libSort'), 0, 260, 88);
+      }
+
+
       // Deck renderer: displays the selected cassette, track receipt, and playback controls.
       function renderDeck() {
         const tape = Deck.tape(); // the tape being shown (not always the one playing)
@@ -4422,7 +4469,9 @@
           const selected = tape && tape.id === t.id ? ' selected' : '';
           return html`<option value="${t.id}"${selected}>${esc(t.name)}</option>`;
         };
-        sel.innerHTML = '<option value="">Load a tape…</option>' + Store.data.playlists.map(option).join('');
+        sel.innerHTML = Store.data.playlists.map(option).join('');
+        // Resize the Deck playlist selector to match the currently selected playlist name.
+        fitDeckSelectToText();
 
         $('#deckTag').textContent = browsing ? 'Just looking' : 'Now spinning';
         $('#deckEmpty').hidden = !!tape;
@@ -4511,6 +4560,8 @@
       });
       // Picking a tape here only opens it; the music keeps playing until you press play on it.
       $('#deckSelect').addEventListener('change', (e) => {
+        // Resize immediately when a different playlist name is selected.
+        fitDeckSelectToText();
         if (!e.target.value) return;
         Deck.open(e.target.value);
         renderDeck();
