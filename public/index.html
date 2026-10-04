@@ -1308,7 +1308,7 @@
                 </div>
               </div>
               <div class="empty-box" id="deckEmpty">
-                Pick a tape from “Load a tape” above, or press play on any tape in your Library.
+                Choose a tape from the dropdown above, or press play on any tape in your Library.
               </div>
               <!-- Shown while looking at a tape other than the one playing. -->
               <div class="now-strip" hidden id="deckNowStrip" role="status">
@@ -4469,7 +4469,10 @@
           const selected = tape && tape.id === t.id ? ' selected' : '';
           return html`<option value="${t.id}"${selected}>${esc(t.name)}</option>`;
         };
-        sel.innerHTML = Store.data.playlists.map(option).join('');
+        // Only while no tape is shown: a "Choose a tape…" placeholder. Without it the dropdown would show the
+        // first tape's name over an empty deck, and picking that tape would do nothing (it's already "selected").
+        const placeholder = tape ? '' : '<option value="" selected disabled>Choose a tape…</option>';
+        sel.innerHTML = placeholder + Store.data.playlists.map(option).join('');
         // Resize the Deck playlist selector to match the currently selected playlist name.
         fitDeckSelectToText();
 
