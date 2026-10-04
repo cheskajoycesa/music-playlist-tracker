@@ -1,4 +1,14 @@
-/* Cassettefy · styles for index.html (moved out of the page; loaded with <link href="css/style.css">). */
+/* ========================================================================== */
+/* CASSETTEFY — FULLY COMMENTED STYLESHEET                                  */
+/* Every major CSS rule is labeled so you can see what part of the app it    */
+/* controls. The original styling and the latest alignment fixes are kept.   */
+/* ========================================================================== */
+
+/* ========================================================================== */
+/* Cassettefy · complete stylesheet for index.html                            */
+/* ========================================================================== */
+/* This file keeps the retro Cassettefy theme, layout, responsive rules, and  */
+/* component styles. New changes are grouped and commented by purpose.        */
 
 /* ========================================================================== */
 /* Global reset, typography, palette, controls, and reusable visual pieces   */
@@ -6,6 +16,7 @@
 * {
   box-sizing: border-box;
 }
+/* PART: body — styles this component or layout area. */
 body {
   margin: 0;
   background: #F2E8CF;
@@ -13,43 +24,52 @@ body {
   font-variant-numeric: lining-nums; /* even-height digits everywhere ("C-60", not "C-6o") */
   color: #4A2C22;
 }
+/* PART: a — styles this component or layout area. */
 a {
   color: #C1272D;
 }
+/* PART: a:hover — styles this component or layout area. */
 a:hover {
   color: #9B1B22;
 }
 button,
 input,
 select,
+/* PART: textarea — styles this component or layout area. */
 textarea {
   font-family: inherit;
   font-variant-numeric: inherit;
 }
+/* PART: :focus-visible — styles this component or layout area. */
 :focus-visible {
   outline: 3px solid #F2CF6B;
   outline-offset: 2px;
   box-shadow: 0 0 0 6px #1E6B65;
 }
+/* PART: .paper — styles this component or layout area. */
 .paper {
   background-color: #F2E8CF;
   background-image: radial-gradient(rgba(74, 44, 34, 0.07) 1px, transparent 1.2px);
   background-size: 6px 6px;
 }
+/* PART: .display — styles this component or layout area. */
 .display {
   font-family: 'Alfa Slab One', Georgia, serif;
   font-weight: 400;
   letter-spacing: 0.02em;
 }
+/* PART: .script — styles this component or layout area. */
 .script {
   font-family: 'Yellowtail', cursive;
   font-weight: 400;
 }
+/* PART: .outline — styles this component or layout area. */
 .outline {
   color: #FAF3E0;
   -webkit-text-stroke: 2.5px #C1272D;
   text-shadow: 5px 5px 0 #C1272D;
 }
+/* PART: .sr — styles this component or layout area. */
 .sr {
   position: absolute;
   width: 1px;
@@ -58,6 +78,7 @@ textarea {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+/* PART: .tag — styles this component or layout area. */
 .tag {
   align-self: flex-start;
   display: inline-block;
@@ -70,6 +91,7 @@ textarea {
   transform: rotate(-3deg);
   clip-path: polygon(0 0, 100% 0, calc(100% - 11px) 50%, 100% 100%, 0 100%, 11px 50%);
 }
+/* PART: .btn-ribbon — styles this component or layout area. */
 .btn-ribbon {
   display: inline-flex;
   align-items: center;
@@ -88,20 +110,24 @@ textarea {
   white-space: nowrap;
 }
 a.btn-ribbon:hover,
+/* PART: button.btn-ribbon:hover — styles this component or layout area. */
 button.btn-ribbon:hover {
   background: #9B1B22;
   color: #F2CF6B;
 }
+/* PART: button.btn-ribbon:disabled — styles this component or layout area. */
 button.btn-ribbon:disabled {
   background: #A8877A;
   color: #F2E8CF;
   cursor: not-allowed;
 }
+/* PART: .btn-ribbon.sm — styles this component or layout area. */
 .btn-ribbon.sm {
   height: 46px;
   font-size: 18px;
   padding: 0 30px 0 20px;
 }
+/* PART: .btn-outline — styles this component or layout area. */
 .btn-outline {
   display: inline-flex;
   align-items: center;
@@ -120,10 +146,12 @@ button.btn-ribbon:disabled {
   white-space: nowrap;
 }
 a.btn-outline:hover,
+/* PART: button.btn-outline:hover — styles this component or layout area. */
 button.btn-outline:hover {
   background: #1E6B65;
   color: #FAF3E0;
 }
+/* PART: .icon-btn — styles this component or layout area. */
 .icon-btn {
   width: 44px;
   height: 44px;
@@ -137,6 +165,7 @@ button.btn-outline:hover {
   flex-shrink: 0;
   text-decoration: none;
 }
+/* PART: .chip — styles this component or layout area. */
 .chip {
   height: 44px;
   padding: 0 18px;
@@ -152,13 +181,16 @@ button.btn-outline:hover {
   gap: 8px;
   white-space: nowrap;
 }
+/* PART: .chip:hover — styles this component or layout area. */
 .chip:hover {
   background: #F7D9D3;
 }
+/* PART: .chip.on — styles this component or layout area. */
 .chip.on {
   background: #C1272D;
   color: #FAF3E0;
 }
+/* PART: .field — styles this component or layout area. */
 .field {
   height: 46px;
   width: 100%;
@@ -170,15 +202,18 @@ button.btn-outline:hover {
   color: #4A2C22;
   box-shadow: -5px 5px 0 #8A5A2B;
 }
+/* PART: textarea.field — styles this component or layout area. */
 textarea.field {
   height: auto;
   padding: 10px 14px;
   resize: none;
 }
 .field::placeholder,
+/* PART: .pill::placeholder — styles this component or layout area. */
 .pill::placeholder {
   color: #8A6A58;
 }
+/* PART: .pill — styles this component or layout area. */
 .pill {
   height: 54px;
   border-radius: 27px;
@@ -188,9 +223,11 @@ textarea.field {
   font-size: 20px;
   color: #4A2C22;
 }
+/* PART: .pill:focus — styles this component or layout area. */
 .pill:focus {
   background: #F2CF6B;
 }
+/* PART: .key — styles this component or layout area. */
 .key {
   height: 60px;
   min-width: 66px;
@@ -209,21 +246,25 @@ textarea.field {
   font-weight: 700;
   letter-spacing: 0.08em;
 }
+/* PART: .key:active — styles this component or layout area. */
 .key:active {
   transform: translateY(4px);
   box-shadow: 0 2px 0 #3A2A22;
 }
 /* Deck keys and progress bar that only apply to the playing tape, dimmed while looking at another tape. */
 .key:disabled,
+/* PART: .progress.off — styles this component or layout area. */
 .progress.off {
   opacity: 0.45;
   cursor: not-allowed;
 }
+/* PART: .key:disabled:active — styles this component or layout area. */
 .key:disabled:active {
   transform: none;
   box-shadow: 0 6px 0 #3A2A22;
 }
 /* "Now playing: … / Back to it" strip on the Deck while looking at another tape. */
+/* PART: .now-strip — styles this component or layout area. */
 .now-strip {
   display: flex;
   flex-wrap: wrap;
@@ -236,15 +277,18 @@ textarea.field {
   color: #FAF3E0;
   font-size: 17px;
 }
+/* PART: .now-strip-text — styles this component or layout area. */
 .now-strip-text {
   min-width: 0;
   display: inline-flex;
   align-items: center;
   gap: 10px;
 }
+/* PART: .now-strip-text b — styles this component or layout area. */
 .now-strip-text b {
   color: #F2CF6B;
 }
+/* PART: .now-strip-btn — styles this component or layout area. */
 .now-strip-btn {
   height: 42px;
   padding: 0 20px;
@@ -258,14 +302,17 @@ textarea.field {
   cursor: pointer;
   white-space: nowrap;
 }
+/* PART: .now-strip-btn:hover — styles this component or layout area. */
 .now-strip-btn:hover {
   background: #F2CF6B;
   color: #241814;
 }
+/* PART: .reel — styles this component or layout area. */
 .reel {
   animation: spin 2.6s linear infinite;
   animation-play-state: paused;
 }
+/* PART: .spinning .reel — styles this component or layout area. */
 .spinning .reel {
   animation-play-state: running;
 }
@@ -274,6 +321,7 @@ textarea.field {
     transform: rotate(360deg);
   }
 }
+/* PART: .ticket — styles this component or layout area. */
 .ticket {
   clip-path: polygon(
     14px 0,
@@ -286,10 +334,12 @@ textarea.field {
     0 14px
   );
 }
+/* PART: .tapebox — styles this component or layout area. */
 .tapebox {
   container-type: inline-size;
   width: 100%;
 }
+/* PART: .flag — styles this component or layout area. */
 .flag {
   display: inline-block;
   padding: 6px 22px;
@@ -300,6 +350,7 @@ textarea.field {
   clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 50%, 100% 100%, 0 100%, 10px 50%);
 }
 /* ---------- app shell ---------- */
+/* PART: .shell — styles this component or layout area. */
 .shell {
   position: relative;
   overflow: hidden;
@@ -307,11 +358,13 @@ textarea.field {
   height: 100vh;
   height: 100dvh;
 }
+/* PART: .app — styles this component or layout area. */
 .app {
   display: grid;
   grid-template-columns: 260px minmax(0, 1fr);
   height: 100%;
 }
+/* PART: .side — styles this component or layout area. */
 .side {
   position: relative;
   background: #C1272D;
@@ -323,6 +376,7 @@ textarea.field {
   overflow: hidden;
   min-height: 0;
 }
+/* PART: .side-rays — styles this component or layout area. */
 .side-rays {
   position: absolute;
   left: -160px;
@@ -334,6 +388,7 @@ textarea.field {
   mask-image: radial-gradient(circle, #000 0, transparent 62%);
   pointer-events: none;
 }
+/* PART: .side-checker — styles this component or layout area. */
 .side-checker {
   position: absolute;
   right: 0;
@@ -343,22 +398,26 @@ textarea.field {
   background-image: repeating-conic-gradient(#9B1B22 0 25%, #FAF3E0 0 50%);
   background-size: 14px 14px;
 }
+/* PART: .brand — styles this component or layout area. */
 .brand {
   position: relative;
   display: flex;
   justify-content: center;
 }
+/* PART: .brand-rail — styles this component or layout area. */
 .brand-rail {
   display: none;
   position: relative;
   justify-content: center;
 }
+/* PART: .navlist — styles this component or layout area. */
 .navlist {
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
+/* PART: .navi — styles this component or layout area. */
 .navi {
   position: relative;
   display: flex;
@@ -373,19 +432,23 @@ textarea.field {
   letter-spacing: 0.06em;
   border-radius: 10px;
 }
+/* PART: .navi:hover — styles this component or layout area. */
 .navi:hover {
   color: #F2CF6B;
   background: rgba(0, 0, 0, 0.14);
 }
+/* PART: .navi.on — styles this component or layout area. */
 .navi.on {
   background: #FAF3E0;
   color: #C1272D;
   border-radius: 10px 0 0 10px;
   clip-path: polygon(0 0, 100% 0, calc(100% - 14px) 50%, 100% 100%, 0 100%);
 }
+/* PART: .navi.on:hover — styles this component or layout area. */
 .navi.on:hover {
   color: #9B1B22;
 }
+/* PART: .sidemini — styles this component or layout area. */
 .sidemini {
   position: relative;
   margin-top: auto;
@@ -397,6 +460,7 @@ textarea.field {
   gap: 10px;
   box-shadow: 0 5px 0 #174F4A;
 }
+/* PART: .mainwrap — styles this component or layout area. */
 .mainwrap {
   display: flex;
   flex-direction: column;
@@ -404,6 +468,7 @@ textarea.field {
   min-height: 0;
   height: 100%;
 }
+/* PART: .topbar — styles this component or layout area. */
 .topbar {
   flex-shrink: 0;
   height: 76px;
@@ -413,6 +478,7 @@ textarea.field {
   padding: 0 40px;
   border-bottom: 3px solid #E3D3A9;
 }
+/* PART: .brand-sm — styles this component or layout area. */
 .brand-sm {
   display: none;
   align-items: center;
@@ -420,6 +486,7 @@ textarea.field {
   text-decoration: none;
   color: #C1272D;
 }
+/* PART: .quick — styles this component or layout area. */
 .quick {
   flex: 1;
   max-width: 560px;
@@ -435,16 +502,19 @@ textarea.field {
   text-decoration: none;
   font-size: 18px;
 }
+/* PART: .quick:hover — styles this component or layout area. */
 .quick:hover {
   background: #F2CF6B;
   color: #4A2C22;
 }
+/* PART: .top-actions — styles this component or layout area. */
 .top-actions {
   margin-left: auto;
   display: flex;
   gap: 12px;
   align-items: center;
 }
+/* PART: .content — styles this component or layout area. */
 .content {
   flex: 1;
   min-height: 0;
@@ -454,6 +524,7 @@ textarea.field {
   flex-direction: column;
   gap: 26px;
 }
+/* PART: .dock — styles this component or layout area. */
 .dock {
   display: none;
   flex-shrink: 0;
@@ -464,6 +535,7 @@ textarea.field {
   color: #FAF3E0;
   border-top: 4px solid #174F4A;
 }
+/* PART: .pagehead — styles this component or layout area. */
 .pagehead {
   display: flex;
   align-items: flex-end;
@@ -471,6 +543,7 @@ textarea.field {
   gap: 16px 24px;
   flex-wrap: wrap;
 }
+/* PART: .h1 — styles this component or layout area. */
 .h1 {
   margin: 0;
   font-family: 'Alfa Slab One', Georgia, serif;
@@ -480,43 +553,51 @@ textarea.field {
   color: #C1272D;
   letter-spacing: 0.02em;
 }
+/* PART: .sub — styles this component or layout area. */
 .sub {
   font-family: 'Yellowtail', cursive;
   font-size: 30px;
   line-height: 1;
   color: #1E6B65;
 }
+/* PART: .h2 — styles this component or layout area. */
 .h2 {
   margin: 0;
   font-size: 26px;
   font-weight: 700;
   color: #C1272D;
 }
+/* PART: .split — styles this component or layout area. */
 .split {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 340px;
   gap: 28px;
   align-items: start;
 }
+/* PART: .cards — styles this component or layout area. */
 .cards {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 22px;
 }
+/* PART: .hero — styles this component or layout area. */
 .hero {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 420px;
   gap: 32px;
   align-items: stretch;
 }
+/* PART: .hero-big — styles this component or layout area. */
 .hero-big {
   font-size: 60px;
   line-height: 1;
 }
+/* PART: .hero-script — styles this component or layout area. */
 .hero-script {
   font-size: 44px;
   line-height: 1;
 }
+/* PART: .hero-art — styles this component or layout area. */
 .hero-art {
   position: relative;
   min-height: 300px;
@@ -524,11 +605,13 @@ textarea.field {
   overflow: hidden;
   box-shadow: 0 7px 0 #9B1B22;
 }
+/* PART: .tiles — styles this component or layout area. */
 .tiles {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 18px;
 }
+/* PART: .tile — styles this component or layout area. */
 .tile {
   display: flex;
   flex-direction: column;
@@ -540,15 +623,18 @@ textarea.field {
   color: #4A2C22;
   transition: transform 0.15s;
 }
+/* PART: a.tile:hover — styles this component or layout area. */
 a.tile:hover {
   transform: translateY(-3px);
   color: #4A2C22;
 }
+/* PART: .hscroll — styles this component or layout area. */
 .hscroll {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 22px;
 }
+/* PART: .card — styles this component or layout area. */
 .card {
   display: flex;
   flex-direction: column;
@@ -558,6 +644,7 @@ a.tile:hover {
   border-radius: 18px;
   padding: 14px;
 }
+/* PART: .deck — styles this component or layout area. */
 .deck {
   background: #1E6B65;
   border: 6px solid #174F4A;
@@ -569,12 +656,14 @@ a.tile:hover {
   box-shadow: 0 8px 0 #174F4A;
   color: #FAF3E0;
 }
+/* PART: .keys — styles this component or layout area. */
 .keys {
   display: flex;
   align-items: center;
   gap: 12px;
   flex-wrap: wrap;
 }
+/* PART: .trow — styles this component or layout area. */
 .trow {
   display: grid;
   grid-template-columns: 92px 64px minmax(0, 1fr) auto auto;
@@ -583,9 +672,11 @@ a.tile:hover {
   background: #FAF3E0;
   padding: 14px 22px;
 }
+/* PART: .shelf — styles this component or layout area. */
 .shelf {
   padding: 30px 36px 26px;
 }
+/* PART: .shelf-row — styles this component or layout area. */
 .shelf-row {
   display: flex;
   align-items: flex-end;
@@ -593,6 +684,7 @@ a.tile:hover {
   padding: 0 20px;
   min-width: 0;
 }
+/* PART: .spine — styles this component or layout area. */
 .spine {
   flex: 0 1 78px;
   min-width: 44px;
@@ -607,6 +699,7 @@ a.tile:hover {
   text-decoration: none;
   box-shadow: inset -7px 0 0 rgba(0, 0, 0, 0.12);
 }
+/* PART: .spine.empty — styles this component or layout area. */
 .spine.empty {
   background: transparent;
   border: 3px dashed #FAF3E0;
@@ -614,6 +707,7 @@ a.tile:hover {
   color: #FAF3E0;
   box-shadow: none;
 }
+/* PART: .spine-title — styles this component or layout area. */
 .spine-title {
   flex: 1 1 0;
   min-height: 0;
@@ -625,10 +719,12 @@ a.tile:hover {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* PART: .only-phone — styles this component or layout area. */
 .only-phone {
   display: none;
 }
 /* ---------- receipt ---------- */
+/* PART: .stage — styles this component or layout area. */
 .stage {
   position: relative;
   border-radius: 24px;
@@ -636,6 +732,7 @@ a.tile:hover {
   padding: 34px 24px;
   box-shadow: 0 7px 0 #9B1B22;
 }
+/* PART: .receipt — styles this component or layout area. */
 .receipt {
   position: relative;
   width: 100%;
@@ -648,6 +745,7 @@ a.tile:hover {
   padding: 26px 26px 30px;
   box-shadow: 0 16px 22px rgba(58, 42, 34, 0.3);
 }
+/* PART: .receipt::before — styles this component or layout area. */
 .receipt::before {
   content: '';
   position: absolute;
@@ -659,6 +757,7 @@ a.tile:hover {
     linear-gradient(45deg, #FFFDF6 6px, transparent 0) left bottom/12px 12px repeat-x,
     linear-gradient(-45deg, #FFFDF6 6px, transparent 0) left bottom/12px 12px repeat-x;
 }
+/* PART: .receipt::after — styles this component or layout area. */
 .receipt::after {
   content: '';
   position: absolute;
@@ -670,16 +769,20 @@ a.tile:hover {
     linear-gradient(135deg, #FFFDF6 6px, transparent 0) left top/12px 12px repeat-x,
     linear-gradient(-135deg, #FFFDF6 6px, transparent 0) left top/12px 12px repeat-x;
 }
+/* PART: .r-c — styles this component or layout area. */
 .r-c {
   text-align: center;
 }
+/* PART: .r-rule — styles this component or layout area. */
 .r-rule {
   border-top: 2px dashed #9C8B74;
   margin: 14px 0;
 }
+/* PART: .r-rule.dbl — styles this component or layout area. */
 .r-rule.dbl {
   border-top: 4px double #2B211C;
 }
+/* PART: .r-head — styles this component or layout area. */
 .r-head {
   display: grid;
   grid-template-columns: 30px minmax(0, 1fr) 54px 22px;
@@ -689,6 +792,7 @@ a.tile:hover {
   letter-spacing: 0.08em;
   padding: 0 6px;
 }
+/* PART: .r-side — styles this component or layout area. */
 .r-side {
   text-align: center;
   font-size: 13px;
@@ -697,6 +801,7 @@ a.tile:hover {
   margin: 10px 0 4px;
   color: #6B5A48;
 }
+/* PART: .r-row — styles this component or layout area. */
 .r-row {
   display: grid;
   grid-template-columns: 30px minmax(0, 1fr) 54px 22px;
@@ -713,37 +818,44 @@ a.tile:hover {
   color: inherit;
   cursor: pointer;
 }
+/* PART: .r-row:hover — styles this component or layout area. */
 .r-row:hover {
   background: #F6EBC8;
 }
+/* PART: .r-t — styles this component or layout area. */
 .r-t {
   display: flex;
   align-items: flex-end;
   min-width: 0;
 }
+/* PART: .r-t b — styles this component or layout area. */
 .r-t b {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   text-transform: uppercase;
 }
+/* PART: .r-lead — styles this component or layout area. */
 .r-lead {
   flex: 1;
   min-width: 12px;
   border-bottom: 2px dotted #B3A387;
   margin: 0 0 5px 6px;
 }
+/* PART: .r-sub — styles this component or layout area. */
 .r-sub {
   display: block;
   font-size: 13px;
   color: #6B5A48;
   margin-top: 2px;
 }
+/* PART: .r-time — styles this component or layout area. */
 .r-time {
   text-align: right;
   font-variant-numeric: lining-nums tabular-nums;
   font-weight: 700;
 }
+/* PART: .r-line — styles this component or layout area. */
 .r-line {
   display: flex;
   justify-content: space-between;
@@ -751,6 +863,7 @@ a.tile:hover {
   font-size: 15px;
   padding: 2px 6px;
 }
+/* PART: .barcode — styles this component or layout area. */
 .barcode {
   height: 46px;
   margin: 6px 10px 8px;
@@ -766,6 +879,7 @@ a.tile:hover {
     transparent 15px 19px
   );
 }
+/* PART: .stamp — styles this component or layout area. */
 .stamp {
   position: absolute;
   right: 18px;
@@ -787,10 +901,12 @@ a.tile:hover {
   line-height: 1.15;
   text-align: center;
 }
+/* PART: .editor — styles this component or layout area. */
 .editor {
   display: flex;
   flex-direction: column;
 }
+/* PART: .ed-tab — styles this component or layout area. */
 .ed-tab {
   align-self: center;
   background: #1E6B65;
@@ -803,6 +919,7 @@ a.tile:hover {
   position: relative;
   top: 4px;
 }
+/* PART: .ed-body — styles this component or layout area. */
 .ed-body {
   background: #1E6B65;
   border: 4px solid #8A5A2B;
@@ -813,6 +930,7 @@ a.tile:hover {
   gap: 14px;
   color: #FAF3E0;
 }
+/* PART: .ed-l — styles this component or layout area. */
 .ed-l {
   display: flex;
   flex-direction: column;
@@ -820,12 +938,14 @@ a.tile:hover {
   font-size: 16px;
   font-weight: 600;
 }
+/* PART: .ed-row — styles this component or layout area. */
 .ed-row {
   display: grid;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   gap: 14px;
 }
 /* ---------- neon highlights ---------- */
+/* PART: .neon-pink — styles this component or layout area. */
 .neon-pink {
   color: #FFE3F2;
   text-shadow:
@@ -834,6 +954,7 @@ a.tile:hover {
     0 0 16px #FF3EA5,
     0 0 30px #FF3EA5;
 }
+/* PART: .neon-cyan — styles this component or layout area. */
 .neon-cyan {
   color: #E2FEFF;
   text-shadow:
@@ -842,6 +963,7 @@ a.tile:hover {
     0 0 16px #2EF2FF,
     0 0 28px #2EF2FF;
 }
+/* PART: .neon-yellow — styles this component or layout area. */
 .neon-yellow {
   color: #FFFBD6;
   text-shadow:
@@ -849,6 +971,7 @@ a.tile:hover {
     0 0 7px #FFE83D,
     0 0 16px #FFE83D;
 }
+/* PART: .neon-sign — styles this component or layout area. */
 .neon-sign {
   background: #241814;
   border-radius: 14px;
@@ -858,29 +981,35 @@ a.tile:hover {
     0 7px 0 rgba(0, 0, 0, 0.28),
     0 0 28px rgba(255, 62, 165, 0.35);
 }
+/* PART: .neon-sign .script — styles this component or layout area. */
 .neon-sign .script {
   font-size: 34px;
   line-height: 1.1;
 }
+/* PART: .neon-fill — styles this component or layout area. */
 .neon-fill {
   background: #FFE83D !important;
   box-shadow:
     0 0 8px #FFE83D,
     0 0 16px rgba(255, 232, 61, 0.7);
 }
+/* PART: .neon-btn — styles this component or layout area. */
 .neon-btn {
   box-shadow:
     0 0 0 3px #FFE83D,
     0 0 14px #FFE83D,
     0 0 26px rgba(255, 232, 61, 0.6);
 }
+/* PART: .sub — styles this component or layout area. */
 .sub {
   color: #E0147A;
   text-shadow: 0 0 12px rgba(255, 62, 165, 0.45);
 }
+/* PART: .tag — styles this component or layout area. */
 .tag {
   background: #C4096A;
 }
+/* PART: .hero-art::after — styles this component or layout area. */
 .hero-art::after {
   content: '';
   position: absolute;
@@ -892,6 +1021,7 @@ a.tile:hover {
     inset 0 0 10px rgba(255, 62, 165, 0.7);
   pointer-events: none;
 }
+/* PART: .stage::after — styles this component or layout area. */
 .stage::after {
   content: '';
   position: absolute;
@@ -903,6 +1033,7 @@ a.tile:hover {
     inset 0 0 10px rgba(46, 242, 255, 0.6);
   pointer-events: none;
 }
+/* PART: .shelf::after — styles this component or layout area. */
 .shelf::after {
   content: '';
   position: absolute;
@@ -914,9 +1045,11 @@ a.tile:hover {
     inset 0 0 10px rgba(46, 242, 255, 0.6);
   pointer-events: none;
 }
+/* PART: .deck — styles this component or layout area. */
 .deck {
   position: relative;
 }
+/* PART: .deck::before — styles this component or layout area. */
 .deck::before {
   content: '';
   position: absolute;
@@ -929,6 +1062,7 @@ a.tile:hover {
     inset 0 0 12px rgba(46, 242, 255, 0.5);
   pointer-events: none;
 }
+/* PART: .side::after — styles this component or layout area. */
 .side::after {
   content: '';
   position: absolute;
@@ -942,6 +1076,7 @@ a.tile:hover {
     0 0 14px #FF3EA5,
     0 0 24px #FF3EA5;
 }
+/* PART: .navi.on — styles this component or layout area. */
 .navi.on {
   /* Retro active-state palette: warm cream, diner red, and a small mustard accent. */
   background: #FAF3E0;
@@ -951,38 +1086,46 @@ a.tile:hover {
     inset 0 -4px 0 #F2CF6B,
     0 4px 0 rgba(23, 79, 74, 0.35);
 }
+/* PART: .navi.on svg — styles this component or layout area. */
 .navi.on svg {
   /* Keep the active icon crisp instead of using the previous neon glow. */
   filter: none;
 }
+/* PART: .navi.on:hover — styles this component or layout area. */
 .navi.on:hover {
   color: #9B1B22;
   background: #FFF7E3;
 }
+/* PART: .navi:hover — styles this component or layout area. */
 .navi:hover {
   /* Subtle mustard hover keeps the 80s diner palette consistent. */
   text-shadow: none;
 }
+/* PART: .topbar — styles this component or layout area. */
 .topbar {
   position: relative;
   z-index: 1;
   border-bottom: 3px solid #FF3EA5;
   box-shadow: 0 4px 16px rgba(255, 62, 165, 0.35);
 }
+/* PART: .chip.on — styles this component or layout area. */
 .chip.on {
   background: #C4096A;
   border-color: #FF3EA5;
   box-shadow: 0 0 10px rgba(255, 62, 165, 0.7);
 }
+/* PART: a.tile:hover — styles this component or layout area. */
 a.tile:hover {
   box-shadow:
     0 0 0 3px #FF3EA5,
     0 0 22px rgba(255, 62, 165, 0.7) !important;
 }
+/* PART: .card:hover — styles this component or layout area. */
 .card:hover {
   border-color: #FF3EA5;
   box-shadow: 0 0 16px rgba(255, 62, 165, 0.45);
 }
+/* PART: .ed-tab — styles this component or layout area. */
 .ed-tab {
   color: #FFFBD6;
   text-shadow:
@@ -990,11 +1133,13 @@ a.tile:hover {
     0 0 8px #FFE83D,
     0 0 16px #FFE83D;
 }
+/* PART: .ed-body — styles this component or layout area. */
 .ed-body {
   box-shadow:
     0 0 0 2px rgba(46, 242, 255, 0),
     0 0 22px rgba(46, 242, 255, 0.35);
 }
+/* PART: .key.lit — styles this component or layout area. */
 .key.lit {
   background: #FFE83D !important;
   box-shadow:
@@ -1002,6 +1147,7 @@ a.tile:hover {
     0 0 16px #FFE83D,
     0 0 30px rgba(255, 232, 61, 0.6);
 }
+/* PART: :focus-visible — styles this component or layout area. */
 :focus-visible {
   outline: 3px solid #2EF2FF;
   outline-offset: 2px;
@@ -1262,25 +1408,31 @@ a.tile:hover {
 }
 /* ---------- app additions ---------- */
 html,
+/* PART: body — styles this component or layout area. */
 body {
   height: 100%;
 }
+/* PART: body — styles this component or layout area. */
 body {
   overflow: hidden;
 }
+/* PART: [hidden] — styles this component or layout area. */
 [hidden] {
   display: none !important;
 }
+/* PART: .view — styles this component or layout area. */
 .view {
   display: flex;
   flex-direction: column;
   gap: 26px;
 }
+/* PART: .ellipsis — styles this component or layout area. */
 .ellipsis {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* PART: .quick input — styles this component or layout area. */
 .quick input {
   flex: 1;
   min-width: 0;
@@ -1290,27 +1442,33 @@ body {
   font-size: 18px;
   color: #4A2C22;
 }
+/* PART: .quick input::placeholder — styles this component or layout area. */
 .quick input::placeholder {
   color: #6B4A3A;
 }
+/* PART: .quick input:focus — styles this component or layout area. */
 .quick input:focus {
   outline: none;
 }
+/* PART: .quick:focus-within — styles this component or layout area. */
 .quick:focus-within {
   background: #F2CF6B;
   box-shadow:
     0 0 0 3px #2EF2FF,
     0 0 14px rgba(46, 242, 255, 0.6);
 }
+/* PART: .r-row.on — styles this component or layout area. */
 .r-row.on {
   background: #FFF04D;
 }
+/* PART: .r-mark — styles this component or layout area. */
 .r-mark {
   color: #C1272D;
   display: flex;
   justify-content: flex-end;
   padding-top: 2px;
 }
+/* PART: .r-empty — styles this component or layout area. */
 .r-empty {
   text-align: center;
   font-size: 13px;
@@ -1336,9 +1494,11 @@ body {
     max-height: 350px;
   }
 }
+/* PART: .on-deck .dock — styles this component or layout area. */
 .on-deck .dock {
   display: none !important;
 }
+/* PART: #toast — styles this component or layout area. */
 #toast {
   position: fixed;
   left: 50%;
@@ -1362,10 +1522,12 @@ body {
   max-width: calc(100vw - 32px);
   text-align: center;
 }
+/* PART: #toast.show — styles this component or layout area. */
 #toast.show {
   opacity: 1;
   transform: translate(-50%, 0);
 }
+/* PART: .empty-box — styles this component or layout area. */
 .empty-box {
   padding: 28px;
   border: 3px dashed #C1272D;
@@ -1378,6 +1540,7 @@ body {
   justify-content: center;
   gap: 12px;
 }
+/* PART: .empty-card — styles this component or layout area. */
 .empty-card {
   display: flex;
   flex-direction: column;
@@ -1392,6 +1555,7 @@ body {
   text-align: center;
   padding: 20px;
 }
+/* PART: .spin — styles this component or layout area. */
 .spin {
   display: inline-block;
   width: 20px;
@@ -1403,6 +1567,7 @@ body {
   vertical-align: middle;
   margin-right: 8px;
 }
+/* PART: .result — styles this component or layout area. */
 .result {
   display: flex;
   align-items: center;
@@ -1412,11 +1577,13 @@ body {
   border-radius: 14px;
   border: 2px solid #E6D6AE;
 }
+/* PART: .result.on — styles this component or layout area. */
 .result.on {
   background: #FFF6B8;
   border-color: #FF3EA5;
   box-shadow: 0 0 12px rgba(255, 62, 165, 0.4);
 }
+/* PART: .add-btn — styles this component or layout area. */
 .add-btn {
   height: 44px;
   padding: 0 16px;
@@ -1433,17 +1600,21 @@ body {
   flex-shrink: 0;
   white-space: nowrap;
 }
+/* PART: .add-btn:hover — styles this component or layout area. */
 .add-btn:hover {
   background: #F7D9D3;
 }
+/* PART: .add-btn.on — styles this component or layout area. */
 .add-btn.on {
   background: #C1272D;
   color: #FAF3E0;
 }
+/* PART: .prev-btn.playing — styles this component or layout area. */
 .prev-btn.playing {
   background: #FF3EA5 !important;
   box-shadow: 0 0 12px #FF3EA5;
 }
+/* PART: .tape-check — styles this component or layout area. */
 .tape-check {
   display: flex;
   align-items: center;
@@ -1455,6 +1626,7 @@ body {
   font-size: 16px;
   cursor: pointer;
 }
+/* PART: .tape-check input — styles this component or layout area. */
 .tape-check input {
   width: 20px;
   height: 20px;
@@ -1462,6 +1634,7 @@ body {
   flex-shrink: 0;
 }
 /* Under the Spotify playlist list: "N playlists are already in your Library…" */
+/* PART: .sp-imported-note — styles this component or layout area. */
 .sp-imported-note {
   margin: 4px 0 0;
   font-size: 14px;
@@ -1469,14 +1642,17 @@ body {
   color: #CFE3DC;
 }
 /* A tape that already has the picked song: can't be ticked for it (no duplicates). */
+/* PART: .tape-check.on-it — styles this component or layout area. */
 .tape-check.on-it {
   cursor: not-allowed;
   background: #F6EBC8;
   color: #6B4A3A;
 }
+/* PART: .tape-check.on-it input — styles this component or layout area. */
 .tape-check.on-it input {
   opacity: 0.45;
 }
+/* PART: .on-it-note — styles this component or layout area. */
 .on-it-note {
   display: inline-flex;
   align-items: center;
@@ -1486,6 +1662,7 @@ body {
   color: #1E6B65;
   white-space: nowrap;
 }
+/* PART: .swatch — styles this component or layout area. */
 .swatch {
   width: 38px;
   height: 38px;
@@ -1494,6 +1671,7 @@ body {
   cursor: pointer;
   box-shadow: 0 0 0 2px #FAF3E0;
 }
+/* PART: .swatch[aria-pressed='true'] — styles this component or layout area. */
 .swatch[aria-pressed='true'] {
   box-shadow:
     0 0 0 3px #1E6B65,
@@ -1503,6 +1681,7 @@ body {
 /* Genre pills are intentionally not displayed in Library cards. */ /* ========================================================================== */
 /* EDITOR POPUP — keeps the Library page visible behind edit.html           */
 /* ========================================================================== */
+/* PART: #editorOverlay — styles this component or layout area. */
 #editorOverlay {
   position: fixed;
   inset: 0;
@@ -1514,9 +1693,11 @@ body {
   background: rgba(20, 44, 40, 0.52);
   backdrop-filter: blur(3px);
 }
+/* PART: #editorOverlay[hidden] — styles this component or layout area. */
 #editorOverlay[hidden] {
   display: none;
 }
+/* PART: #editorOverlayFrame — styles this component or layout area. */
 #editorOverlayFrame {
   width: min(1180px, 96vw);
   height: min(820px, 92vh);
@@ -1542,6 +1723,7 @@ body {
   }
 }
 
+/* PART: .jump — styles this component or layout area. */
 .jump {
   display: flex;
   flex-direction: column;
@@ -1550,9 +1732,11 @@ body {
   color: #4A2C22;
   min-width: 0;
 }
+/* PART: .jump:hover — styles this component or layout area. */
 .jump:hover {
   color: #4A2C22;
 }
+/* PART: .group-h — styles this component or layout area. */
 .group-h {
   margin: 8px 0 0;
   font-size: 15px;
@@ -1560,6 +1744,7 @@ body {
   letter-spacing: 0.14em;
   color: #1E6B65;
 }
+/* PART: .resume-btn — styles this component or layout area. */
 .resume-btn {
   height: 44px;
   padding: 0 16px;
@@ -1572,9 +1757,11 @@ body {
   align-items: center;
   gap: 6px;
 }
+/* PART: .resume-btn:hover — styles this component or layout area. */
 .resume-btn:hover {
   color: #FFE83D;
 }
+/* PART: .armed — styles this component or layout area. */
 .armed {
   background: #C1272D !important;
   color: #FAF3E0 !important;
@@ -1584,6 +1771,7 @@ body {
   font-size: 15px;
   font-weight: 700;
 }
+/* PART: .led — styles this component or layout area. */
 .led {
   width: 12px;
   height: 12px;
@@ -1591,6 +1779,7 @@ body {
   background: #6B3B2A;
   box-shadow: 0 0 0 3px #174F4A;
 }
+/* PART: .led.lit — styles this component or layout area. */
 .led.lit {
   background: #FF3EA5;
   box-shadow:
@@ -1598,6 +1787,7 @@ body {
     0 0 10px #FF3EA5,
     0 0 20px #FF3EA5;
 }
+/* PART: .progress — styles this component or layout area. */
 .progress {
   height: 30px;
   border-radius: 15px;
@@ -1608,6 +1798,7 @@ body {
   cursor: pointer;
   position: relative;
 }
+/* PART: .side-btn — styles this component or layout area. */
 .side-btn {
   height: 40px;
   padding: 0 16px;
@@ -1619,10 +1810,13 @@ body {
   font-weight: 700;
   cursor: pointer;
 }
+/* PART: .side-btn.on — styles this component or layout area. */
 .side-btn.on {
   background: #FAF3E0;
   color: #1E6B65;
 }
+/* Base cassette dropdown sizing; the dropdown-select rules below refine alignment and styling. */
+/* PART: .tape-select — styles this component or layout area. */
 .tape-select {
   height: 52px;
   padding: 0 16px;
@@ -1634,6 +1828,7 @@ body {
   font-weight: 600;
   max-width: 100%;
 }
+/* PART: .plain-input — styles this component or layout area. */
 .plain-input {
   height: 44px;
   padding: 0 12px;
@@ -1644,6 +1839,7 @@ body {
   color: #4A2C22;
   width: 100%;
 }
+/* PART: code — styles this component or layout area. */
 code {
   font-family: 'Zilla Slab', Georgia, serif;
   background: rgba(0, 0, 0, 0.25);
@@ -1651,14 +1847,17 @@ code {
   border-radius: 4px;
   word-break: break-all;
 }
+/* PART: .r-namebox — styles this component or layout area. */
 .r-namebox {
   position: relative;
   min-height: 44px;
 }
+/* PART: .r-namebox .stamp — styles this component or layout area. */
 .r-namebox .stamp {
   top: -22px;
   right: -4px;
 }
+/* PART: #deckMain — styles this component or layout area. */
 #deckMain {
   grid-template-columns: minmax(0, 1fr) 400px;
 }
@@ -1692,6 +1891,7 @@ code {
 .side .count-badge,
 .side .count-pill,
 .side [data-nav-count],
+/* PART: .side [data-nav-badge] — styles this component or layout area. */
 .side [data-nav-badge] {
   display: none !important;
 }
@@ -1703,6 +1903,7 @@ code {
 /* ========================================================================== */
 
 /* ---------- 1. Global rhythm and page background ---------- */
+/* PART: :root — styles this component or layout area. */
 :root {
   --ui-red: #C1272D;
   --ui-red-dark: #9B1B22;
@@ -1716,10 +1917,12 @@ code {
   --ui-shadow: 0 8px 0 rgba(58, 42, 34, 0.16);
 }
 
+/* PART: html — styles this component or layout area. */
 html {
   scroll-behavior: smooth;
 }
 
+/* PART: body — styles this component or layout area. */
 body {
   background: var(--ui-paper);
   color: var(--ui-ink);
@@ -1727,6 +1930,7 @@ body {
 
 /* Keep the main page comfortable on wide monitors instead of stretching every
    card edge-to-edge. */
+/* PART: .content — styles this component or layout area. */
 .content {
   padding: 34px clamp(22px, 4vw, 56px) 150px;
   gap: 34px;
@@ -1734,14 +1938,17 @@ body {
   scrollbar-color: var(--ui-red) transparent;
 }
 
+/* PART: .content::-webkit-scrollbar — styles this component or layout area. */
 .content::-webkit-scrollbar {
   width: 10px;
 }
 
+/* PART: .content::-webkit-scrollbar-track — styles this component or layout area. */
 .content::-webkit-scrollbar-track {
   background: transparent;
 }
 
+/* PART: .content::-webkit-scrollbar-thumb — styles this component or layout area. */
 .content::-webkit-scrollbar-thumb {
   background: var(--ui-red);
   border: 3px solid var(--ui-paper);
@@ -1749,6 +1956,7 @@ body {
 }
 
 /* ---------- 2. Sidebar refinement ---------- */
+/* PART: .side — styles this component or layout area. */
 .side {
   width: auto;
   padding: 24px 22px 24px 18px;
@@ -1757,20 +1965,24 @@ body {
   z-index: 10;
 }
 
+/* PART: .brand — styles this component or layout area. */
 .brand {
   padding: 4px 8px 8px;
   transition: transform 0.18s ease;
 }
 
+/* PART: .brand:hover — styles this component or layout area. */
 .brand:hover {
   transform: translateY(-2px) rotate(-1deg);
 }
 
+/* PART: .navlist — styles this component or layout area. */
 .navlist {
   gap: 8px;
   padding-top: 4px;
 }
 
+/* PART: .navi — styles this component or layout area. */
 .navi {
   min-height: 52px;
   height: 52px;
@@ -1783,12 +1995,14 @@ body {
     border-color 0.18s ease;
 }
 
+/* PART: .navi:hover — styles this component or layout area. */
 .navi:hover {
   transform: translateX(3px);
   background: rgba(250, 243, 224, 0.12);
   border-color: rgba(250, 243, 224, 0.18);
 }
 
+/* PART: .navi.on — styles this component or layout area. */
 .navi.on {
   transform: translateX(5px);
   border-color: var(--ui-cream);
@@ -1797,41 +2011,49 @@ body {
 
 /* The user previously requested no sidebar player. Keep the sidebar focused
    on navigation and move the full player to the horizontal dock instead. */
+/* PART: .sidemini — styles this component or layout area. */
 .sidemini {
   display: none !important;
 }
 
 /* ---------- 3. Page headings ---------- */
+/* PART: .pagehead — styles this component or layout area. */
 .pagehead {
   align-items: flex-start;
   padding-bottom: 6px;
   border-bottom: 2px dashed rgba(193, 39, 45, 0.35);
 }
 
+/* PART: .h1 — styles this component or layout area. */
 .h1 {
   font-size: clamp(38px, 4.2vw, 58px);
   letter-spacing: 0.025em;
 }
 
+/* PART: .h2 — styles this component or layout area. */
 .h2 {
   font-size: 28px;
   line-height: 1.15;
 }
 
+/* PART: .sub — styles this component or layout area. */
 .sub {
   margin-top: 4px;
 }
 
 /* ---------- 4. Home hero ---------- */
+/* PART: .hero — styles this component or layout area. */
 .hero {
   gap: 38px;
   padding: 8px 0 12px;
 }
 
+/* PART: .hero > div:first-child — styles this component or layout area. */
 .hero > div:first-child {
   padding: 14px 0;
 }
 
+/* PART: .hero-art — styles this component or layout area. */
 .hero-art {
   min-height: 330px;
   border: 4px solid var(--ui-red-dark);
@@ -1842,6 +2064,7 @@ body {
    retro sign feeling. */
 .hero-art::after,
 .stage::after,
+/* PART: .shelf::after — styles this component or layout area. */
 .shelf::after {
   border-color: rgba(193, 39, 45, 0.7);
   box-shadow: none;
@@ -1850,11 +2073,13 @@ body {
 /* ---------- 5. Cards and tiles ---------- */
 .tiles,
 .cards,
+/* PART: .hscroll — styles this component or layout area. */
 .hscroll {
   gap: 20px;
 }
 
 .tile,
+/* PART: .card — styles this component or layout area. */
 .card {
   border: 2px solid var(--ui-border);
   box-shadow: 0 5px 0 rgba(58, 42, 34, 0.08);
@@ -1864,17 +2089,20 @@ body {
     border-color 0.18s ease;
 }
 
+/* PART: .tile — styles this component or layout area. */
 .tile {
   padding: 20px;
   min-height: 150px;
 }
 
+/* PART: .card — styles this component or layout area. */
 .card {
   padding: 18px;
   gap: 14px;
 }
 
 .tile:hover,
+/* PART: .card:hover — styles this component or layout area. */
 .card:hover {
   transform: translateY(-4px);
   border-color: var(--ui-red);
@@ -1884,26 +2112,31 @@ body {
 /* Avoid the previous neon glow on ordinary cards. The red/cream palette is
    easier to scan and keeps important controls visually prominent. */
 a.tile:hover,
+/* PART: .card:hover — styles this component or layout area. */
 .card:hover {
   box-shadow: 0 8px 0 rgba(58, 42, 34, 0.12) !important;
 }
 
 a.tile:hover,
+/* PART: .card:hover — styles this component or layout area. */
 .card:hover {
   box-shadow: 0 8px 0 rgba(58, 42, 34, 0.12) !important;
 }
 
 /* ---------- Library card alignment ---------- */
 /* Keep cards compact and let every card size itself from its real content. */
+/* PART: .cards — styles this component or layout area. */
 .cards {
   align-items: start;
 }
 
+/* PART: .library-card — styles this component or layout area. */
 .library-card {
   min-height: 0;
   height: auto;
 }
 
+/* PART: .library-card-info — styles this component or layout area. */
 .library-card-info {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -1912,10 +2145,12 @@ a.tile:hover,
   min-height: 66px;
 }
 
+/* PART: .library-card-copy — styles this component or layout area. */
 .library-card-copy {
   min-width: 0;
 }
 
+/* PART: .library-card-title — styles this component or layout area. */
 .library-card-title {
   margin: 0;
   min-height: 46px;
@@ -1924,6 +2159,7 @@ a.tile:hover,
   line-height: 1.2;
 }
 
+/* PART: .library-card-meta — styles this component or layout area. */
 .library-card-meta {
   margin-top: 5px;
   min-height: 20px;
@@ -1932,6 +2168,7 @@ a.tile:hover,
   color: #6B4A3A;
 }
 
+/* PART: .library-favorite — styles this component or layout area. */
 .library-favorite {
   background: transparent;
   color: var(--ui-red);
@@ -1939,6 +2176,7 @@ a.tile:hover,
 }
 
 /* Three fixed action positions: pencil left, play center, delete right. */
+/* PART: .library-card-actions — styles this component or layout area. */
 .library-card-actions {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
@@ -1948,6 +2186,7 @@ a.tile:hover,
   padding-top: 2px;
 }
 
+/* PART: .library-edit — styles this component or layout area. */
 .library-edit {
   justify-self: start;
   background: transparent;
@@ -1956,38 +2195,46 @@ a.tile:hover,
 
 /* "Export to Spotify" sits beside the heart, so the action row keeps its three slots.
    The title shares the top line with those two buttons; the meta line below uses the full card width. */
+/* PART: .library-card-tools — styles this component or layout area. */
 .library-card-tools {
   grid-column: 2;
   grid-row: 1;
   display: inline-flex;
   align-items: flex-start;
 }
+/* PART: .library-card-copy — styles this component or layout area. */
 .library-card-copy {
   display: contents;
 }
+/* PART: .library-card-info — styles this component or layout area. */
 .library-card-info {
   row-gap: 0; /* the meta line keeps its own small margin under the title */
 }
+/* PART: .library-card-title — styles this component or layout area. */
 .library-card-title {
   grid-column: 1;
   grid-row: 1;
 }
+/* PART: .library-card-meta — styles this component or layout area. */
 .library-card-meta {
   grid-column: 1 / -1;
   grid-row: 2;
 }
+/* PART: .library-export — styles this component or layout area. */
 .library-export {
   background: transparent;
   color: var(--ui-teal);
   margin-top: 1px;
 }
 
+/* PART: .library-play — styles this component or layout area. */
 .library-play {
   justify-self: center;
   background: var(--ui-teal);
   color: var(--ui-cream);
 }
 
+/* PART: .library-delete — styles this component or layout area. */
 .library-delete {
   justify-self: end;
   background: transparent;
@@ -1995,6 +2242,7 @@ a.tile:hover,
 }
 
 /* ---------- 6. Search/results and list rows ---------- */
+/* PART: .result — styles this component or layout area. */
 .result {
   min-height: 70px;
   padding: 12px 16px;
@@ -2002,17 +2250,20 @@ a.tile:hover,
   box-shadow: 0 3px 0 rgba(58, 42, 34, 0.06);
 }
 
+/* PART: .result:hover — styles this component or layout area. */
 .result:hover {
   border-color: var(--ui-red);
   transform: translateY(-1px);
 }
 
+/* PART: .result.on — styles this component or layout area. */
 .result.on {
   background: #FFF1C7;
   border-color: var(--ui-red);
   box-shadow: 0 4px 0 rgba(193, 39, 45, 0.14);
 }
 
+/* PART: .trow — styles this component or layout area. */
 .trow {
   border: 2px solid transparent;
   border-radius: 12px;
@@ -2024,6 +2275,7 @@ a.tile:hover,
     transform 0.15s ease;
 }
 
+/* PART: .trow:hover — styles this component or layout area. */
 .trow:hover {
   border-color: var(--ui-border);
   transform: translateX(2px);
@@ -2033,6 +2285,7 @@ a.tile:hover,
 .btn-ribbon,
 .btn-outline,
 .chip,
+/* PART: .add-btn — styles this component or layout area. */
 .add-btn {
   transition:
     transform 0.16s ease,
@@ -2044,14 +2297,17 @@ a.tile:hover,
 .btn-ribbon:hover,
 .btn-outline:hover,
 .chip:hover,
+/* PART: .add-btn:hover — styles this component or layout area. */
 .add-btn:hover {
   transform: translateY(-2px);
 }
 
+/* PART: .btn-outline — styles this component or layout area. */
 .btn-outline {
   background: rgba(250, 243, 224, 0.55);
 }
 
+/* PART: .chip.on — styles this component or layout area. */
 .chip.on {
   box-shadow: 3px 3px 0 rgba(58, 42, 34, 0.16);
 }
@@ -2060,16 +2316,123 @@ a.tile:hover,
    clear retro active state. */
 .chip.on,
 .key.lit,
+/* PART: .neon-btn — styles this component or layout area. */
 .neon-btn {
   text-shadow: none;
 }
 
+/* ---------- Search page heading ---------- */
+/* Keep the existing pagehead layout everywhere else, while centering only
+   the iTunes Search API label, SEARCH title, and retro subtitle. */
+/* PART: .search-pagehead — styles this component or layout area. */
+.search-pagehead {
+  justify-content: center;
+  text-align: center;
+}
+
+/* Centers the three heading elements as one compact vertical group. */
+/* PART: .search-page-copy — styles this component or layout area. */
+.search-page-copy {
+  align-items: center;
+  width: min(100%, 760px);
+  margin-inline: auto;
+}
+
+/* ---------- Creative dropdown controls ---------- */
+/*
+   These rules intentionally target native <select> controls only.
+   Other buttons, text fields, pills, and inputs are left untouched.
+   The centered text + fixed box model prevents the dropdown from appearing
+   slightly shifted to the right because of browser-native select padding.
+*/
+/* PART: .dropdown-select — styles this component or layout area. */
+.dropdown-select {
+  box-sizing: border-box;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  margin: 0 !important;
+  flex-shrink: 0;
+  text-align: center;
+  text-align-last: center;
+  font-weight: 700 !important;
+  letter-spacing: 0.02em;
+  border: 3px solid var(--ui-teal) !important;
+  color: var(--ui-teal) !important;
+  background-color: var(--ui-cream) !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 13px center;
+  background-size: 17px 17px;
+  padding-left: 18px !important;
+  padding-right: 46px !important;
+  /* One clean border only — no outer or inset shadow. */
+  box-shadow: none;
+  cursor: pointer;
+  transition:
+    border-color 0.16s ease,
+    box-shadow 0.16s ease,
+    transform 0.16s ease,
+    background-color 0.16s ease;
+}
+
+/* Give each dropdown a subtle neon-style hover treatment without filling it. */
+/* PART: .dropdown-select:hover — styles this component or layout area. */
+.dropdown-select:hover {
+  border-color: var(--ui-red) !important;
+  color: var(--ui-red) !important;
+  background-color: #FFFDF6 !important;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23C1272D' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  /* Keep the hover state to a single border with no shadow. */
+  box-shadow: none;
+  transform: translateY(-1px);
+}
+
+/* Keep the dropdown perfectly centered when keyboard focus is used. */
+/* PART: .dropdown-select:focus — styles this component or layout area. */
+.dropdown-select:focus {
+  outline: none;
+  border-color: var(--ui-gold) !important;
+  /* Focus does not create a second ring or shadow. */
+  box-shadow: none;
+}
+
+/* Consistent widths keep the three dropdowns visually aligned in their own areas. */
+/* PART: #entity.dropdown-select — styles this component or layout area. */
+#entity.dropdown-select {
+  width: 150px;
+}
+
+/* PART: #libSort.dropdown-select — styles this component or layout area. */
+#libSort.dropdown-select {
+  width: 180px;
+}
+
+/* PART: #deckSelect.dropdown-select — styles this component or layout area. */
+#deckSelect.dropdown-select {
+  /* Deck selector: size the control from its playlist text without making it oversized. */
+  width: fit-content;
+  min-width: 220px;
+  max-width: 340px;
+
+  /* Keep the playlist name close to the left side of the Deck dropdown. */
+  padding-left: 24px !important;
+  padding-right: 48px !important;
+
+  /* The Deck playlist name stays left-aligned; only Songs and Last played are centered. */
+  text-align: left !important;
+  text-align-last: left !important;
+}
+
 /* ---------- 8. Editor / forms ---------- */
+/* PART: .editor — styles this component or layout area. */
 .editor {
   position: sticky;
   top: 18px;
 }
 
+/* PART: .ed-body — styles this component or layout area. */
 .ed-body {
   gap: 18px;
   padding: 26px;
@@ -2079,6 +2442,7 @@ a.tile:hover,
 .field,
 .plain-input,
 .pill,
+/* PART: .tape-select — styles this component or layout area. */
 .tape-select {
   transition:
     border-color 0.15s ease,
@@ -2089,6 +2453,7 @@ a.tile:hover,
 .field:focus,
 .plain-input:focus,
 .pill:focus,
+/* PART: .tape-select:focus — styles this component or layout area. */
 .tape-select:focus {
   outline: none;
   box-shadow:
@@ -2097,11 +2462,13 @@ a.tile:hover,
 }
 
 /* ---------- 9. Deck and player ---------- */
+/* PART: .deck — styles this component or layout area. */
 .deck {
   border-width: 5px;
   box-shadow: 0 9px 0 var(--ui-teal-dark);
 }
 
+/* PART: .deck::before — styles this component or layout area. */
 .deck::before {
   border-color: rgba(242, 207, 107, 0.65);
   box-shadow: none;
@@ -2109,6 +2476,7 @@ a.tile:hover,
 
 /* Full-width horizontal player. It is fixed above the page bottom so it is
    always reachable without consuming a sidebar slot. */
+/* PART: .dock — styles this component or layout area. */
 .dock {
   display: flex !important;
   position: fixed;
@@ -2127,15 +2495,18 @@ a.tile:hover,
   z-index: 40;
 }
 
+/* PART: .dock .icon-btn — styles this component or layout area. */
 .dock .icon-btn {
   width: 48px;
   height: 48px;
 }
 
+/* PART: .dock .neon-btn — styles this component or layout area. */
 .dock .neon-btn {
   box-shadow: 3px 3px 0 #174F4A;
 }
 
+/* PART: .dock .neon-fill — styles this component or layout area. */
 .dock .neon-fill {
   background: var(--ui-gold) !important;
   box-shadow: none;
@@ -2143,17 +2514,20 @@ a.tile:hover,
 
 /* ---------- 10. Empty states ---------- */
 .empty-box,
+/* PART: .empty-card — styles this component or layout area. */
 .empty-card {
   background: rgba(250, 243, 224, 0.45);
   box-shadow: 0 5px 0 rgba(58, 42, 34, 0.06);
 }
 
+/* PART: .empty-card:hover — styles this component or layout area. */
 .empty-card:hover {
   background: var(--ui-cream);
   transform: translateY(-3px);
 }
 
 /* ---------- 11. Toast ---------- */
+/* PART: #toast — styles this component or layout area. */
 #toast {
   background: var(--ui-red-dark);
   color: var(--ui-cream);
@@ -2255,6 +2629,7 @@ a.tile:hover,
 
 /* Phones (one column, panel below the results): a slim bar above the player dock
    records the picked song without scrolling down. */
+/* PART: .save-bar — styles this component or layout area. */
 .save-bar {
   display: none;
 }
@@ -2355,25 +2730,172 @@ a.tile:hover,
   cursor: default;
 }
 
-/* ========================================================================== */
-/* Dropdowns: our own chevron and equal space on both sides, so the chosen     */
-/* option sits in the middle of the pill (the browser's arrow hugged the edge) */
-/* ========================================================================== */
-select.dropdown {
-  appearance: none;
-  -webkit-appearance: none;
-  padding: 0 40px;
+/* ---------- Final dropdown alignment + centering correction ---------- */
+/*
+   All three visible dropdown controls now use their own centered position.
+   The search textbox itself is NOT moved.
+*/
+
+/* Keep the iTunes Search API heading perfectly centered. */
+/* The ribbon tag has a global align-self:flex-start rule, so override it here. */
+/* PART: .search-pagehead .tag — styles this component or layout area. */
+.search-pagehead .tag {
+  align-self: center !important;
+  margin-inline: auto;
   text-align: center;
-  text-align-last: center;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A2C22' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 16px center;
-  background-size: 14px 14px;
-  cursor: pointer;
 }
-select.dropdown.tape-select {
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+
+/* PART: .search-pagehead — styles this component or layout area. */
+.search-pagehead {
+  justify-content: center !important;
+  text-align: center;
 }
-select.dropdown option {
-  text-align: left;
+
+/* PART: .search-page-copy — styles this component or layout area. */
+.search-page-copy {
+  align-items: center !important;
+  justify-content: center;
+  width: 100%;
+  margin-inline: auto;
+  text-align: center;
+}
+
+/* The search-type dropdown stays centered in the search controls without
+   inheriting the old global left shift. */
+/* PART: #entity.dropdown-select — styles this component or layout area. */
+#entity.dropdown-select {
+  transform: none !important;
+  align-self: center;
+}
+
+/* Center the Library search + Last played control group in the pagehead. */
+/* PART: .library-tools — styles this component or layout area. */
+.library-tools {
+  /* Keep the library search controls together on the LEFT to use the full row. */
+  justify-content: flex-start;
+  margin-inline: 0;
+  margin-right: auto;
+}
+
+/* PART: #libSort.dropdown-select — styles this component or layout area. */
+#libSort.dropdown-select {
+  transform: none !important;
+  align-self: center;
+  padding-right: 50px !important;
+  /* Last played uses the same simple dropdown arrow as the other selects.
+     The previous neon-cyan circle has intentionally been removed. */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") !important;
+  background-repeat: no-repeat !important;
+  background-position: right 13px center !important;
+  background-size: 17px 17px !important;
+}
+
+/* Center the Cassette Deck tape selector and give it the same visual weight. */
+/* PART: .deck-pagehead — styles this component or layout area. */
+.deck-pagehead {
+  position: relative;
+}
+
+/* PART: .deck-tools — styles this component or layout area. */
+.deck-tools {
+  /* Push the cassette selector + Favorite + Edit controls to the RIGHT. */
+  justify-content: flex-end;
+  margin-inline: 0 0 auto;
+  margin-left: auto;
+}
+
+/* PART: #deckSelect.dropdown-select — styles this component or layout area. */
+#deckSelect.dropdown-select {
+  transform: none !important;
+  align-self: center;
+}
+
+/* Keep hover/focus centered instead of applying an old horizontal shift. */
+#entity.dropdown-select:hover,
+#libSort.dropdown-select:hover,
+/* PART: #deckSelect.dropdown-select:hover — styles this component or layout area. */
+#deckSelect.dropdown-select:hover {
+  transform: translateY(-1px) !important;
+}
+
+#entity.dropdown-select:focus,
+#libSort.dropdown-select:focus,
+#deckSelect.dropdown-select:focus,
+#entity.dropdown-select:focus-visible,
+#libSort.dropdown-select:focus-visible,
+/* PART: #deckSelect.dropdown-select:focus-visible — styles this component or layout area. */
+#deckSelect.dropdown-select:focus-visible {
+  transform: none !important;
+}
+
+/* ---------- Clean dropdown finish ---------- */
+/* Every native dropdown has exactly ONE visible border and ZERO shadow. */
+.dropdown-select,
+.dropdown-select:hover,
+.dropdown-select:focus,
+.dropdown-select:focus-visible {
+  border: 3px solid var(--ui-teal) !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+/* The hover state may change color, but it never adds another border or shadow. */
+.dropdown-select:hover {
+  border-color: var(--ui-red) !important;
+}
+
+/* Responsive: stack each tool cleanly while keeping the dropdown centered. */
+@media (max-width: 700px) {
+  .library-tools,
+  .deck-tools {
+    width: 100%;
+    justify-content: center;
+  }
+
+  #entity.dropdown-select,
+  #libSort.dropdown-select,
+  #deckSelect.dropdown-select {
+    transform: none !important;
+  }
+}
+
+/* ---------- Final side placement correction ---------- */
+/* The cassette-deck controls belong on the LEFT; the library controls belong on the RIGHT. */
+/* PART: .deck-pagehead .deck-tools — styles this component or layout area. */
+.deck-pagehead .deck-tools {
+  /* Keep the playlist, Favorite, and Edit controls together on one row. */
+  flex-wrap: nowrap !important;
+  align-items: center !important;
+  gap: 12px !important;
+  margin-left: 0 !important;
+  margin-right: auto !important;
+  justify-content: flex-start !important;
+}
+
+/* Keep the Edit tape button directly beside Favorite instead of dropping it below. */
+.deck-pagehead .deck-tools #deckFav,
+.deck-pagehead .deck-tools #deckEdit {
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* PART: #view-library .library-tools — styles this component or layout area. */
+#view-library .library-tools {
+  margin-left: auto !important;
+  margin-right: 0 !important;
+  justify-content: flex-end !important;
+}
+
+@media (max-width: 700px) {
+  /* On narrow screens, allow the deck controls to wrap so they remain usable. */
+  .deck-pagehead .deck-tools {
+    flex-wrap: wrap !important;
+  }
+
+  .deck-pagehead .deck-tools,
+  #view-library .library-tools {
+    margin-left: auto !important;
+    margin-right: auto !important;
+    justify-content: center !important;
+  }
 }
