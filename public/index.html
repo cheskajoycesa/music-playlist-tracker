@@ -509,7 +509,7 @@
             <div
               style="height: 8px; border-radius: 4px; background: #174F4A; border: 2px solid #86B8AA; overflow: hidden;"
             >
-              <div class="neon-fill" data-np="fill" style="width: 0%; height: 100%;"></div>
+              <div class="bar-fill" data-np="fill" style="width: 0%; height: 100%;"></div>
             </div>
             <div style="display: flex; align-items: center; justify-content: space-between;">
               <button
@@ -537,9 +537,9 @@
               </button>
               <button
                 aria-label="Play"
-                class="icon-btn neon-btn"
+                class="icon-btn btn-mustard"
                 data-np="play"
-                style="background: #FFE83D; color: #3A2A22; width: 50px; height: 50px;"
+                style="background: #F2CF6B; color: #3A2A22; width: 50px; height: 50px;"
                 type="button"
               >
                 <svg
@@ -608,7 +608,7 @@
                     <span class="display hero-big" style="color: #C1272D;">PRESS PLAY</span>
                     <span
                       class="script hero-script"
-                      style="color: #E0147A; text-shadow: 0 0 14px rgba(255,62,165,.5);"
+                      style="color: #E0147A; text-shadow: none;"
                     >
                       on every
                     </span>
@@ -886,25 +886,25 @@
                   <svg
                     aria-hidden="true"
                     height="28"
-                    style="position: absolute; left: 7%; top: 12%; filter: drop-shadow(0 0 6px #2EF2FF);"
+                    style="position: absolute; left: 7%; top: 12%;"
                     viewbox="0 0 24 24"
                     width="28"
                   >
                     <path
                       d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0z"
-                      fill="#2EF2FF"
+                      fill="#86B8AA"
                     ></path>
                   </svg>
                   <svg
                     aria-hidden="true"
                     height="20"
-                    style="position: absolute; left: 44%; top: 8%; filter: drop-shadow(0 0 6px #FFE83D);"
+                    style="position: absolute; left: 44%; top: 8%;"
                     viewbox="0 0 24 24"
                     width="20"
                   >
                     <path
                       d="M12 0C13 8 16 11 24 12 16 13 13 16 12 24 11 16 8 13 0 12 8 11 11 8 12 0z"
-                      fill="#FFE83D"
+                      fill="#F2CF6B"
                     ></path>
                   </svg>
                   <svg
@@ -920,10 +920,10 @@
                     ></path>
                   </svg>
                   <div
-                    class="neon-sign"
+                    class="sign-board"
                     style="position: absolute; right: 26px; top: 26px; transform: rotate(5deg);"
                   >
-                    <span class="script neon-pink">now spinning</span>
+                    <span class="script text-pink">now spinning</span>
                   </div>
                   <div
                     style="position: absolute; left: 24px; bottom: 24px; max-width: 190px; padding: 12px 18px; background: #1E6B65; color: #FAF3E0; border-radius: 50%; text-align: center; line-height: 1.2;"
@@ -941,7 +941,7 @@
                     <h2 class="h2">Jump back in</h2>
                     <span
                       class="script hide-phone"
-                      style="font-size: 28px; color: #E0147A; text-shadow: 0 0 12px rgba(255,62,165,.45);"
+                      style="font-size: 28px; color: #E0147A; text-shadow: none;"
                     >
                       still warm from the deck
                     </span>
@@ -1319,7 +1319,7 @@
               <section class="split" id="deckMain">
                 <div class="deck">
                   <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px;">
-                    <span class="display neon-cyan" style="font-size: 15px; letter-spacing: .14em;">
+                    <span class="display text-cream" style="font-size: 15px; letter-spacing: .14em;">
                       CASSETTEFY DECK · STEREO
                     </span>
                     <span
@@ -1340,7 +1340,7 @@
                       <div id="nowArtist" style="font-size: 16px; color: #CFE3DC;"></div>
                     </div>
                     <div
-                      class="display neon-yellow"
+                      class="display text-mustard"
                       data-deck="elapsed"
                       style="font-size: 24px; font-variant-numeric: lining-nums tabular-nums; background: #241814; border-radius: 8px; padding: 4px 12px; flex-shrink: 0;"
                     >
@@ -1357,7 +1357,7 @@
                     role="slider"
                     tabindex="0"
                   >
-                    <div class="neon-fill" id="progFill" style="width: 0%;"></div>
+                    <div class="bar-fill" id="progFill" style="width: 0%;"></div>
                     <span
                       data-deck="elapsed"
                       style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); font-size: 14px; font-weight: 700; color: #3A2A22;"
@@ -1503,7 +1503,7 @@
                         id="vol"
                         max="10"
                         min="0"
-                        style="width: 120px; accent-color: #FFE83D;"
+                        style="width: 120px; accent-color: #F2CF6B;"
                         type="range"
                         value="8"
                       />
@@ -1652,7 +1652,7 @@
                   <div
                     style="width: 100%; height: 10px; border-radius: 5px; background: #9B1B22; border: 2px solid #FAF3E0; overflow: hidden;"
                   >
-                    <div class="neon-fill" id="resumeFill" style="width: 0%; height: 100%;"></div>
+                    <div class="bar-fill" id="resumeFill" style="width: 0%; height: 100%;"></div>
                   </div>
                   <a
                     data-play=""
@@ -1867,7 +1867,7 @@
                         <rect fill="#0F3A36" height="6" rx="1" width="8" x="96" y="160"></rect>
                       </svg>
                       <div>
-                        <div class="display neon-cyan" style="font-size: 18px; letter-spacing: .06em;">
+                        <div class="display text-cream" style="font-size: 18px; letter-spacing: .06em;">
                           CASSETTEFY
                         </div>
                         <div style="font-size: 14px; color: #CFE3DC; letter-spacing: .12em;">
@@ -2010,7 +2010,7 @@
                       hidden=""
                       id="spMsg"
                       role="status"
-                      style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #241814; color: #FFE3F2; font-size: 15px; line-height: 1.45; box-shadow: 0 0 0 2px #FF3EA5;"
+                      style="margin: 0; padding: 12px 14px; border-radius: 12px; background: #241814; color: #FAF3E0; font-size: 15px; line-height: 1.45; box-shadow: 0 0 0 2px #C1272D;"
                     ></p>
                     <div id="spOut" style="display: flex; flex-direction: column; gap: 16px;">
                       <p style="margin: 0; font-size: 18px; line-height: 1.45;">
@@ -2068,7 +2068,7 @@
                       </ul>
                       <button
                         id="spConnect"
-                        style="height: 56px; border: 0; border-radius: 28px; background: #FFE83D; color: #3A2A22; font-size: 20px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; box-shadow: 0 5px 0 #8A5A2B, 0 0 16px #FFE83D, 0 0 30px rgba(255,232,61,.55);"
+                        style="height: 56px; border: 0; border-radius: 28px; background: #F2CF6B; color: #3A2A22; font-size: 20px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; box-shadow: 0 5px 0 #8A5A2B;"
                         type="button"
                       >
                         <svg
@@ -2194,7 +2194,7 @@
                   class="np-seek-track"
                   style="height: 10px; border-radius: 5px; background: #174F4A; border: 2px solid #86B8AA; overflow: hidden;"
                 >
-                  <div class="neon-fill" data-np="fill" style="width: 0%; height: 100%;"></div>
+                  <div class="bar-fill" data-np="fill" style="width: 0%; height: 100%;"></div>
                 </div>
               </div>
               <span data-np="total">0:00</span>
@@ -2224,9 +2224,9 @@
             </button>
             <button
               aria-label="Play"
-              class="icon-btn neon-btn"
+              class="icon-btn btn-mustard"
               data-np="play"
-              style="background: #FFE83D; color: #3A2A22;"
+              style="background: #F2CF6B; color: #3A2A22;"
               type="button"
             >
               <svg
@@ -4602,9 +4602,9 @@
           favs.map(spine).join('') +
           html`
             <a href="#library" class="spine empty" aria-label="Add more favorites from the library">${icon('plus', 26)}</a>
-            <div class="hide-phone neon-sign" style="margin-left: auto; align-self: center; flex: 0 1 300px; min-width: 0; text-align: center; transform: rotate(-3deg); padding: 8px 22px 14px;">
-              <div class="script neon-pink">Top shelf</div>
-              <div class="neon-cyan" style="font-size: 16px; font-weight: 600;">tap a spine to play it</div>
+            <div class="hide-phone sign-board" style="margin-left: auto; align-self: center; flex: 0 1 300px; min-width: 0; text-align: center; transform: rotate(-3deg); padding: 8px 22px 14px;">
+              <div class="script text-pink">Top shelf</div>
+              <div class="text-cream" style="font-size: 16px; font-weight: 600;">tap a spine to play it</div>
             </div>`;
 
         const likedWhen = (t) =>
@@ -5152,7 +5152,7 @@
         const st = $('#profStatus');
         st.lastChild.textContent = connected ? 'Spotify connected' : 'Spotify not connected';
         st.style.background = connected ? '#241814' : '#F7D9D3';
-        st.style.color = connected ? '#2EF2FF' : '#9B1B22';
+        st.style.color = connected ? '#F2CF6B' : '#9B1B22';
         $('#statTapes').textContent = d.playlists.length;
         $('#statTracks').textContent = d.playlists.reduce((a, p) => a + p.tracks.length, 0);
         $('#statFavs').textContent = d.playlists.filter((p) => p.fav).length;
