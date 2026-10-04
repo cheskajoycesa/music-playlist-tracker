@@ -339,6 +339,13 @@ textarea.field {
   container-type: inline-size;
   width: 100%;
 }
+/* The tape name on the cassette label. It hides overflow (long names end in "…"), and the script font's
+   tails (g, j, p, q, y) and swashes reach outside its line box, so the box gets extra room on every side.
+   The negative margins take that room back, so the label's layout doesn't move. */
+.tapebox .script {
+  padding: 0.12em 0.2em 0.32em;
+  margin: -0.12em -0.2em -0.32em;
+}
 /* PART: .flag — styles this component or layout area. */
 .flag {
   display: inline-block;
@@ -718,6 +725,9 @@ a.tile:hover {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  /* extra room for the script letters' tails and swashes, taken back by the negative margins */
+  padding: 0.15em 0.3em;
+  margin: -0.15em -0.3em;
 }
 /* PART: .only-phone — styles this component or layout area. */
 .only-phone {
@@ -2273,18 +2283,20 @@ a.tile:hover,
   text-shadow: none;
 }
 
-/* ---------- Search page heading ---------- */
-/* Keep the existing pagehead layout everywhere else, while centering only
-   the iTunes Search API label, SEARCH title, and retro subtitle. */
+/* ---------- Search and Profile page headings ---------- */
+/* These two pages center their ribbon label, title and retro subtitle; the other pages keep the
+   left-aligned heading. */
 /* PART: .search-pagehead — styles this component or layout area. */
-.search-pagehead {
+.search-pagehead,
+.profile-pagehead {
   justify-content: center;
   text-align: center;
 }
 
 /* Centers the three heading elements as one compact vertical group. */
 /* PART: .search-page-copy — styles this component or layout area. */
-.search-page-copy {
+.search-page-copy,
+.profile-page-copy {
   align-items: center;
   width: min(100%, 760px);
   margin-inline: auto;
@@ -2697,28 +2709,59 @@ a.tile:hover,
    The search textbox itself is NOT moved.
 */
 
-/* Keep the iTunes Search API heading perfectly centered. */
-/* The ribbon tag has a global align-self:flex-start rule, so override it here. */
+/* Search and Profile headings, centered. */
+/* The ribbon tag is normally pinned to the left (align-self: flex-start); here it is centered. */
 /* PART: .search-pagehead .tag — styles this component or layout area. */
-.search-pagehead .tag {
+.search-pagehead .tag,
+.profile-pagehead .tag {
   align-self: center !important;
   margin-inline: auto;
   text-align: center;
 }
 
 /* PART: .search-pagehead — styles this component or layout area. */
-.search-pagehead {
+.search-pagehead,
+.profile-pagehead {
   justify-content: center !important;
   text-align: center;
 }
 
 /* PART: .search-page-copy — styles this component or layout area. */
-.search-page-copy {
+.search-page-copy,
+.profile-page-copy {
   align-items: center !important;
   justify-content: center;
   width: 100%;
   margin-inline: auto;
   text-align: center;
+}
+
+/* Search and Profile heading spacing: the ribbon, title and subtitle are evenly spaced, and the space between
+   the subtitle and the dashed line matches the space above the ribbon, so the text sits in the middle. */
+.search-pagehead,
+.profile-pagehead {
+  padding-bottom: 34px;
+}
+.search-page-copy,
+.profile-page-copy {
+  gap: 12px !important; /* overrides the 8px gap set on the element itself */
+}
+/* The script font leaves empty room above its letters; this pulls the subtitle up to an even gap. */
+.search-pagehead .sub,
+.profile-pagehead .sub {
+  margin-top: -11px;
+}
+@media (max-width: 1180px) {
+  .search-pagehead,
+  .profile-pagehead {
+    padding-bottom: 28px;
+  }
+}
+@media (max-width: 700px) {
+  .search-pagehead,
+  .profile-pagehead {
+    padding-bottom: 21px;
+  }
 }
 
 /* The search-type dropdown stays centered in the search controls without
