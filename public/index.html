@@ -13,11 +13,12 @@
       name="description"
     />
     <meta content="#C1272D" name="theme-color" />
-    <!--External font resources used by the retro UI typography.-->
+    <!--Browser tab icon: the Cassettefy logo, drawn inline as an SVG.-->
     <link
       href="data:image/svg+xml,%3Csvg width='64' height='64' viewBox='0 0 200 200' role='img' aria-label='Cassettefy logo' style='flex-shrink: 0; display: block;'%3E%3Crect x='8' y='14' width='184' height='180' rx='28' fill='%230F3A36'/%3E%3Crect x='8' y='6' width='184' height='180' rx='28' fill='%231E6B65'/%3E%3Ccircle cx='26' cy='22' r='5' fill='%23174F4A'/%3E%3Cpath d='M23 22h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Ccircle cx='174' cy='22' r='5' fill='%23174F4A'/%3E%3Cpath d='M171 22h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Ccircle cx='26' cy='170' r='5' fill='%23174F4A'/%3E%3Cpath d='M23 170h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Ccircle cx='174' cy='170' r='5' fill='%23174F4A'/%3E%3Cpath d='M171 170h6' stroke='%235E9C93' stroke-width='1.5'/%3E%3Crect x='24' y='34' width='152' height='108' rx='10' fill='%23FAF3E0'/%3E%3Cpath d='M24 44a10 10 0 0 1 10-10h132a10 10 0 0 1 10 10v5H24z' fill='%23F2CF6B'/%3E%3Crect x='24' y='52' width='152' height='5' fill='%23C1272D'/%3E%3Crect x='36' y='70' width='128' height='56' rx='28' fill='%233A2A22'/%3E%3Crect x='88' y='88' width='24' height='20' rx='2' fill='none' stroke='%23FAF3E0' stroke-opacity='.45' stroke-width='2'/%3E%3Cpath d='M89 105h22' stroke='%236B3B2A' stroke-width='4'/%3E%3Ccircle cx='66' cy='98' r='22.0' fill='%236B3B2A'/%3E%3Ccircle cx='66' cy='98' r='17.2' fill='none' stroke='%238A5238' stroke-width='1'/%3E%3Ccircle cx='66' cy='98' r='12.0' fill='%23FAF3E0'/%3E%3Ccircle cx='66' cy='98' r='6.6' fill='%232A1D17'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(0 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(60 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(120 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(180 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(240 66 98)'/%3E%3Crect x='63.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(300 66 98)'/%3E%3Ccircle cx='134' cy='98' r='16.0' fill='%236B3B2A'/%3E%3Ccircle cx='134' cy='98' r='12.5' fill='none' stroke='%238A5238' stroke-width='1'/%3E%3Ccircle cx='134' cy='98' r='12.0' fill='%23FAF3E0'/%3E%3Ccircle cx='134' cy='98' r='6.6' fill='%232A1D17'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(0 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(60 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(120 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(180 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(240 134 98)'/%3E%3Crect x='131.8' y='90.6' width='4.3' height='3.6' rx='.6' fill='%23FAF3E0' transform='rotate(300 134 98)'/%3E%3Cpath d='M54 186L64 152h72l10 34z' fill='%23174F4A'/%3E%3Ccircle cx='84' cy='170' r='5' fill='%230F3A36'/%3E%3Ccircle cx='116' cy='170' r='5' fill='%230F3A36'/%3E%3Crect x='96' y='160' width='8' height='6' rx='1' fill='%230F3A36'/%3E%3C/svg%3E"
       rel="icon"
     />
+    <!--Google Fonts used by the retro look: Alfa Slab One (headings), Zilla Slab (text), Yellowtail (script).-->
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect" />
     <link
@@ -589,12 +590,11 @@
             </a>
           </section>
         </nav>
-        <!--Main application column: top bar, page content, and mobile player dock.-->
+        <!--Main application column: page content, and the player dock on tablets and phones.-->
         <div class="mainwrap">
-          <!-- Top utility bar removed: navigation is handled by the sidebar. -->
           <!--Main content region: route-specific views are rendered here.-->
           <main class="content" id="content">
-            <!-- Home dashboard: intro, shortcuts, and recently used tapes. -->
+            <!-- Home: welcome, library totals, and recently played tapes to pick up where you left off. -->
             <section aria-labelledby="home-h" class="view" id="view-home">
               <section class="hero">
                 <div
@@ -973,18 +973,18 @@
             <!-- iTunes search and the add-to-mixtape workflow. -->
             <section class="view" hidden="" id="view-search">
               <!-- ================= SEARCH PAGE HEADING ================= -->
-              <!-- This wrapper controls the complete search-page heading row. -->
+              <!-- The heading row (centered; see .search-pagehead in style.css). -->
               <div class="pagehead search-pagehead">
-                <!-- This inner flex column keeps the API label, SEARCH title, and subtitle together. -->
+                <!-- The ribbon label, SEARCH title and subtitle, stacked. -->
                 <div
                   class="search-page-copy"
                   style="display: flex; flex-direction: column; gap: 8px; min-width: 0; width: 100%; align-items: center; text-align: center;"
                 >
-                  <!-- Small ribbon label: CSS centers this independently from the global tag style. -->
+                  <!-- Ribbon label naming the data source. -->
                   <span class="tag">iTunes Search API</span>
                   <!-- Main page title for the iTunes search screen. -->
                   <h1 class="h1">SEARCH</h1>
-                  <!-- Decorative retro subtitle shown directly under the title. -->
+                  <!-- Script-font subtitle under the title. -->
                   <div class="sub">dig through the crates</div>
                 </div>
               </div>
@@ -1528,8 +1528,6 @@
                 </div>
               </section>
             </section>
-            <!-- Tape metadata and song editor. -->
-
             <!-- Favorite tapes shelf. -->
             <section class="view" hidden="" id="view-favorites">
               <div class="pagehead">
@@ -2281,7 +2279,21 @@
     <!-- Spotify: login, playback, song matching, export and import (see the overview at the top of the file). -->
     <script src="js/spotify.js"></script>
     <script>
+      /* ================= Cassettefy · index.html =================
+         The whole app runs in this one page; the URL hash (#home, #search, #library, #deck, #favorites,
+         #recent, #profile) picks which view is shown. Main parts, in order:
+           - shared code      colors, helpers, the Store (tapes on the Node server, other data in the browser),
+                              icons, and the cassette and receipt drawings
+           - editor popup     opens edit.html in an iframe over this page (#edit/<tape id>)
+           - router           shows the view for the current hash
+           - deck player      the Player: play/pause/next/seek for Spotify songs, 30-second previews,
+                              and songs without audio; also moves on to the next song when one ends
+           - HOME, SEARCH (iTunes Search API), LIBRARY, DECK, FAVORITES, RECENT, PROFILE   one section per view
+           - boot             loads the tapes and opens the first view
+         Everything that talks to Spotify is in js/spotify.js. */
+
       /* ================= Cassettefy · shared code ================= */
+      // Brand colors and the six shell/stripe color pairs a tape can have.
       const RED = '#C1272D',
         DRED = '#9B1B22',
         TEAL = '#1E6B65',
@@ -2922,7 +2934,7 @@
         $$('[data-np="sub"]').forEach(
           (e) => (e.textContent = t ? t.artist + ' · ' + tape.name : 'Load a tape in the deck'),
         );
-        // Leave the bottom player's bar alone while the listener is dragging it.
+        // The bottom player's bar is left alone while the listener is dragging it.
         const dragging = document.querySelector('.np-seek.dragging');
         const free = (e) => !dragging || !dragging.parentElement.contains(e);
         $$('[data-np="elapsed"]').forEach((e) => free(e) && (e.textContent = fmt(info ? info.pos : 0)));
@@ -3004,8 +3016,8 @@
         document.body.classList.remove('editor-open');
         const frame = $('#editorOverlayFrame');
         if (frame && wasOpen) {
-          // The editor saves through its own copy of the tapes. Wait for its last save (at most 2 s),
-          // then reload ours, so this page doesn't show - or later save over - an older copy.
+          // The editor saves through its own copy of the tapes. This page waits for its last save (at most 2 s),
+          // then reloads its own copy, so it never shows - or later saves over - an older version.
           let flushing = null;
           try {
             flushing = frame.contentWindow.cassettefyFlush && frame.contentWindow.cassettefyFlush();
@@ -3023,8 +3035,8 @@
             history.replaceState(null, '', location.pathname + location.search + '#library');
             route();
           } else {
-            // Leave the page underneath as it is, but drop "#edit/<id>" from the address: otherwise clicking
-            // the same tape's pencil again would ask for the same address, which the browser ignores.
+            // The page underneath stays as it is; only "#edit/<id>" is dropped from the address. Otherwise
+            // clicking the same tape's pencil again would ask for the same address, which the browser ignores.
             history.replaceState(null, '', location.pathname + location.search + '#' + currentRoute);
           }
         }
@@ -3084,7 +3096,7 @@
 
             deckAudio.pause();
 
-            // Pause Spotify only if Spotify currently has playback loaded
+            // Spotify is paused only if it is playing that song
             if (current.spotifyUri) pauseSpotifyIfPlaying('delete-track pause');
 
             Player.pos = 0;
@@ -3201,14 +3213,14 @@
         },
         /** Called by armEnd's timer: plays the next song if this one is really over, or waits a little longer. */
         async checkEnd(id) {
-          // Compare by id: reloading the tapes replaces the song objects but keeps their ids.
+          // Songs are compared by id: reloading the tapes replaces the song objects but keeps their ids.
           const sameSong = () => this.playing && !!this.track() && this.track().id === id;
           if (!sameSong()) return;
           const t = this.track();
           let left = this.dur() - this.clockPos();
           if (t.spotifyUri) {
-            // Ask Spotify how much is left (it may have buffered for a moment). Its answer is ignored only if it
-            // is clearly out of date: the clock says the song ended more than 5 seconds ago.
+            // Spotify is asked how much is left (it may have buffered for a moment). Its answer is ignored only
+            // if it is clearly out of date: the clock says the song ended more than 5 seconds ago.
             const spotifyLeft = await spotifySecondsLeft(t.spotifyUri);
             if (!sameSong()) return;
             if (spotifyLeft !== null && left > -5) left = spotifyLeft;
@@ -3271,15 +3283,15 @@
 
           // Spotify imported track
           if (t.spotifyUri) {
-            // If the song already finished, replay it from the beginning
+            // A song that already finished starts again from the beginning
             if (this.pos >= this.dur() - 1) {
               this.pos = 0;
             }
 
-            // Compare by id: reloading the tapes replaces the song objects but keeps their ids.
+            // Songs are compared by id: reloading the tapes replaces the song objects but keeps their ids.
             const sameSong = () => !!this.track() && this.track().id === t.id;
             playSpotifyTrack(t.spotifyUri, this.pos).then(async (success) => {
-              // Ignore a late answer if the listener already paused or moved to another song.
+              // A late answer is ignored if the listener already paused or moved to another song.
               if (!this.playing || !sameSong()) return;
               if (!success) {
                 this.playing = false;
@@ -3295,7 +3307,7 @@
               tick();
               this.armEnd();
 
-              // Keep the cassette timer synced with Spotify
+              // The cassette timer follows Spotify's position
               clearInterval(this.timer);
               this.timer = setInterval(async () => {
                 if (!this.playing || !spotifyReady() || !sameSong()) return;
@@ -3311,7 +3323,7 @@
             // Existing preview audio
             deckAudio.play().catch(() => this.simulate());
           } else {
-            // Manually added songs
+            // Songs without audio
             this.simulate();
           }
 
@@ -3319,7 +3331,7 @@
           ui();
         },
         simulate() {
-          // Songs typed in by hand have no audio, so the deck counts through their duration (by the clock,
+          // Songs without audio: the deck counts through their duration (by the clock,
           // so the count stays right even when a background tab only lets this timer run now and then).
           this.stopTimers();
           this.startClock();
@@ -3371,7 +3383,7 @@
 
           deckAudio.pause();
 
-          // Only pause Spotify if a Spotify track was actually playing
+          // Spotify is paused only if a Spotify song was actually playing
           if (!keepSpotify && wasPlaying && t && t.spotifyUri) {
             pauseSpotifyIfPlaying('halt');
           }
@@ -3513,7 +3525,7 @@
         if (currentRoute === 'deck') renderDeck();
         if (!Player.info()) paintNowPlaying(null);
       }
-      // Player UI bindings: connects playback buttons to the Player controller.
+      // Play / previous / next buttons of the sidebar mini player and the bottom player.
       $$('[data-np="play"]').forEach((b) =>
         b.addEventListener('click', () => (Player.tape ? Player.toggle() : (location.hash = '#deck'))),
       );
@@ -3599,8 +3611,6 @@
       function renderHome() {
         const d = Store.data,
           tracks = d.playlists.reduce((a, p) => a + p.tracks.length, 0);
-        // The home navigation tiles were intentionally removed from the HTML.
-        // Keep the remaining home statistics and recent-tape area working normally.
         const np = Player.track();
         $('#homeStats').textContent = d.playlists.length + ' tapes · ' + tracks + ' tracks';
         let list = d.recent
@@ -3628,6 +3638,8 @@
                   class="btn-outline" data-samples style="height: 44px; font-size: 17px;">add sample tapes</button>
               </p>`;
       }
+      // Every Play link and button with data-play="<tape id>" (Home, Library, Favorites, Recent): loads that
+      // tape into the deck and plays it, then shows the Deck. data-track / data-pos start at a song or spot.
       document.addEventListener('click', (e) => {
         const a = e.target.closest('[data-play]');
         if (!a) return;
@@ -3644,8 +3656,7 @@
             Player.play();
           }
         } else {
-          // Different tape (or another data-play link):
-          // use the normal load/play behavior.
+          // Different tape (or another data-play link): loads it and plays.
           Player.load(id, a.dataset.track || null, +(a.dataset.pos || 0), true);
         }
 
@@ -3653,11 +3664,12 @@
         location.hash = '#deck';
       });
 
+      // Clicking a tape card (outside its buttons) opens that tape on the Deck page.
       document.addEventListener('click', (e) => {
         const card = e.target.closest('[data-open-deck]');
         if (!card) return;
 
-        // Don't trigger when clicking Play, Edit, Favorite, Delete, etc.
+        // Clicks on the card's own buttons and links (Play, Edit, heart, erase) are handled by those buttons.
         if (e.target.closest('a, button')) return;
 
         // Only open the tape on the Deck to look at its songs: whatever is playing keeps playing.
@@ -3684,9 +3696,8 @@
       // Loads an iTunes URL through a <script> tag (JSONP) and resolves with its data.
       function jsonp(url) {
         /*
-         * JSONP is intentionally used as the primary iTunes request method.
-         * This keeps the search working when Cassettefy is opened from localhost
-         * without needing a separate proxy server or backend route.
+         * JSONP is the main way this app calls iTunes: it works from localhost
+         * without a proxy server or a backend route.
          */
         return new Promise((resolve, reject) => {
           const callbackName = 'itunes_' + uid();
@@ -3732,14 +3743,10 @@
       // Calls the iTunes API: path is 'search' or 'lookup'.
       async function itunes(path, params) {
         /*
-         * Build one clean iTunes Search API URL.
-         *
-         * JSONP is used first because this project is a front-end app that is
-         * expected to run from localhost. It avoids browser CORS problems while
-         * still talking directly to Apple's public iTunes Search API.
-         *
-         * A normal fetch is kept as a fallback for environments where JSONP is
-         * unavailable. Both paths return the same { results: [] } structure.
+         * Builds the iTunes Search API URL and asks iTunes for it.
+         * JSONP comes first: it avoids the browser's cross-site (CORS) limits while still
+         * talking straight to Apple's public API. A normal fetch is the fallback where JSONP
+         * is blocked. Both return the same { results: [] } data.
          */
         const query = new URLSearchParams({
           ...params,
@@ -3753,7 +3760,7 @@
           return await jsonp(url);
         } catch (jsonpError) {
           /*
-           * Fallback for browsers/environments where script requests are blocked.
+           * The fallback, for browsers that block script requests.
            */
           const response = await fetch(url, {
             method: 'GET',
@@ -3815,7 +3822,7 @@
       // Search execution: queries the iTunes Search API and stores normalized results.
       async function runSearch(q) {
         q = (q || '').trim();
-        // The old top-bar quick search was removed, so only update it when it exists.
+        // The search box shows the searched words; a quick-search field, if the page has one, is cleared.
         $('#q').value = q;
         const quickInput = $('#quickInput');
         if (quickInput) quickInput.value = '';
@@ -3965,7 +3972,7 @@
             <div style="font-size: 16px;">Pick a song with <b>+ Add</b> to record it onto your tapes.</div>`;
         }
 
-        // Keep the tapes the listener already ticked (this panel redraws whenever a song is picked),
+        // Tapes the listener already ticked stay ticked (this panel redraws whenever a song is picked),
         // plus the tape they came to fill from the editor's "Add songs from Search" button.
         const ticked = new Set($$('#addTapes input:checked').map((i) => i.value));
         if (S.addTo) ticked.add(S.addTo);
@@ -4041,7 +4048,7 @@
         }
         $('#addSave').click();
       });
-      // Hide the save bar while the full panel is visible, so the same controls don't show twice.
+      // The save bar hides while the full panel is visible, so the same controls don't show twice.
       new IntersectionObserver(
         ([entry]) => {
           S.panelInView = entry.isIntersecting;
@@ -4108,6 +4115,8 @@
         });
       }
       previewAudio.addEventListener('ended', stopPreviewButtons);
+      // "Record": adds the picked song to every ticked tape, on the chosen side. When Spotify is connected it
+      // first looks up the same song on Spotify, so the deck can play the full song instead of a 30-second preview.
       $('#addSave').addEventListener('click', async () => {
         const sel = S.selected;
         if (!sel || S.saving) return;
@@ -4126,11 +4135,11 @@
 
         const side = ($('input[name="addSide"]:checked') || {}).value || 'B';
 
-        // Block a second tap while the Spotify lookup below is still running (it would record the song twice).
+        // A second tap is blocked while the Spotify lookup below is still running (it would record the song twice).
         S.saving = true;
         renderAddPanel();
 
-        // Try to find the same song on Spotify
+        // The same song on Spotify, if there is one (js/spotify.js)
         const spotifyUri = await findSpotifyUri(sel.title, sel.artist).finally(() => {
           S.saving = false;
         });
@@ -4220,7 +4229,7 @@
           tracks: (a, b) => b.tracks.length - a.tracks.length,
         };
         list.sort(sorters[L.sort]);
-        // Resize the sorting dropdown to match the currently selected label.
+        // The sorting dropdown is sized to its selected label.
         fitLibrarySortToText();
         const favs = Store.data.playlists.filter((t) => t.fav).length;
         $('#chipAll').classList.toggle('on', L.filter === 'all');
@@ -4277,6 +4286,8 @@
           renderSwatches();
         }
       });
+      // New mixtape form: creates an empty tape with the chosen name, genre and shell color on the server,
+      // then opens it in the editor so songs can be added.
       $('#newTapeForm').addEventListener('submit', async (e) => {
         e.preventDefault();
         const name = $('#ntName').value.trim();
@@ -4305,7 +4316,7 @@
           toast('The server didn’t save that tape. Is it still running?');
         }
       });
-      // sample tapes for an empty server
+      // "Add 6 sample tapes" button, shown while the Library is empty.
       document.addEventListener('click', async (e) => {
         const b = e.target.closest('[data-samples]');
         if (!b) return;
@@ -4319,7 +4330,8 @@
         }
         RENDER[currentRoute]();
       });
-      // shared card actions (library, favorites, recent)
+      // Heart (favorite) and erase buttons on tape cards (Library, Favorites, Recent). Erasing takes two clicks
+      // and deletes the tape from the server; if it was playing, the deck stops.
       document.addEventListener('click', (e) => {
         const fav = e.target.closest('[data-fav]'),
           erase = e.target.closest('[data-erase]');
@@ -4354,8 +4366,8 @@
       });
 
       /* ======================= DECK ======================= */
-      // Resize a select control to the width of its currently selected text.
-      // Short labels get a short box, while longer labels receive only the space they need.
+      // Sizes a dropdown to the width of its selected text: short labels get a short box,
+      // longer labels only the space they need.
       function fitSelectToText(sel, minWidth, maxWidth, extraWidth) {
         if (!sel) return;
 
@@ -4364,7 +4376,7 @@
         const cs = getComputedStyle(sel);
         const probe = document.createElement('span');
 
-        // Copy the visible font settings so the hidden measurement matches the real text.
+        // The hidden measuring element copies the visible font settings, so it matches the real text.
         probe.textContent = text;
         probe.style.position = 'fixed';
         probe.style.visibility = 'hidden';
@@ -4376,7 +4388,7 @@
         probe.style.letterSpacing = cs.letterSpacing;
         document.body.appendChild(probe);
 
-        // Measure the text and add only the space needed for the arrow, padding, and border.
+        // Width = the text plus only the space needed for the arrow, padding and border.
         const textWidth = probe.getBoundingClientRect().width;
         const width = Math.min(
           maxWidth,
@@ -4385,7 +4397,7 @@
 
         probe.remove();
 
-        // Store the measured width so CSS can size the visible select exactly.
+        // The measured width is stored so CSS can size the visible dropdown exactly.
         sel.style.setProperty('--select-fit-width', width + 'px');
       }
 
@@ -4414,7 +4426,7 @@
         // first tape's name over an empty deck, and picking that tape would do nothing (it's already "selected").
         const placeholder = tape ? '' : '<option value="" selected disabled>Choose a tape…</option>';
         sel.innerHTML = placeholder + Store.data.playlists.map(option).join('');
-        // Resize the Deck playlist selector to match the currently selected playlist name.
+        // The Deck's tape dropdown is sized to the selected tape's name.
         fitDeckSelectToText();
 
         $('#deckTag').textContent = browsing ? 'Just looking' : 'Now spinning';
@@ -4469,8 +4481,8 @@
       }
       /**
        * The deck receipt's song list scrolls on its own (see .r-songs in style.css) and is redrawn on every
-       * update. Keep the listener's scroll position; when the playing song or the tape changes, bring the
-       * playing line into view inside the list (without scrolling the page).
+       * update. The listener's scroll position is kept; when the playing song or the tape changes, the
+       * playing line is brought into view inside the list (without scrolling the page).
        */
       function keepReceiptScroll(key, oldScroll) {
         const list = $('#deckReceipt .r-songs');
@@ -4504,7 +4516,7 @@
       });
       // Picking a tape here only opens it; the music keeps playing until you press play on it.
       $('#deckSelect').addEventListener('change', (e) => {
-        // Resize immediately when a different playlist name is selected.
+        // Resized as soon as a different tape is picked.
         fitDeckSelectToText();
         if (!e.target.value) return;
         Deck.open(e.target.value);
@@ -4515,6 +4527,7 @@
         if (Deck.browsing()) Player.load(Deck.tape().id, null, 0, true);
         else Player.toggle();
       });
+      // Deck buttons: previous, next, stop, flip to the other side, and volume.
       $('#kPrev').addEventListener('click', () => Player.prev());
       $('#kNext').addEventListener('click', () => Player.go(Player.idx + 1));
       $('#kStop').addEventListener('click', () => Player.stop());
@@ -4522,7 +4535,7 @@
       $('#vol').addEventListener('input', (e) => {
         const volume = e.target.value / 10;
 
-        // Existing preview/local audio
+        // 30-second previews
         deckAudio.volume = volume;
 
         // Spotify Web Playback
@@ -4536,6 +4549,7 @@
         Store.save();
         renderDeck();
       });
+      // Clicking a song on the deck's receipt plays it.
       $('#deckReceipt').addEventListener('click', (e) => {
         const row = e.target.closest('[data-track]');
         if (!row) return;
@@ -4567,8 +4581,6 @@
           e.preventDefault();
         }
       });
-
-      /* ======================= EDITOR MOVED TO edit.html ======================= */
 
       /* ======================= FAVORITES ======================= */
       let favSort = 'liked';
@@ -4805,7 +4817,7 @@
           history.replaceState(null, '', location.pathname + '#home');
           route();
         } else {
-          // Always show Home after refreshing/opening the website
+          // Opening or refreshing the site starts on Home
           history.replaceState(null, '', location.pathname + '#home');
           route();
         }

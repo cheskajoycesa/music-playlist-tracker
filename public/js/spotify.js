@@ -14,24 +14,32 @@
    runs straight away (the button listeners below) only uses plain DOM calls for that reason. */
 
 /* ======================= 1. Settings ======================= */
-/* Paste your app's Client ID from https://developer.spotify.com/dashboard
-   In the Spotify dashboard, add this page's exact URL as a Redirect URI. With the Node server that is
-   http://127.0.0.1:3000/index.html  (open the app at that same address — Spotify doesn't accept "localhost"). */
+/* The app's Client ID from the Spotify developer dashboard (developer.spotify.com), where the app is
+   registered with http://127.0.0.1:3000/index.html as its Redirect URI. Spotify only sends a login back
+   to a registered address, which is why the app is opened at 127.0.0.1 and not "localhost". */
 const SPOTIFY_CLIENT_ID = 'e5d9a005633045a296b672629fff872a';
+// What the app asks permission for: playing music in the browser, reading the listener's playlists,
+// and creating playlists (for export).
 const SPOTIFY_SCOPES =
   'streaming user-read-email user-modify-playback-state playlist-read-private playlist-read-collaborative playlist-modify-private playlist-modify-public user-read-private';
 const redirectUri = () => 'http://127.0.0.1:3000/index.html';
 
-// Spotify state: stores connection status, imported playlists, and import progress.
+// Spotify state for the Profile page: the logged-in user (me), their playlists (lists), whether they are
+// still loading (busy), and any login message to show (msg).
 const SP = { me: null, lists: null, busy: false, msg: '' };
 
 /* ======================= 2. Login (Authorization Code with PKCE) ======================= */
+// Turns bytes into URL-safe base64 text (used for the PKCE codes below).
 const b64url = (bytes) => {
   let s = '';
   bytes.forEach((b) => (s += String.fromCharCode(b)));
   return btoa(s).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
 };
-// Spotify authorization: starts the Authorization Code with PKCE connection flow.
+/* "Log in with Spotify": the Authorization Code with PKCE flow, which needs no server-side secret.
+   1. A random "verifier" is made and kept in sessionStorage; only its SHA-256 hash (the "challenge") is sent.
+   2. The browser goes to Spotify's login page with the Client ID, the scopes and the challenge.
+   3. Spotify sends the listener back to the Redirect URI with ?code=..., which handleSpotifyCallback()
+      trades (together with the verifier) for an access token. */
 async function spotifyConnect() {
   if (!SPOTIFY_CLIENT_ID) {
     SP.msg = 'setup';
@@ -299,7 +307,7 @@ async function findSpotifyUri(title, artist) {
   }
 
   try {
-    // Use the first/main artist for matching
+    // Only the first (main) artist is used for matching
     const mainArtist = (artist || '').split(',')[0].trim();
 
     const query = 'track:' + title + ' artist:' + mainArtist;
@@ -313,7 +321,7 @@ async function findSpotifyUri(title, artist) {
       return '';
     }
 
-    // Try to find the closest exact match
+    // An exact title + artist match is preferred; otherwise Spotify's top result is used
     const normalize = (text) =>
       String(text || '')
         .toLowerCase()
@@ -342,6 +350,7 @@ async function findSpotifyUri(title, artist) {
 }
 
 /* ======================= 5. Export (tape -> Spotify playlist) ======================= */
+// Creates a new private playlist in the listener's Spotify account; resolves to the playlist.
 async function createSpotifyPlaylist(name) {
   const token = Store.data.spotify?.access;
 
@@ -377,6 +386,7 @@ async function createSpotifyPlaylist(name) {
   return response.json();
 }
 
+// Adds songs (by Spotify URI) to a Spotify playlist.
 async function addSongsToSpotifyPlaylist(playlistId, uris) {
   const token = Store.data.spotify?.access;
 
@@ -431,12 +441,14 @@ async function inSpotifyLibrary(playlistId) {
   return false;
 }
 
+// Exports a tape: creates a Spotify playlist with the tape's name and adds its songs, in tape order.
+// Songs without a Spotify match are skipped; resolves to how many were exported and skipped.
 async function exportTapeToSpotify(tape) {
   if (!tape) {
     throw new Error('No tape selected.');
   }
 
-  // Don't duplicate playlists that originally came from Spotify (the stored link survives a genre change)
+  // A tape imported from Spotify already exists there, so it isn't exported (the stored link survives a genre change)
   if (tape.spotifyPlaylistId || tape.genre === 'Spotify import') {
     throw new Error('This tape was imported from Spotify and already exists in your Spotify library.');
   }
@@ -458,7 +470,7 @@ async function exportTapeToSpotify(tape) {
     throw new Error('This tape has no Spotify-matched songs.');
   }
 
-  // Create the playlist in Spotify
+  // The new playlist in Spotify
   const spotifyPlaylist = await createSpotifyPlaylist(tape.name || 'Cassettefy Playlist');
 
   // Spotify accepts up to 100 items per request
@@ -466,7 +478,7 @@ async function exportTapeToSpotify(tape) {
     await addSongsToSpotifyPlaylist(spotifyPlaylist.id, uris.slice(i, i + 100));
   }
 
-  // Remember the Spotify playlist so we don't create duplicates
+  // The Spotify playlist is remembered on the tape, so the tape isn't exported twice
   tape.spotifyExportId = spotifyPlaylist.id;
   Store.save();
 
@@ -541,13 +553,13 @@ async function loadSpotify() {
   renderProfile();
 
   try {
-    // Get the currently logged-in Spotify user
+    // The logged-in Spotify user
     SP.me = await spFetch('me');
 
-    // Get the user's Spotify playlists
+    // Their Spotify playlists
     const pl = await spFetch('me/playlists?limit=30');
 
-    // Only show playlists CREATED/OWNED by the logged-in user
+    // Only playlists the user owns are listed (not ones they follow)
     SP.lists = (pl.items || []).filter(
       (playlist) => playlist && playlist.owner && playlist.owner.id === SP.me.id,
     );
@@ -558,7 +570,6 @@ async function loadSpotify() {
   SP.busy = false;
   renderProfile();
 }
-// Spotify importer: converts selected Spotify playlists into cassette tapes.
 /**
  * The Library tape this Spotify playlist belongs to, or null: the tape imported from it, or the tape
  * that was exported to create it (importing that back would duplicate the tape). Tapes imported before
@@ -575,6 +586,8 @@ function importedTape(playlist) {
     ) || null
   );
 }
+// "Import as tapes": turns each ticked Spotify playlist into a tape in the Library. The songs are split
+// between side A (first half) and side B, and keep their Spotify URIs so the deck plays the full songs.
 async function importSpotify() {
   const ids = $$('#spLists input:checked').map((i) => i.value);
   if (!ids.length) {
@@ -587,7 +600,7 @@ async function importSpotify() {
   let made = 0;
   for (const id of ids) {
     const meta = SP.lists.find((x) => x.id === id);
-    // Never import the same playlist twice (e.g. a second click while the first import runs).
+    // A playlist that is already a tape is skipped (e.g. after a second click while the first import runs).
     if (importedTape(meta || { id })) continue;
     try {
       let items = [],
@@ -597,7 +610,7 @@ async function importSpotify() {
         items = items.concat(page.items || []);
         next = page.next ? page.next.replace('https://api.spotify.com/v1/', '') : null;
       }
-      // A Spotify playlist can list the same song twice: keep only its first appearance.
+      // A Spotify playlist can list the same song twice: only its first appearance is kept.
       const seen = new Set();
       const tracks = items
         .map((it) => it && (it.track || it.item))
@@ -707,6 +720,8 @@ function renderSpotifyProfile(connected) {
     loadSpotify();
   }
 }
+// The Profile page's Spotify buttons: log in, import the ticked playlists, and disconnect (which forgets the
+// login in this browser).
 document.getElementById('spConnect').addEventListener('click', spotifyConnect);
 document.getElementById('spImport').addEventListener('click', importSpotify);
 document.getElementById('spDisconnect').addEventListener('click', () => {
@@ -721,6 +736,8 @@ document.getElementById('spDisconnect').addEventListener('click', () => {
 
 /* ======================= 8. SDK start-up ======================= */
 // https://sdk.scdn.co/spotify-player.js (loaded at the end of index.html) calls this once it is ready.
+// It creates the "Cassette Tape Player": a Spotify device inside this page that plays the full songs.
+// Its device id (on "ready") is where playSpotifyTrack() sends songs.
 window.onSpotifyWebPlaybackSDKReady = () => {
   spotifyPlayer = new Spotify.Player({
     name: 'Cassette Tape Player',
@@ -764,17 +781,19 @@ window.onSpotifyWebPlaybackSDKReady = () => {
     console.error('Spotify playback error:', message);
   });
 
+  // When a Spotify song reaches its end, the deck moves on to the next song. (If this news comes late, for
+  // example while the tab is in the background, the deck's own end timer in index.html moves on instead.)
   spotifyPlayer.addListener('player_state_changed', (state) => {
     if (!state) return;
 
     const t = Player.track();
 
-    // Only handle Spotify songs in the cassette
+    // Only Spotify songs on the deck are handled here
     if (!t || !t.spotifyUri) return;
 
     const duration = Player.dur();
 
-    // Detect a song that naturally reached the end
+    // A song that reached its end (not one the listener paused)
     const endedNaturally = state.paused && Player.playing && duration > 0 && Player.pos >= duration - 2;
 
     if (endedNaturally) {
