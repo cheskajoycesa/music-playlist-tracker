@@ -1001,7 +1001,7 @@
                     type="search"
                   />
                   <label class="sr" for="entity">Search in</label>
-                  <select class="pill" id="entity" style="flex: 0 0 150px; font-size: 18px; padding: 0 18px;">
+                  <select class="pill dropdown" id="entity" style="flex: 0 0 150px; font-size: 18px;">
                     <option value="song">Songs</option>
                     <option value="album">Albums</option>
                     <option value="musicArtist">Artists</option>
@@ -1161,8 +1161,9 @@
                   </div>
                   <label class="sr" for="libSort">Sort mixtapes</label>
                   <select
+                    class="dropdown"
                     id="libSort"
-                    style="height: 48px; padding: 0 14px; border: 2px solid #C1272D; border-radius: 24px; background: #FAF3E0; color: #4A2C22; font-size: 17px;"
+                    style="height: 48px; border: 2px solid #C1272D; border-radius: 24px; background-color: #FAF3E0; color: #4A2C22; font-size: 17px;"
                   >
                     <option value="played">Last played</option>
                     <option value="added">Recently added</option>
@@ -1252,7 +1253,7 @@
                 </div>
                 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
                   <label class="sr" for="deckSelect">Load a tape</label>
-                  <select class="tape-select" id="deckSelect"></select>
+                  <select class="tape-select dropdown" id="deckSelect"></select>
                   <button
                     aria-pressed="false"
                     class="btn-outline"
@@ -1874,10 +1875,12 @@
                       ></div>
                       <div style="min-width: 0; flex: 1 1 200px;">
                         <div id="profNameView" style="display: flex; align-items: center; gap: 6px;">
+                          <!-- Script font: extra line height and padding so capitals, swashes and tails
+                               (J, y, g…) aren't clipped; long names wrap instead of being cut off. -->
                           <div
-                            class="script ellipsis"
+                            class="script"
                             id="profName"
-                            style="font-size: 38px; line-height: 1.1; color: #4A2C22; min-width: 0;"
+                            style="font-size: 38px; line-height: 1.3; padding: 2px 6px 6px 4px; color: #4A2C22; min-width: 0; overflow-wrap: anywhere;"
                           ></div>
                           <button
                             aria-label="Edit display name"
@@ -2149,7 +2152,14 @@
           <!-- Compact player shown below the content on tablet and mobile layouts. -->
           <section aria-label="Now playing" class="dock">
             <span data-np="tape" data-w="50"></span>
-            <div style="min-width: 0; flex: 1 1 auto;">
+            <!-- The song title (and the rest of the dock outside its controls) opens the cassette deck. -->
+            <div
+              class="dock-open"
+              role="link"
+              style="min-width: 0; flex: 1 1 auto;"
+              tabindex="0"
+              title="Open the cassette deck"
+            >
               <div class="ellipsis" data-np="title" style="font-size: 17px; font-weight: 700;">
                 Nothing playing
               </div>
@@ -2160,10 +2170,23 @@
               style="flex: 1 1 200px; display: flex; align-items: center; gap: 10px; font-size: 14px; font-variant-numeric: lining-nums tabular-nums;"
             >
               <span data-np="elapsed">0:00</span>
+              <!-- Click or drag to jump in the song; arrow keys work too. The taller wrapper is the hit area. -->
               <div
-                style="flex-grow: 1; height: 10px; border-radius: 5px; background: #174F4A; border: 2px solid #86B8AA; overflow: hidden;"
+                aria-label="Song position"
+                aria-valuemax="0"
+                aria-valuemin="0"
+                aria-valuenow="0"
+                class="np-seek"
+                data-np="seek"
+                role="slider"
+                tabindex="0"
               >
-                <div class="neon-fill" data-np="fill" style="width: 0%; height: 100%;"></div>
+                <div
+                  class="np-seek-track"
+                  style="height: 10px; border-radius: 5px; background: #174F4A; border: 2px solid #86B8AA; overflow: hidden;"
+                >
+                  <div class="neon-fill" data-np="fill" style="width: 0%; height: 100%;"></div>
+                </div>
               </div>
               <span data-np="total">0:00</span>
             </div>
@@ -2888,11 +2911,22 @@
         $$('[data-np="sub"]').forEach(
           (e) => (e.textContent = t ? t.artist + ' · ' + tape.name : 'Load a tape in the deck'),
         );
-        $$('[data-np="elapsed"]').forEach((e) => (e.textContent = fmt(info ? info.pos : 0)));
+        // Leave the bottom player's bar alone while the listener is dragging it.
+        const dragging = document.querySelector('.np-seek.dragging');
+        const free = (e) => !dragging || !dragging.parentElement.contains(e);
+        $$('[data-np="elapsed"]').forEach((e) => free(e) && (e.textContent = fmt(info ? info.pos : 0)));
         $$('[data-np="total"]').forEach((e) => (e.textContent = fmt(info ? info.dur : 0)));
         $$('[data-np="fill"]').forEach(
-          (e) => (e.style.width = (info && info.dur ? Math.min(100, (info.pos / info.dur) * 100) : 0) + '%'),
+          (e) =>
+            free(e) && (e.style.width = (info && info.dur ? Math.min(100, (info.pos / info.dur) * 100) : 0) + '%'),
         );
+        // Slider values for screen readers and keyboard users.
+        $$('[data-np="seek"]').forEach((b) => {
+          b.setAttribute('aria-valuenow', Math.round(info ? info.pos : 0));
+          b.setAttribute('aria-valuemax', Math.round(info ? info.dur : 0));
+          b.setAttribute('aria-valuetext', fmt(info ? info.pos : 0) + ' of ' + fmt(info ? info.dur : 0));
+          b.setAttribute('aria-disabled', !(info && info.dur));
+        });
         $$('[data-np="tape"]').forEach(
           (e) => (e.innerHTML = miniTape(e.dataset.w || 58, tape ? tape.shell : RED, tape ? tape.stripe : MUST)),
         );
@@ -3482,6 +3516,80 @@
       );
       $$('[data-np="prev"]').forEach((b) => b.addEventListener('click', () => Player.prev()));
       $$('[data-np="next"]').forEach((b) => b.addEventListener('click', () => Player.go(Player.idx + 1)));
+
+      // Clicking the bottom player anywhere except its buttons and progress bar opens the cassette deck.
+      function openDeckFromDock() {
+        Deck.viewId = null; // the deck shows the tape that's playing
+        location.hash = '#deck';
+      }
+      $$('.dock').forEach((dock) =>
+        dock.addEventListener('click', (e) => {
+          // composedPath, not e.target.closest: the play button redraws its icon while handling the click,
+          // so by now the clicked icon may no longer be inside the button.
+          const controls = e
+            .composedPath()
+            .some((el) => el.matches && el.matches('button, a, input, [data-np="seek"]'));
+          if (!controls) openDeckFromDock();
+        }),
+      );
+      $$('.dock-open').forEach((el) =>
+        el.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            openDeckFromDock();
+          }
+        }),
+      );
+
+      // Bottom player progress bar: click or drag to jump in the song, arrow keys step 5 seconds.
+      // While dragging only the bar moves; the jump happens on release (so Spotify gets one seek, not dozens).
+      $$('[data-np="seek"]').forEach((bar) => {
+        const row = bar.closest('.dock-wide') || bar.parentElement;
+        const fraction = (e) => {
+          const r = bar.getBoundingClientRect();
+          return Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+        };
+        const preview = (f) => {
+          bar.querySelector('[data-np="fill"]').style.width = f * 100 + '%';
+          const elapsed = row.querySelector('[data-np="elapsed"]');
+          if (elapsed) elapsed.textContent = fmt(f * Player.dur());
+        };
+        let dragging = false;
+        bar.addEventListener('pointerdown', (e) => {
+          if (!Player.tape || !Player.dur()) return;
+          dragging = true;
+          bar.setPointerCapture(e.pointerId);
+          bar.classList.add('dragging');
+          preview(fraction(e));
+          e.preventDefault();
+        });
+        bar.addEventListener('pointermove', (e) => {
+          if (dragging) preview(fraction(e));
+        });
+        const finish = (e, jump) => {
+          if (!dragging) return;
+          dragging = false;
+          bar.classList.remove('dragging');
+          if (jump) Player.seek(fraction(e) * Player.dur());
+          else tick();
+        };
+        bar.addEventListener('pointerup', (e) => finish(e, true));
+        bar.addEventListener('pointercancel', (e) => finish(e, false));
+        bar.addEventListener('keydown', (e) => {
+          if (!Player.tape || !Player.dur()) return;
+          const to = {
+            ArrowRight: Player.pos + 5,
+            ArrowUp: Player.pos + 5,
+            ArrowLeft: Player.pos - 5,
+            ArrowDown: Player.pos - 5,
+            Home: 0,
+            End: Player.dur() - 1,
+          }[e.key];
+          if (to === undefined) return;
+          e.preventDefault();
+          Player.seek(to);
+        });
+      });
 
       /* ======================= HOME ======================= */
       // Home renderer: builds the dashboard using current library and recent-play data.
@@ -4786,6 +4894,26 @@
         return response.json();
       }
 
+      /**
+       * Is this playlist still in the user's Spotify library? "Deleting" a playlist in Spotify only removes it
+       * from the library (Spotify still returns the playlist itself), so this looks through the library's list.
+       * Throws if Spotify can't be reached, so an export never goes ahead on a guess.
+       */
+      async function inSpotifyLibrary(playlistId) {
+        let next = 'me/playlists?limit=50';
+        for (let pages = 0; next && pages < 40; pages++) {
+          let page;
+          try {
+            page = await spFetch(next);
+          } catch (e) {
+            throw new Error('Couldn’t check your Spotify library. Please try again.');
+          }
+          if ((page.items || []).some((p) => p && p.id === playlistId)) return true;
+          next = page.next ? page.next.replace('https://api.spotify.com/v1/', '') : null;
+        }
+        return false;
+      }
+
       async function exportTapeToSpotify(tape) {
         if (!tape) {
           throw new Error('No tape selected.');
@@ -4796,8 +4924,12 @@
           throw new Error('This tape was imported from Spotify and already exists in your Spotify library.');
         }
 
+        // Already exported: only allowed again if that playlist was deleted in Spotify.
         if (tape.spotifyExportId) {
-          throw new Error('This tape has already been exported to Spotify.');
+          if (await inSpotifyLibrary(tape.spotifyExportId)) {
+            throw new Error('This tape has already been exported to Spotify.');
+          }
+          tape.spotifyExportId = null; // deleted in Spotify: forget it; the new playlist is remembered below
         }
 
         const tracks = orderTracks(tape);

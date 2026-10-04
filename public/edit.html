@@ -2337,7 +2337,27 @@ input[type="file"]{
   }
 }
 
-  </style>
+  
+/* Dropdowns: own chevron, equal space on both sides so the chosen option is centered. */
+select.dropdown{
+  appearance:none;
+  -webkit-appearance:none;
+  padding:0 40px;
+  text-align:center;
+  text-align-last:center;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234A2C22' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;
+  background-position:right 16px center;
+  background-size:14px 14px;
+  cursor:pointer;
+}
+select.dropdown.tape-select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+}
+select.dropdown option{
+  text-align:left;
+}
+</style>
 </head>
 <body>
 <div class="shell paper">
@@ -2353,7 +2373,7 @@ input[type="file"]{
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
 <label class="sr" for="edSelect">Pick a tape to edit</label>
-<select class="tape-select" id="edSelect"></select>
+<select class="tape-select dropdown" id="edSelect"></select>
 <a class="btn-outline" href="index.html#library" id="edBack">Back to library</a>
 <a class="btn-outline" href="index.html#deck" id="edPlay">Play in deck</a>
 <a class="dialog-close" href="index.html#deck" aria-label="Close editor and stay in deck">×</a>
