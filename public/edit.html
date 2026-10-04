@@ -1389,17 +1389,6 @@ body{
   background:#FAF3E0;
   color:#1E6B65
 }
-.tape-select{
-  height:52px;
-  padding:0 16px;
-  border:3px solid #1E6B65;
-  border-radius:26px;
-  background:#FAF3E0;
-  color:#1E6B65;
-  font-size:18px;
-  font-weight:600;
-  max-width:100%
-}
 .plain-input{
   height:44px;
   padding:0 12px;
@@ -1734,15 +1723,13 @@ a.tile:hover,
 
 .field,
 .plain-input,
-.pill,
-.tape-select{
+.pill{
   transition:border-color .15s ease,box-shadow .15s ease,background .15s ease;
 }
 
 .field:focus,
 .plain-input:focus,
-.pill:focus,
-.tape-select:focus{
+.pill:focus{
   outline:none;
   box-shadow:0 0 0 3px var(--ui-gold), 0 5px 0 #8A5A2B;
 }
@@ -2029,14 +2016,9 @@ html.embedded-editor .edit-dialog{
   gap:8px !important;
 }
 
-#view-edit .tape-select,
 #view-edit .btn-outline{
   height:44px;
   font-size:16px;
-}
-
-#view-edit .tape-select{
-  min-width:180px;
 }
 
 .dialog-close{
@@ -2283,7 +2265,6 @@ input[type="file"]{
     width:100%;
   }
 
-  #view-edit .tape-select,
   #view-edit .btn-outline{
     width:100%;
     min-width:0;
@@ -2304,70 +2285,6 @@ input[type="file"]{
 }
 
   
-/* Dropdowns: same look as index.html (css/style.css, .dropdown-select). */
-.dropdown-select {
-  box-sizing: border-box;
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  position: relative;
-  margin: 0 !important;
-  flex-shrink: 0;
-  text-align: center;
-  text-align-last: center;
-  font-weight: 700 !important;
-  letter-spacing: 0.02em;
-  border: 3px solid var(--ui-teal) !important;
-  color: var(--ui-teal) !important;
-  background-color: var(--ui-cream) !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 13px center;
-  background-size: 17px 17px;
-  padding-left: 18px !important;
-  padding-right: 46px !important;
-  /* One clean border only — no outer or inset shadow. */
-  box-shadow: none;
-  cursor: pointer;
-  transition:
-    border-color 0.16s ease,
-    box-shadow 0.16s ease,
-    transform 0.16s ease,
-    background-color 0.16s ease;
-}
-.dropdown-select:hover {
-  border-color: var(--ui-red) !important;
-  color: var(--ui-red) !important;
-  background-color: #FFFDF6 !important;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%23C1272D' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
-  /* Keep the hover state to a single border with no shadow. */
-  box-shadow: none;
-  transform: translateY(-1px);
-}
-.dropdown-select:focus {
-  outline: none;
-  border-color: var(--ui-gold) !important;
-  /* Focus does not create a second ring or shadow. */
-  box-shadow: none;
-}
-.dropdown-select,
-.dropdown-select:hover,
-.dropdown-select:focus,
-.dropdown-select:focus-visible {
-  border: 3px solid var(--ui-teal) !important;
-  box-shadow: none !important;
-  outline: none !important;
-}
-/* The editor tape picker matches the Deck tape picker: playlist name on the left. */
-#edSelect.dropdown-select {
-  width: fit-content;
-  min-width: 220px;
-  max-width: 340px;
-  padding-left: 24px !important;
-  padding-right: 48px !important;
-  text-align: left !important;
-  text-align-last: left !important;
-}
 </style>
 </head>
 <body>
@@ -2383,15 +2300,13 @@ input[type="file"]{
 <div class="sub">customize the shell, then fill in the songs</div>
 </div>
 <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
-<label class="sr" for="edSelect">Pick a tape to edit</label>
-<select class="tape-select dropdown-select" id="edSelect"></select>
 <a class="btn-outline" href="index.html#library" id="edBack">Back to library</a>
 <a class="btn-outline" href="index.html#deck" id="edPlay">Play in deck</a>
 <a class="dialog-close" href="index.html#deck" aria-label="Close editor and stay in deck">×</a>
 </div>
 </div>
 <div class="empty-box" id="edEmpty">
-          Pick a tape from the list above, or open this page from the pencil button in your Library.
+          No tape chosen. Open one with the pencil button on a tape in your Library.
         </div>
 <section class="split" id="edMain">
 <div style="display: flex; flex-direction: column; gap: 24px; min-width: 0;">
@@ -2926,8 +2841,6 @@ const playingTrackId = (tape) => (Player.tape === tape && Player.track() ? Playe
 // Function: renderEdit — handles this part of the app.
 function renderEdit() {
   const tape = E.tape();
-  $('#edSelect').innerHTML = '<option value="" disabled' + (tape ? '' : ' selected') + '>Pick a tape to edit…</option>' +
-    Store.data.playlists.map((t) => '<option value="' + esc(t.id) + '"' + (tape && tape.id === t.id ? ' selected' : '') + '>' + esc(t.name) + '</option>').join('');
   $('#edEmpty').hidden = !!tape; $('#edMain').hidden = !tape; $('#edPlay').hidden = !tape;
   if (!tape) { $('#edTag').textContent = 'In the workshop'; return; }
   if (!E.draft) {
@@ -2947,7 +2860,6 @@ function renderEditPreview() {
   $('#edShells').innerHTML = SHELLS.map((s, i) => '<button type="button" class="swatch" data-shell="' + i + '" aria-label="' + s.name + ' shell" aria-pressed="' + (d.shell === s.shell) + '" style="background: ' + s.shell + ';"></button>').join('');
   $('#edStripes').innerHTML = STRIPES.map((s, i) => '<button type="button" class="swatch" data-stripe="' + i + '" aria-label="' + s.name + ' stripe" aria-pressed="' + (d.stripe === s.color) + '" style="background: ' + s.color + ';"></button>').join('');
 }
-$('#edSelect').addEventListener('change', (e) => { if (e.target.value) location.search = '?id=' + encodeURIComponent(e.target.value); });
 $('#edTapeForm').addEventListener('input', () => {
   if (!E.draft) return;
   Object.assign(E.draft, { name: $('#edName').value, notes: $('#edNotes').value, genre: $('#edGenre').value });

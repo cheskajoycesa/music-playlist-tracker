@@ -3022,9 +3022,15 @@
             reloadTapes();
           });
         }
-        if (updateHash && location.hash.slice(1).split('/')[0] === 'edit') {
-          history.replaceState(null, '', location.pathname + location.search + '#library');
-          route();
+        if (location.hash.slice(1).split('/')[0] === 'edit') {
+          if (updateHash) {
+            history.replaceState(null, '', location.pathname + location.search + '#library');
+            route();
+          } else {
+            // Leave the page underneath as it is, but drop "#edit/<id>" from the address: otherwise clicking
+            // the same tape's pencil again would ask for the same address, which the browser ignores.
+            history.replaceState(null, '', location.pathname + location.search + '#' + currentRoute);
+          }
         }
       }
 
