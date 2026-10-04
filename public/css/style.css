@@ -2954,3 +2954,23 @@ a.tile:hover,
     max-width: calc(100vw - 32px) !important;
   }
 }
+
+/* ========================================================================== */
+/* Search and Library dropdowns: chevron always visible, label left-aligned   */
+/* ========================================================================== */
+
+/* After use the Search dropdown keeps focus, and .pill:focus repaints its whole background,
+   which wiped the chevron until the mouse hovered it again. */
+#entity.dropdown-select:focus:not(:hover) {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%231E6B65' stroke-width='2.8' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+/* Every dropdown shows its label left-aligned, with the same spacing as the Deck tape picker
+   (24px before the text, 48px on the right for the chevron). */
+#entity.dropdown-select,
+#libSort.dropdown-select {
+  padding-left: 24px !important;
+  padding-right: 48px !important;
+  text-align: left !important;
+  text-align-last: left !important;
+}
