@@ -1,17 +1,3 @@
-/* ================= Cassettefy · Spotify =================
-   Everything that talks to Spotify lives in this file:
-     1. Settings          Client ID, permissions (scopes) and the Redirect URI
-     2. Login             Authorization Code with PKCE, tokens, and the spFetch() Web API helper
-     3. Playback          the Web Playback SDK player and the helpers the deck uses (play, pause, seek, song length, …)
-     4. Song matching     finds the Spotify version of a song added from Search (iTunes)
-     5. Export            a tape -> a new playlist in the listener's Spotify library
-     6. Import            the listener's Spotify playlists -> tapes in the Library
-     7. Profile page      the Spotify part of the Profile page, and its buttons
-     8. SDK start-up      onSpotifyWebPlaybackSDKReady, called by https://sdk.scdn.co/spotify-player.js
-
-   index.html loads this file just before its own script. Functions here may use what that script
-   defines ($, Store, Player, toast, …), because they only run after the page has started. Code that
-   runs straight away (the button listeners below) only uses plain DOM calls for that reason. */
 
 /* ======================= 1. Settings ======================= */
 /* The app's Client ID from the Spotify developer dashboard (developer.spotify.com), where the app is
@@ -448,7 +434,8 @@ async function exportTapeToSpotify(tape) {
     throw new Error('No tape selected.');
   }
 
-  // A tape imported from Spotify already exists there, so it isn't exported (the stored link survives a genre change)
+  // A tape imported from Spotify already exists there, so it isn't exported. The stored playlist link
+  // survives a genre change; the "Spotify import" genre is how earlier versions marked imported tapes.
   if (tape.spotifyPlaylistId || tape.genre === 'Spotify import') {
     throw new Error('This tape was imported from Spotify and already exists in your Spotify library.');
   }
@@ -569,11 +556,145 @@ async function loadSpotify() {
 
   SP.busy = false;
   renderProfile();
+  // Tapes an earlier version imported as "Spotify import" get their real genres
+  fixImportedGenres();
 }
+/* ---------- Genres for imported tapes ----------
+   Spotify gives genres to artists, not to songs, so an imported song takes its main artist's genre and the
+   tape takes the genre most of its songs share. When Spotify has no genre for any of the artists, the tape's
+   genre comes from iTunes (where songs added from Search get theirs), and is "Mixed" only if iTunes has none
+   either. Earlier versions labelled every imported tape "Spotify import" (and every song "Spotify");
+   fixImportedGenres() below replaces those labels on tapes imported before this change. */
+
+// Spotify writes genres in lower case: "dance pop" -> "Dance Pop", "k-pop" -> "K-Pop", "r&b" -> "R&B".
+function genreLabel(genre) {
+  return String(genre || '').replace(/[^\s-]+/g, (w) =>
+    w.includes('&') ? w.toUpperCase() : w.charAt(0).toUpperCase() + w.slice(1),
+  );
+}
+
+// The main artist's genre for each Spotify track, in the same order; '' where Spotify has none.
+async function artistGenres(tracks) {
+  const artistOf = (tr) => tr && tr.artists && tr.artists[0] && tr.artists[0].id;
+  const ids = [...new Set(tracks.map(artistOf).filter(Boolean))];
+  const genreOf = new Map();
+  // Spotify sends up to 50 artists per request
+  for (let i = 0; i < ids.length; i += 50) {
+    try {
+      const page = await spFetch('artists?ids=' + ids.slice(i, i + 50).join(','));
+      (page.artists || []).forEach((a) => a && genreOf.set(a.id, genreLabel((a.genres || [])[0])));
+    } catch (e) {
+      console.warn('Could not get artist genres from Spotify:', e);
+    }
+  }
+  return tracks.map((tr) => genreOf.get(artistOf(tr)) || '');
+}
+
+// The genre most of the songs share, or '' when none of them has one.
+function commonGenre(genres) {
+  const count = new Map();
+  genres.filter(Boolean).forEach((g) => count.set(g, (count.get(g) || 0) + 1));
+  let best = '',
+    most = 0;
+  count.forEach((n, g) => {
+    if (n > most) {
+      best = g;
+      most = n;
+    }
+  });
+  return best;
+}
+
+// Asks iTunes (the same search the Search page uses) for the genre of up to 5 of the songs; the first found wins.
+async function itunesGenre(songs) {
+  for (const s of songs.slice(0, 5)) {
+    try {
+      const data = await itunes('search', { term: s.title + ' ' + s.artist, media: 'music', entity: 'song', limit: 1 });
+      const genre = data.results && data.results[0] && data.results[0].primaryGenreName;
+      if (genre) return genre;
+    } catch (e) {
+      // no answer for this song: the next one is tried
+    }
+  }
+  return '';
+}
+
+// Genres for a list of Spotify tracks: { songs: one genre per track ('' if unknown), tape: the tape's genre }.
+async function genresFor(tracks) {
+  const songs = await artistGenres(tracks);
+  const tape =
+    commonGenre(songs) ||
+    (await itunesGenre(tracks.map((tr) => ({ title: tr.name, artist: ((tr.artists || [])[0] || {}).name || '' })))) ||
+    'Mixed';
+  return { songs, tape };
+}
+
+// Every playlist in the listener's Spotify library (page by page, 50 at a time).
+async function allSpotifyPlaylists() {
+  let lists = [],
+    next = 'me/playlists?limit=50';
+  for (let pages = 0; next && pages < 40; pages++) {
+    const page = await spFetch(next);
+    lists = lists.concat((page.items || []).filter(Boolean));
+    next = page.next ? page.next.replace('https://api.spotify.com/v1/', '') : null;
+  }
+  return lists;
+}
+
+/**
+ * Gives real genres to tapes that an earlier version imported as "Spotify import", once, while Spotify is
+ * connected (called when the site opens and when the Profile page loads Spotify). Such a tape is first linked
+ * to its Spotify playlist (spotifyPlaylistId), because the old label was how it was recognised as imported:
+ * with the link it still can't be imported or exported a second time once the label is gone.
+ */
+let fixingGenres = false;
+async function fixImportedGenres() {
+  if (fixingGenres || !Store.data.spotify) return;
+  const stuck = Store.data.playlists.filter((t) => t.genre === 'Spotify import');
+  if (!stuck.length) return;
+  fixingGenres = true;
+  try {
+    const lists = stuck.some((t) => !t.spotifyPlaylistId) ? await allSpotifyPlaylists() : [];
+    for (const tape of stuck) {
+      if (!tape.spotifyPlaylistId) {
+        // Linked by name, as older imports were recognised. No playlist by that name: nothing to protect.
+        const playlist = lists.find((p) => p.name === tape.name);
+        if (playlist) tape.spotifyPlaylistId = playlist.id;
+      }
+      // Spotify's details for the tape's songs (for their artists), 50 songs per request
+      const ids = tape.tracks.map((t) => (t.spotifyUri || '').split(':').pop()).filter(Boolean);
+      const byUri = new Map();
+      for (let i = 0; i < ids.length; i += 50) {
+        const page = await spFetch('tracks?ids=' + ids.slice(i, i + 50).join(','));
+        (page.tracks || []).forEach((tr) => {
+          if (!tr) return;
+          byUri.set(tr.uri, tr);
+          // Spotify may answer with a "relinked" copy of the song; the tape knows the original URI
+          if (tr.linked_from && tr.linked_from.uri) byUri.set(tr.linked_from.uri, tr);
+        });
+      }
+      const known = tape.tracks.filter((t) => byUri.has(t.spotifyUri));
+      const genres = await genresFor(known.map((t) => byUri.get(t.spotifyUri)));
+      known.forEach((t, i) => (t.genre = genres.songs[i]));
+      // Songs Spotify no longer has lose the old "Spotify" label rather than keep it
+      tape.tracks.forEach((t) => {
+        if (t.genre === 'Spotify') t.genre = '';
+      });
+      tape.genre = genres.tape;
+      Store.save(); // after each tape, so a later failure doesn't lose the ones already done
+    }
+    RENDER[currentRoute]();
+  } catch (e) {
+    console.warn('Could not update the genres of imported tapes:', e);
+  } finally {
+    fixingGenres = false;
+  }
+}
+
 /**
  * The Library tape this Spotify playlist belongs to, or null: the tape imported from it, or the tape
- * that was exported to create it (importing that back would duplicate the tape). Tapes imported before
- * the playlist id was stored are recognised by their name and the "Spotify import" genre.
+ * that was exported to create it (importing that back would duplicate the tape). Tapes imported by earlier
+ * versions, before the playlist id was stored, are recognised by their name and the old "Spotify import" genre.
  */
 function importedTape(playlist) {
   return (
@@ -623,16 +744,18 @@ async function importSpotify() {
           return true;
         });
       const half = Math.ceil(tracks.length / 2);
+      // Real genres (see "Genres for imported tapes" above), not a fixed "Spotify import" label
+      const genres = await genresFor(tracks);
       const tape = Store.newTape({
         name: meta ? meta.name : 'Spotify tape',
-        genre: 'Spotify import',
+        genre: genres.tape,
         shellIdx: made % SHELLS.length,
         tracks: tracks.map((tr, i) => ({
           id: uid(),
           side: i < half ? 'A' : 'B',
           title: tr.name,
           artist: (tr.artists || []).map((a) => a.name).join(', '),
-          genre: 'Spotify',
+          genre: genres.songs[i],
           time: fmt((tr.duration_ms || 0) / 1000),
           previewUrl: tr.preview_url || '',
           spotifyUri: tr.uri,
